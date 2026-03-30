@@ -29,6 +29,9 @@ func Run(args []string) error {
 
 	rootCmd.AddCommand(
 		versionCommand(),
+		featureCommand(),
+		specCommand(),
+		codeCommand(),
 	)
 
 	if len(args) > 1 {
