@@ -31,7 +31,9 @@ func Run(args []string) error {
 		versionCommand(),
 	)
 
-	rootCmd.SetArgs(args[1:])
+	if len(args) > 1 {
+		rootCmd.SetArgs(args[1:])
+	}
 	return rootCmd.ExecuteContext(context.Background())
 }
 

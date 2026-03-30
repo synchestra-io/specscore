@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	cli "github.com/synchestra-io/specscore/internal/cli"
+	"github.com/synchestra-io/specscore/internal/cli"
 )
 
 func main() {
