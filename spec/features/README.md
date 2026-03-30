@@ -4,17 +4,19 @@ Core features of the SpecScore specification framework:
 
 | Feature | Status | Description |
 |---------|--------|-------------|
-| [feature](feature/README.md) | Defined | Feature specification structure and conventions |
-| [architecture](architecture/README.md) | Defined | Architecture specification structure and conventions |
-| [development-plan](development-plan/README.md) | Defined | Planning documents that bridge specs to task execution |
-| [project-definition](project-definition/README.md) | Defined | SpecScore project configuration and root structure |
+| [feature](feature/README.md) | Conceptual | Feature specification structure, metadata, lifecycle, and conventions |
+| [acceptance-criteria](acceptance-criteria/README.md) | Conceptual | Acceptance criteria format and conventions |
+| [source-references](source-references/README.md) | Conceptual | Code-to-spec traceability via inline annotations |
+| [development-plan](development-plan/README.md) | Conceptual | Planning documents that bridge specs to execution |
+| [project-definition](project-definition/README.md) | Conceptual | SpecScore project configuration and root structure |
 
 ## Feature Hierarchy
 
 ```
 spec/features/
 ├── feature/               # How to structure and write features
-├── architecture/          # How to structure architecture specs
+├── acceptance-criteria/   # How to define and verify acceptance criteria
+├── source-references/     # How to link code to specifications
 ├── development-plan/      # How to structure planning documents
 └── project-definition/    # Project config and top-level structure
 ```
