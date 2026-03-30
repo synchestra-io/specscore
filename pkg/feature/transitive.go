@@ -44,7 +44,7 @@ func walkTransitive(featuresDir, featureID string, visited map[string]bool, reso
 		node := &EnrichedFeature{Path: r}
 		children := walkTransitive(featuresDir, r, visited, resolver)
 		if len(children) > 0 {
-			node.Children = children
+			node.ChildNodes = children
 		}
 		nodes = append(nodes, node)
 	}
@@ -58,8 +58,8 @@ func EnrichTransitiveNodes(featuresDir string, nodes []*EnrichedFeature, fields 
 			continue
 		}
 		enrichNodeFields(featuresDir, node, fields)
-		if children, ok := node.Children.([]*EnrichedFeature); ok {
-			EnrichTransitiveNodes(featuresDir, children, fields)
+		if len(node.ChildNodes) > 0 {
+			EnrichTransitiveNodes(featuresDir, node.ChildNodes, fields)
 		}
 	}
 }
@@ -67,7 +67,7 @@ func EnrichTransitiveNodes(featuresDir string, nodes []*EnrichedFeature, fields 
 // enrichNodeFields copies resolved field values into a node without
 // overwriting its tree children.
 func enrichNodeFields(featuresDir string, node *EnrichedFeature, fields []string) {
-	resolved := ResolveFields(featuresDir, node.Path, fields)
+	resolved, _ := ResolveFields(featuresDir, node.Path, fields)
 	node.Status = resolved.Status
 	node.OQ = resolved.OQ
 	node.Deps = resolved.Deps
@@ -87,8 +87,8 @@ func PrintTransitiveText(sb *strings.Builder, nodes []*EnrichedFeature, depth in
 			sb.WriteString(" (cycle)")
 		}
 		sb.WriteByte('\n')
-		if children, ok := node.Children.([]*EnrichedFeature); ok {
-			PrintTransitiveText(sb, children, depth+1)
+		if len(node.ChildNodes) > 0 {
+			PrintTransitiveText(sb, node.ChildNodes, depth+1)
 		}
 	}
 }

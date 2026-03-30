@@ -591,9 +591,9 @@ func TestTransitiveDeps(t *testing.T) {
 	if nodes[0].Path != "b" {
 		t.Errorf("nodes[0].Path = %q, want %q", nodes[0].Path, "b")
 	}
-	children, ok := nodes[0].Children.([]*EnrichedFeature)
-	if !ok || len(children) != 1 {
-		t.Fatalf("expected 1 child of b, got %v", nodes[0].Children)
+	children := nodes[0].ChildNodes
+	if len(children) != 1 {
+		t.Fatalf("expected 1 child of b, got %v", nodes[0].ChildNodes)
 	}
 	if children[0].Path != "c" {
 		t.Errorf("child path = %q, want %q", children[0].Path, "c")

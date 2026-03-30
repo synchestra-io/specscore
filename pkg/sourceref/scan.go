@@ -17,18 +17,25 @@ type ScanResult struct {
 
 // ScanFiles scans a list of files for source references.
 // Returns a ScanResult with all references grouped by file.
+// The result may be partial if some files fail; errors are accumulated
+// and returned alongside whatever refs were successfully scanned.
 func ScanFiles(filePaths []string) (*ScanResult, error) {
 	result := &ScanResult{
 		FileRefs: make(map[string][]*Reference),
 	}
+	var errs []string
 	for _, filePath := range filePaths {
 		refs, err := scanFile(filePath)
 		if err != nil {
+			errs = append(errs, fmt.Sprintf("%s: %v", filePath, err))
 			continue
 		}
 		if len(refs) > 0 {
 			result.FileRefs[filePath] = refs
 		}
+	}
+	if len(errs) > 0 {
+		return result, fmt.Errorf("scan errors: %s", strings.Join(errs, "; "))
 	}
 	return result, nil
 }
@@ -67,6 +74,14 @@ func scanFile(filePath string) ([]*Reference, error) {
 
 // ExpandGlobPattern expands a glob pattern to a list of file paths.
 // Returns sorted file paths.
+//
+// Supported patterns:
+//   - "**/*" or "**" — matches all files recursively (special-cased)
+//   - Standard filepath.Match patterns (e.g. "*.go", "src/*.txt")
+//
+// Note: arbitrary recursive glob patterns like "src/**/*.go" are NOT
+// supported. Only the exact literals "**" and "**/*" trigger recursive
+// matching; all other patterns are matched per-segment via filepath.Match.
 func ExpandGlobPattern(pattern string) ([]string, error) {
 	if pattern == "" {
 		pattern = "**/*"

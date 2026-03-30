@@ -28,7 +28,9 @@ func newLinter(opts Options) *linter {
 	}
 
 	l.registerChecker(newReadmeExistsChecker())
-	l.registerChecker(newOQSectionChecker())
+	oqChecker := newOQSectionChecker()
+	l.registerChecker(oqChecker)
+	l.ruleSet["oq-not-empty"] = oqChecker
 	l.registerChecker(newIndexEntriesChecker())
 	l.registerChecker(newHeadingLevelsChecker())
 	l.registerChecker(newFeatureRefSyntaxChecker())
@@ -58,19 +60,44 @@ func (l *linter) isRuleEnabled(ruleName string) bool {
 }
 
 // lint runs all enabled checkers and returns violations.
+// A checker runs if any of the rule names it is registered under are
+// enabled.  Individual violations are then filtered so only violations
+// whose Rule field matches an enabled rule are returned.
 func (l *linter) lint() ([]Violation, error) {
 	var violations []Violation
 
-	for ruleName, c := range l.ruleSet {
-		if !l.isRuleEnabled(ruleName) {
+	// Deduplicate checkers (the same checker may be registered under
+	// multiple rule names).
+	seen := make(map[checker]bool)
+	for _, c := range l.ruleSet {
+		if seen[c] {
+			continue
+		}
+		seen[c] = true
+
+		// Run checker if any of its registered rule names are enabled.
+		enabled := false
+		for ruleName, rc := range l.ruleSet {
+			if rc == c && l.isRuleEnabled(ruleName) {
+				enabled = true
+				break
+			}
+		}
+		if !enabled {
 			continue
 		}
 
 		v, err := c.check(l.opts.SpecRoot)
 		if err != nil {
-			return nil, fmt.Errorf("checker %s: %v", ruleName, err)
+			return nil, fmt.Errorf("checker %s: %v", c.name(), err)
 		}
-		violations = append(violations, v...)
+
+		// Keep only violations whose rule is enabled.
+		for _, vi := range v {
+			if l.isRuleEnabled(vi.Rule) {
+				violations = append(violations, vi)
+			}
+		}
 	}
 
 	return violations, nil
@@ -97,7 +124,7 @@ func walkSpecDirs(specRoot string, fn func(dirPath, relPath string) error) error
 			return fmt.Errorf("computing relative path: %w", relErr)
 		}
 		if relPath == "." {
-			relPath = specRoot
+			relPath = filepath.Base(specRoot)
 		}
 		return fn(path, relPath)
 	})

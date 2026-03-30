@@ -43,64 +43,86 @@ func ParseFieldNames(fieldsStr string) ([]string, error) {
 }
 
 // EnrichedFeature holds a feature ID with optional metadata fields.
-// Children can be []string (child paths for flat output) or
-// []*EnrichedFeature (tree nesting).
+// ChildPaths holds child IDs for flat output; ChildNodes holds enriched
+// children for tree representations.
 type EnrichedFeature struct {
-	Path      string      `yaml:"path" json:"path"`
-	Focus     *bool       `yaml:"focus,omitempty" json:"focus,omitempty"`
-	Cycle     *bool       `yaml:"cycle,omitempty" json:"cycle,omitempty"`
-	Status    string      `yaml:"status,omitempty" json:"status,omitempty"`
-	OQ        *int        `yaml:"oq,omitempty" json:"oq,omitempty"`
-	Deps      []string    `yaml:"deps,omitempty" json:"deps,omitempty"`
-	Refs      []string    `yaml:"refs,omitempty" json:"refs,omitempty"`
-	Plans     []string    `yaml:"plans,omitempty" json:"plans,omitempty"`
-	Proposals []string    `yaml:"proposals,omitempty" json:"proposals,omitempty"`
-	Children  interface{} `yaml:"children,omitempty" json:"children,omitempty"`
+	Path       string             `yaml:"path" json:"path"`
+	Focus      *bool              `yaml:"focus,omitempty" json:"focus,omitempty"`
+	Cycle      *bool              `yaml:"cycle,omitempty" json:"cycle,omitempty"`
+	Status     string             `yaml:"status,omitempty" json:"status,omitempty"`
+	OQ         *int               `yaml:"oq,omitempty" json:"oq,omitempty"`
+	Deps       []string           `yaml:"deps,omitempty" json:"deps,omitempty"`
+	Refs       []string           `yaml:"refs,omitempty" json:"refs,omitempty"`
+	Plans      []string           `yaml:"plans,omitempty" json:"plans,omitempty"`
+	Proposals  []string           `yaml:"proposals,omitempty" json:"proposals,omitempty"`
+	ChildPaths []string           `yaml:"children,omitempty" json:"children,omitempty"`
+	ChildNodes []*EnrichedFeature `yaml:"child_nodes,omitempty" json:"child_nodes,omitempty"`
 }
 
 // ResolveFields computes the requested metadata fields for a feature.
-func ResolveFields(featuresDir, featureID string, fields []string) *EnrichedFeature {
+// Returns partial results alongside any errors encountered.
+func ResolveFields(featuresDir, featureID string, fields []string) (*EnrichedFeature, error) {
 	ef := &EnrichedFeature{Path: featureID}
 	readmePath := ReadmePath(featuresDir, featureID)
+	var errs []string
 
 	for _, f := range fields {
 		switch f {
 		case "status":
-			if s, err := ParseFeatureStatus(readmePath); err == nil {
+			s, err := ParseFeatureStatus(readmePath)
+			if err != nil {
+				errs = append(errs, fmt.Sprintf("status: %v", err))
+			} else {
 				ef.Status = s
 			}
 		case "oq":
-			if n, err := CountOutstandingQuestions(readmePath); err == nil {
+			n, err := CountOutstandingQuestions(readmePath)
+			if err != nil {
+				errs = append(errs, fmt.Sprintf("oq: %v", err))
+			} else {
 				ef.OQ = &n
 			}
 		case "deps":
-			if d, err := ParseDependencies(readmePath); err == nil {
+			d, err := ParseDependencies(readmePath)
+			if err != nil {
+				errs = append(errs, fmt.Sprintf("deps: %v", err))
+			} else {
 				ef.Deps = d
 			}
 		case "refs":
-			if r, err := FindFeatureRefs(featuresDir, featureID); err == nil {
+			r, err := FindFeatureRefs(featuresDir, featureID)
+			if err != nil {
+				errs = append(errs, fmt.Sprintf("refs: %v", err))
+			} else {
 				ef.Refs = r
 			}
 		case "children":
-			if c, err := DiscoverChildFeatures(featuresDir, featureID, readmePath); err == nil {
+			c, err := DiscoverChildFeatures(featuresDir, featureID, readmePath)
+			if err != nil {
+				errs = append(errs, fmt.Sprintf("children: %v", err))
+			} else {
 				var paths []string
 				for _, ch := range c {
 					paths = append(paths, ch.Path)
 				}
-				if len(paths) > 0 {
-					ef.Children = paths
-				}
+				ef.ChildPaths = paths
 			}
 		case "plans":
 			specRoot := filepath.Dir(featuresDir)
-			if p, err := FindLinkedPlans(filepath.Dir(specRoot), featureID); err == nil {
+			p, err := FindLinkedPlans(filepath.Dir(specRoot), featureID)
+			if err != nil {
+				errs = append(errs, fmt.Sprintf("plans: %v", err))
+			} else {
 				ef.Plans = p
 			}
 		case "proposals":
 			// Proposals not yet implemented in the spec repo structure.
 		}
 	}
-	return ef
+	if len(errs) > 0 {
+		return ef, fmt.Errorf("resolve %s: %s", featureID, strings.Join(errs, "; "))
+	}
+	return ef, nil
 }
 
 // ValidateFormat checks the format flag value is valid.

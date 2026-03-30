@@ -17,7 +17,7 @@ func BuildEnrichedTree(featuresDir string, featureIDs []string, fields []string,
 	var roots []*EnrichedFeature
 
 	for _, id := range featureIDs {
-		ef := ResolveFields(featuresDir, id, treeFields)
+		ef, _ := ResolveFields(featuresDir, id, treeFields)
 		if id == focusID && focusID != "" {
 			ef.Focus = BoolPtr(true)
 		}
@@ -29,11 +29,7 @@ func BuildEnrichedTree(featuresDir string, featureIDs []string, fields []string,
 		} else {
 			parentID := strings.Join(parts[:len(parts)-1], "/")
 			if parent, ok := nodeMap[parentID]; ok {
-				if children, ok := parent.Children.([]*EnrichedFeature); ok {
-					parent.Children = append(children, ef)
-				} else {
-					parent.Children = []*EnrichedFeature{ef}
-				}
+				parent.ChildNodes = append(parent.ChildNodes, ef)
 			} else {
 				roots = append(roots, ef)
 			}
