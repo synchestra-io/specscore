@@ -6,11 +6,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/synchestra-io/specscore/pkg/exitcode"
+	"github.com/synchestra-io/specscore/pkg/feature"
 	"github.com/synchestra-io/specscore/pkg/lint"
 	"gopkg.in/yaml.v3"
 )
@@ -29,7 +32,7 @@ func specCommand() *cobra.Command {
 
 func specLintCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "lint [PATH]",
+		Use:   "lint",
 		Short: "Validate spec tree for structural convention violations",
 		Long: `Scans the specification tree and reports violations of structural
 conventions (README.md files, Outstanding Questions sections, heading
@@ -38,9 +41,10 @@ levels, feature references, internal links, index entries).
 Violations are categorized by severity: error (must fix), warning (should
 fix), info (advisory). Exit code 0 = valid, 1 = violations found, 2 =
 invalid arguments, 10+ = unexpected error.`,
-		Args: cobra.MaximumNArgs(1),
+		Args: cobra.NoArgs,
 		RunE: runSpecLint,
 	}
+	cmd.Flags().StringP("project", "p", "", "path to spec repository root (default: auto-discover from CWD)")
 	cmd.Flags().String("rules", "", "enable only specified rules (comma-separated)")
 	cmd.Flags().String("ignore", "", "disable specified rules (comma-separated)")
 	cmd.Flags().String("severity", "error", "minimum severity: error, warning, info")
@@ -49,10 +53,28 @@ invalid arguments, 10+ = unexpected error.`,
 }
 
 func runSpecLint(cmd *cobra.Command, args []string) error {
-	specRoot := "./spec"
-	if len(args) > 0 {
-		specRoot = args[0]
+	projectFlag, _ := cmd.Flags().GetString("project")
+
+	var startDir string
+	if projectFlag != "" {
+		abs, err := filepath.Abs(projectFlag)
+		if err != nil {
+			return exitcode.InvalidArgsErrorf("resolving --project path: %v", err)
+		}
+		startDir = abs
+	} else {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return exitcode.UnexpectedErrorf("cannot determine working directory: %v", err)
+		}
+		startDir = cwd
 	}
+
+	root, err := feature.FindSpecRepoRoot(startDir)
+	if err != nil {
+		return err
+	}
+	specRoot := filepath.Join(root, "spec")
 
 	rulesStr, _ := cmd.Flags().GetString("rules")
 	ignoreStr, _ := cmd.Flags().GetString("ignore")
