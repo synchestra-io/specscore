@@ -23,3 +23,7 @@ spec/
 4. **Standards:** How specs link to code, to each other, and to execution workflows
 
 See [features/](features/README.md) for detailed specifications.
+
+## Outstanding Questions
+
+None at this time.

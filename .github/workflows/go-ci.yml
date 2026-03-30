@@ -1,0 +1,33 @@
+name: Go CI
+
+on:
+  push:
+    paths:
+      - '.github/workflows/go-ci.yml'
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+  pull_request:
+    paths:
+      - '.github/workflows/go-ci.yml'
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: go-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  strongo_workflow:
+    permissions:
+      contents: write
+    uses: strongo/go-ci-action/.github/workflows/workflow.yml@main
+
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
