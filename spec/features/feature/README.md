@@ -204,9 +204,9 @@ Features are identified by their path relative to `spec/features/`:
 
 | Feature path        | Identifier          |
 |---------------------|---------------------|
-| `spec/features/cli/` | `cli`               |
-| `spec/features/ui/hub/` | `ui/hub` |
-| `spec/features/task-status-board/` | `task-status-board` |
+| `spec/features/authentication/` | `authentication`               |
+| `spec/features/billing/payments/` | `billing/payments` |
+| `spec/features/user-management/` | `user-management` |
 
 This path-based identification is used in development plans and spec tooling.
 
