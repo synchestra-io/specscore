@@ -1,0 +1,54 @@
+version: 2
+
+project_name: specscore
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - id: specscore
+    main: ./cmd/specscore
+    binary: specscore
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X github.com/synchestra-io/specscore/internal/cli.version={{.Version}}
+      - -X github.com/synchestra-io/specscore/internal/cli.commit={{.Commit}}
+      - -X github.com/synchestra-io/specscore/internal/cli.date={{.Date}}
+
+archives:
+  - id: specscore
+    ids:
+      - specscore
+    name_template: "specscore_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    formats: [tar.gz]
+
+checksum:
+  name_template: "specscore_{{ .Version }}_checksums.txt"
+  algorithm: sha256
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - Merge pull request
+      - Merge branch
