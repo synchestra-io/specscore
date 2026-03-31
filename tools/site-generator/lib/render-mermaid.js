@@ -23,9 +23,13 @@ export async function renderMermaidBlocks(markdown) {
   const workDir = join(tmpdir(), `mermaid-${randomUUID()}`);
   await mkdir(workDir, { recursive: true });
 
-  // Find mmdc binary from node_modules
+  // Find mmdc binary and puppeteer config from node_modules
   const mmdc = new URL(
     '../node_modules/.bin/mmdc',
+    import.meta.url
+  ).pathname;
+  const puppeteerConfig = new URL(
+    '../puppeteer-config.json',
     import.meta.url
   ).pathname;
 
@@ -45,6 +49,7 @@ export async function renderMermaidBlocks(markdown) {
           '-o', outputFile,
           '-b', 'transparent',
           '--quiet',
+          '--puppeteerConfigFile', puppeteerConfig,
         ]);
 
         const svg = await readFile(outputFile, 'utf-8');
