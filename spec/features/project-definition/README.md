@@ -4,17 +4,39 @@
 
 ## Summary
 
-How SpecScore discovers and configures specification projects.
+How SpecScore discovers and configures specification projects. Every SpecScore project has a `specscore-project.yaml` file as its entry point, declaring project metadata and directory conventions.
 
-## Project File
+## Contents
 
-Every SpecScore project has a `specscore-project.yaml` file as its entry point. This file lives at the root of the specification repository and declares project metadata and directory conventions.
+| Directory | Description |
+|-----------|-------------|
+| [_tests/](_tests/README.md) | Test scenarios for project definition requirements |
+
+## Problem
+
+SpecScore needs a consistent way to discover where specifications and documents live within a repository. Without a project definition file, tools must guess directory layouts, project names, and repository associations. A standard project file eliminates ambiguity for both human contributors and spec-aware tooling.
+
+## Behavior
+
+### Project file location
+
+The project configuration file is `specscore-project.yaml`. It lives at the root of the specification repository.
+
+#### REQ: project-file-location
+
+Every SpecScore project MUST have a `specscore-project.yaml` file at the repository root. This file is the entry point for all SpecScore tooling.
 
 ### Mandatory fields
+
+The project file has one mandatory field:
 
 | Field   | Description                 |
 |---------|-----------------------------|
 | `title` | Human-readable project name |
+
+#### REQ: title-required
+
+The `specscore-project.yaml` file MUST contain a `title` field. A project file without a `title` is invalid.
 
 ### Optional fields
 
@@ -25,9 +47,11 @@ Every SpecScore project has a `specscore-project.yaml` file as its entry point. 
 | `project_dirs.specifications` | `spec`  | Directory for technical specifications (features, architecture, etc.) |
 | `project_dirs.documents`      | `docs`  | Directory for user-facing documentation                               |
 
-Orchestration tools may extend this file with additional fields (see [Orchestration Tool Extensions](#orchestration-tool-extensions)).
+#### REQ: optional-field-defaults
 
-## Repository Structure
+When optional `project_dirs` fields are omitted, SpecScore MUST use the default values: `spec` for `project_dirs.specifications` and `docs` for `project_dirs.documents`.
+
+### Repository structure
 
 SpecScore specification projects follow a standard directory layout:
 
@@ -44,7 +68,9 @@ SpecScore specification projects follow a standard directory layout:
     ...
 ```
 
-The project entry point is `specscore-project.yaml` at the repository root. The `spec/` and `docs/` directories are configurable via `project_dirs` fields.
+#### REQ: directory-layout
+
+The `spec/` and `docs/` directories MUST be configurable via `project_dirs` fields. Tools MUST resolve specification and document paths using the configured values rather than hardcoded defaults.
 
 ### Example
 
@@ -59,7 +85,7 @@ project_dirs:
   documents: docs
 ```
 
-## Orchestration Tool Extensions
+### Orchestration tool extensions
 
 Orchestration tools (like Synchestra) may extend `specscore-project.yaml` with additional fields:
 
@@ -70,10 +96,17 @@ planning:
   auto_create: false
 ```
 
-SpecScore ignores unknown fields, allowing any tool to add its own configuration alongside the standard SpecScore fields.
+#### REQ: unknown-fields-ignored
+
+SpecScore MUST ignore unknown fields in `specscore-project.yaml`. This allows any orchestration tool to add its own configuration alongside the standard SpecScore fields without causing validation errors.
+
+## Acceptance Criteria
+
+Not defined yet.
 
 ## Outstanding Questions
 
 - Should there be a schema version field in `specscore-project.yaml` to support future evolution?
 - Should `project_dirs` support additional custom directories beyond `specifications` and `documents`?
 - How should SpecScore handle a repository that has no `specscore-project.yaml` — infer defaults or refuse to operate?
+- Acceptance criteria not yet defined for this feature.
