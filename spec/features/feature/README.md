@@ -69,7 +69,7 @@ Directories prefixed with `_` are reserved for SpecScore tooling and extensions 
 |---|---|---|
 | `_acs/` | Acceptance criteria | See [Acceptance Criteria](../acceptance-criteria/README.md) |
 | `_args/` | Argument documentation | Extension point for CLI tooling |
-| `_tests/` | Feature-scoped test scenarios | Extension point for testing frameworks |
+| `_tests/` | Feature-scoped test scenarios | See [Scenario](../scenario/README.md) |
 
 ### Feature README structure
 
@@ -103,7 +103,8 @@ Why this feature exists. What gap or pain point it addresses.
 ## Behavior
 
 How the feature works. The bulk of the spec — structure, rules,
-examples, edge cases.
+examples, edge cases. Individual rules use the `### REQ: {slug}`
+convention. See [Requirement](../requirement/README.md).
 
 ## Interaction with Other Features
 
@@ -293,6 +294,8 @@ Feature behavior is configured through the project definition file. See [Project
 |---------|-------------|
 | [Proposals](../proposals/README.md) | Proposals attach change requests to features. Features display recent proposals in their README. |
 | [Development Plan](../development-plan/README.md) | Plans reference features they affect. Features back-reference active plans. |
+| [Requirement](../requirement/README.md) | Requirements are named subsections (`### REQ:`) within a feature's Behavior section. They are the addressable rules that ACs verify. |
+| [Scenario](../scenario/README.md) | Scenarios are concrete behavior examples in the feature's `_tests/` directory. They validate ACs with Given/When/Then flows. |
 | [Outstanding Questions](../outstanding-questions/README.md) | Every feature maintains an Outstanding Questions section with the standard question lifecycle. |
 
 For tool integrations (CLI, UI, API, LSP), see [Synchestra](https://synchestra.io).
