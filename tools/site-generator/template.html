@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}} - SpecScore</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script>
+    (function() {
+      var saved = localStorage.getItem('specscore-theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a href="/" class="wordmark">SpecScore</a>
+      <nav>
+        {{nav}}
+        <a href="https://github.com/synchestra-io/specscore">GitHub</a>
+      </nav>
+      <button id="theme-toggle" type="button" aria-label="Toggle dark/light theme">
+        <span class="theme-icon-light">&#9789;</span>
+        <span class="theme-icon-dark">&#9788;</span>
+      </button>
+    </div>
+  </header>
+  <main>
+    {{content}}
+    <p class="view-markdown"><a href="{{mdUrl}}">View as Markdown</a></p>
+  </main>
+  <footer>
+    <div class="footer-inner">
+      <span>Apache License 2.0</span>
+      <a href="https://github.com/synchestra-io/specscore">GitHub</a>
+    </div>
+  </footer>
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('specscore-theme', next);
+    });
+  </script>
+</body>
+</html>
