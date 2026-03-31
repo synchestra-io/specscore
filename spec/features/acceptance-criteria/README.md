@@ -4,92 +4,131 @@
 
 ## Summary
 
-Acceptance criteria are **abstract verification conditions** — success/failure statements that define what must be true for a requirement to be satisfied. Each AC is a standalone markdown file that states a condition without prescribing specific inputs, flows, or implementation details. ACs are readable by product owners, auditable by reviewers, and verifiable through [scenarios](../scenario/README.md) that provide concrete Given/When/Then proof.
+Acceptance criteria (ACs) are optional inline sections within a feature README that bundle related [requirements](../requirement/README.md) into composite verification conditions. An AC states what must be true for a group of requirements to be satisfied — without prescribing specific inputs, flows, or implementation details. Concrete proof is the [scenario](../scenario/README.md)'s job.
 
-ACs answer: **"What must be true?"** — not **"How do we test it?"** That is the [scenario](../scenario/README.md)'s job.
+ACs answer: **"What must be true?"** Scenarios answer: **"How do we prove it?"**
 
-The full specification for this feature — file format, supported languages, identification scheme, statuses, and validation rules — lives in the [synchestra-io/rehearse](https://github.com/synchestra-io/rehearse/blob/main/spec/features/acceptance-criteria/) repository.
+## Contents
 
-## SpecScore Conventions
+| Directory | Description |
+|---|---|
+| [_tests/](_tests/README.md) | Test scenarios for acceptance criteria behavior |
 
-SpecScore extends the base AC specification with project-specific conventions:
+### _tests
 
-### Mandatory AC section in feature READMEs
+Scenarios that validate the requirements defined in this feature, covering AC formatting, requirement linkage, placeholder behavior, and the relationship between ACs and scenarios.
 
-Every SpecScore feature README must include an **Acceptance Criteria** section. The "Not defined yet." state triggers a mandatory Outstanding Question: "Acceptance criteria not yet defined for this feature." This ensures missing ACs are visible — not forgotten.
+## Problem
 
-### Requirement traceability
+Requirements (`#### REQ:`) capture individual enforceable rules, but reviewers and product owners often need to verify conditions that span multiple requirements. Without a grouping mechanism:
 
-Each AC SHOULD include a `**Requirement:**` metadata field linking it to the requirement(s) it verifies:
+- Verification checklists repeat requirement references redundantly across scenarios.
+- Reviewers cannot quickly see which requirements are verified together.
+- There is no single place that states the composite condition a group of requirements must satisfy.
 
-```markdown
-# AC: title-required
+Acceptance criteria solve this by bundling related requirements under a named, addressable heading that scenarios can reference.
 
-**Requirement:** todo-item/manage#req:title-required
+## Behavior
 
-Creating a todo without a title is rejected. Creating a todo with a title succeeds.
-```
+### AC format and location
 
-The reference format is `{feature-path}#req:{slug}`. An AC may reference multiple requirements as a comma-separated list when it verifies a condition spanning them.
+ACs are inline sections within the feature README's `## Acceptance Criteria` section. They do not live in a separate directory.
 
-### Acceptance criteria vs scenarios
+#### REQ: inline-heading
 
-ACs and [scenarios](../scenario/README.md) are complementary but distinct:
+Each AC MUST use the heading format `### AC: {slug}` within the `## Acceptance Criteria` section. The slug MUST be lowercase, hyphen-separated, and URL-safe.
 
-| | Acceptance Criteria | Scenario |
-|---|---|---|
-| **Abstraction** | Abstract condition | Concrete flow |
-| **Format** | Prose statement | Given/When/Then steps |
-| **Location** | `_acs/` directory | `_tests/` directory |
-| **Purpose** | Define what must be true | Prove it with specific inputs |
-| **Executable** | No (verified through scenarios) | Yes (via Rehearse) |
+#### REQ: requirements-metadata
 
-**Example pair:**
+Each AC MUST include a `**Requirements:**` field listing the requirements it bundles. The field appears on the line immediately after the `### AC:` heading. Requirements use the format `{feature-id}#req:{slug}`, comma-separated when multiple.
 
-AC (`_acs/title-required.md`):
-> Creating a todo without a title is rejected. Creating a todo with a title succeeds.
+#### REQ: condition-statement
 
-Scenario (`_tests/create-without-title.md`):
-> GIVEN an empty todo list
-> WHEN the user runs `todo add ""`
-> THEN the CLI prints "Error: title is required"
-> AND the list remains empty
+Each AC MUST include a prose statement (one or more sentences) after the `**Requirements:**` field that describes the composite verification condition. The statement is abstract — it defines what must be true, not how to test it.
 
-The AC states the rule; the scenario proves it with a concrete example.
+### AC section in feature READMEs
 
-### Relationship to development plan ACs
+Every feature README carries an Acceptance Criteria section. ACs are optional — the section may contain ACs, or it may indicate that none are defined yet.
 
-Feature ACs and plan ACs serve different audiences and have different lifecycles:
+#### REQ: section-required
 
-| AC type | Lives in | Answers | Lifecycle |
-|---|---|---|---|
-| **Feature AC** | `spec/features/{feature}/_acs/` | "Does this feature work correctly?" | Evolves with the feature; long-lived |
-| **Plan-level AC** | `spec/plans/{plan}/README.md` (inline or `_acs/` subdir) | "Were this plan's goals achieved?" | Frozen with the plan; immutable |
-| **Plan step-level AC** | Within each plan step | "Was this step's deliverable produced?" | Frozen with the plan; immutable |
+Every feature README MUST include an `## Acceptance Criteria` section. This section is never omitted.
 
-Plan step ACs may *reference* feature ACs — for example, "the feature AC `cli/project/remove/not-in-list` must pass after this step." But they are not the same artifact. Feature ACs are the long-lived, canonical verification units. Plan ACs are scoped to a single implementation effort and frozen on approval.
+#### REQ: placeholder-when-empty
 
-When execution units are derived from a plan, both plan step ACs and any referenced feature ACs are included in the execution context. Implementers know exactly what "done" looks like before they write a line of code.
+When no ACs are defined, the Acceptance Criteria section MUST state "Not defined yet." as its only content.
 
-### Outstanding Questions linkage
+#### REQ: outstanding-question-linkage
 
-If the AC section says "Not defined yet.", the Outstanding Questions section must include the corresponding question. This keeps missing ACs visible until addressed.
+When the Acceptance Criteria section reads "Not defined yet.", the feature's Outstanding Questions section MUST include "Acceptance criteria not yet defined for this feature." This keeps missing ACs visible until addressed.
+
+### When to use ACs
+
+ACs are a grouping mechanism, not a mandatory layer. Not every requirement needs an AC wrapper.
+
+#### REQ: optional-grouping
+
+ACs are OPTIONAL. They SHOULD only be created when bundling two or more related requirements adds clarity for reviewers or scenario authors. A requirement that stands alone SHOULD be referenced directly by its scenario without an intermediary AC.
+
+#### REQ: no-duplicate-conditions
+
+An AC MUST NOT restate a single requirement verbatim. If an AC would contain exactly one requirement and add no additional condition, the AC SHOULD be omitted and the scenario SHOULD reference the requirement directly.
+
+### ACs vs scenarios
+
+ACs and scenarios are complementary but distinct artifacts.
+
+#### REQ: abstract-not-concrete
+
+ACs MUST remain abstract verification conditions. They MUST NOT contain Given/When/Then steps, specific test inputs, or implementation details. Concrete flows belong in [scenarios](../scenario/README.md).
+
+#### REQ: scenario-validates-ac
+
+Scenarios that verify a bundled condition SHOULD reference the AC in their `**Validates:**` field using the format `{feature-id}#ac:{slug}`. When a scenario also needs to reference the underlying requirements, it MAY list both the AC and the individual REQs.
+
+### Relationship to plan ACs
+
+Feature ACs and development plan ACs serve different audiences and lifecycles.
+
+#### REQ: feature-ac-long-lived
+
+Feature ACs are long-lived and evolve with the feature specification. They MUST NOT be frozen or versioned with a development plan.
+
+#### REQ: plan-ac-references
+
+Development plan step ACs MAY reference feature ACs to indicate that a plan step's completion depends on the feature AC passing. The plan step AC is frozen with the plan; the referenced feature AC continues to evolve independently.
 
 ## Interaction with Other Features
 
 | Feature | Interaction |
 |---|---|
-| [Feature](../feature/README.md) | Features gain a mandatory Acceptance Criteria section and `_acs/` directory convention. The feature spec defines the structural rules; this feature defines what goes inside. |
-| [Requirement](../requirement/README.md) | ACs reference requirements via the `**Requirement:**` metadata field, creating traceability from verification conditions back to specific behavioral rules. |
-| [Scenario](../scenario/README.md) | Scenarios validate ACs with concrete Given/When/Then flows. An AC is abstract; a scenario is its executable proof. |
+| [Feature](../feature/README.md) | Features carry a mandatory Acceptance Criteria section. This feature defines what goes inside that section. |
+| [Requirement](../requirement/README.md) | ACs bundle requirements via the `**Requirements:**` metadata field, creating traceability from composite verification conditions back to individual behavioral rules. |
+| [Scenario](../scenario/README.md) | Scenarios validate ACs (or REQs directly) with concrete Given/When/Then flows. An AC is abstract; a scenario is its executable proof. |
 | [Development Plan](../development-plan/README.md) | Plan step ACs may reference feature ACs. Plan-level ACs follow the same format but are frozen with the plan. |
-| [Testing Framework](../testing-framework/README.md) | Test scenarios reference ACs via table syntax. The test runner resolves and executes verification scripts. |
 | [Outstanding Questions](../outstanding-questions/README.md) | Missing ACs surface as outstanding questions, keeping them visible until addressed. |
 
 ## Acceptance Criteria
 
-Not defined yet.
+### AC: well-formed-ac
+
+**Requirements:** acceptance-criteria#req:inline-heading, acceptance-criteria#req:requirements-metadata, acceptance-criteria#req:condition-statement
+
+An AC uses the correct heading format, includes a Requirements metadata field linking to the REQs it bundles, and provides an abstract prose condition. An AC missing any of these elements fails validation.
+
+### AC: empty-section-handling
+
+**Requirements:** acceptance-criteria#req:section-required, acceptance-criteria#req:placeholder-when-empty, acceptance-criteria#req:outstanding-question-linkage
+
+The Acceptance Criteria section is always present. When it has no ACs, it reads "Not defined yet." and a corresponding outstanding question is raised. Once ACs are added, the placeholder and question are removed.
+
+### AC: ac-scenario-separation
+
+**Requirements:** acceptance-criteria#req:abstract-not-concrete, acceptance-criteria#req:scenario-validates-ac, acceptance-criteria#req:optional-grouping
+
+ACs remain abstract — they never contain Given/When/Then steps or test data. Scenarios reference ACs (or REQs directly) in their Validates field. ACs are only created when bundling adds value; standalone requirements are referenced directly.
 
 ## Outstanding Questions
 
-- Acceptance criteria not yet defined for this feature.
+- Should tooling enforce a minimum of two requirements per AC, or is the "optional grouping" convention sufficient without automated enforcement?
+- How should ACs handle cross-feature requirement bundles — e.g., an AC in feature A that references requirements from both feature A and feature B?
