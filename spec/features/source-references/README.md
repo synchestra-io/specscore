@@ -34,6 +34,14 @@ specscore:{reference}@{host}/{org}/{repo}
 - **`{reference}`** — either a type-prefixed shortcut or a repo-root-relative path (see [Resolution](#short-notation-resolution))
 - **`@{host}/{org}/{repo}`** — optional; omitted when referencing resources in the same project. `{host}` is the repository host (e.g., `github.com`, `bitbucket.org`, `gitlab.mycompany.com`)
 
+#### REQ: specscore-prefix
+
+Every source reference MUST begin with the `specscore:` prefix followed by a reference string. No other prefix is permitted for SpecScore annotations.
+
+#### REQ: cross-repo-suffix
+
+Cross-repo references MUST append `@{host}/{org}/{repo}` after the reference string. Same-repo references MUST NOT include the `@` suffix.
+
 ### Resource type shortcuts
 
 Known type prefixes provide shorthand for common paths. User-configurable types may be added later via project configuration.
@@ -43,6 +51,14 @@ Known type prefixes provide shorthand for common paths. User-configurable types 
 | `feature/` | `spec/features/{path}` | `feature/cli/task/claim` | `spec/features/cli/task/claim` |
 | `plan/` | `spec/plans/{path}` | `plan/v2-migration` | `spec/plans/v2-migration` |
 | `doc/` | `docs/{path}` | `doc/api/rest` | `docs/api/rest` |
+
+#### REQ: type-prefix-expansion
+
+When a reference begins with a known type prefix (`feature/`, `plan/`, `doc/`), the resolver MUST expand it to the corresponding repo path according to the type prefix table. The type prefix itself MUST NOT appear in the resolved path.
+
+#### REQ: type-prefix-set
+
+The set of recognized type prefixes MUST be `feature/`, `plan/`, and `doc/`. Any other first segment MUST NOT be treated as a type prefix.
 
 ### Short notation resolution
 
@@ -62,34 +78,9 @@ When resolving a `specscore:` reference, the following order is used:
 | `specscore:docs/api/rest` | Not a known prefix — path | `docs/api/rest` |
 | `specscore:README.md` | Not a known prefix — path | `README.md` |
 
-### Examples
+#### REQ: resolution-order
 
-What developers type (authoring — using type shortcuts or full paths):
-
-```go
-// specscore:feature/cli/task/claim
-// specscore:feature/agent-skills@github.com/acme/orchestrator
-// specscore:spec/features/cli/task/claim    (full path — equivalent to above)
-```
-
-What gets committed after lint/pre-commit expansion:
-
-```go
-// https://specscore.org/github.com/acme/myproject/spec/features/cli/task/claim
-// https://specscore.org/github.com/acme/orchestrator/spec/features/agent-skills
-```
-
-```python
-# https://specscore.org/github.com/acme/myproject/spec/features/model-selection
-```
-
-```yaml
-# https://specscore.org/github.com/acme/myproject/spec/features/project-definition
-```
-
-```sql
--- https://specscore.org/bitbucket.org/acme/data-pipeline/spec/features/etl-config
-```
+The resolver MUST first attempt type prefix expansion. If the first segment does not match a known type prefix, the resolver MUST treat the entire reference as a repo-root-relative path. If type prefix expansion produces a path that does not exist, the resolver MUST fall back to treating the full reference as a repo-root-relative path.
 
 ### URL mapping
 
@@ -97,10 +88,10 @@ Every short reference expands to a canonical URL on `specscore.org`. The URL use
 
 ```
 specscore:{reference}
-  → https://specscore.org/{host}/{org}/{repo}/{resolved_path}
+  -> https://specscore.org/{host}/{org}/{repo}/{resolved_path}
 
 specscore:{reference}@{host}/{org}/{repo}
-  → https://specscore.org/{host}/{org}/{repo}/{resolved_path}
+  -> https://specscore.org/{host}/{org}/{repo}/{resolved_path}
 ```
 
 For same-repo references, `{host}/{org}/{repo}` is resolved at expansion time from git remote or project configuration.
@@ -116,6 +107,10 @@ For same-repo references, `{host}/{org}/{repo}` is resolved at expansion time fr
 | `specscore:doc/api/rest@bitbucket.org/acme/docs` | `https://specscore.org/bitbucket.org/acme/docs/docs/api/rest` |
 | `specscore:README.md` | `https://specscore.org/github.com/acme/myproject/README.md` |
 
+#### REQ: url-structure
+
+Expanded URLs MUST follow the pattern `https://specscore.org/{host}/{org}/{repo}/{resolved_path}`. The resolved path MUST NOT contain the type prefix — only the expanded repo-root-relative path.
+
 ### Canonical form and auto-expansion
 
 The **expanded URL** is the canonical form stored in source files. The short `specscore:` notation is an **authoring convenience** — developers type the short form, and the linter (or pre-commit hook) auto-expands it to the full URL before commit.
@@ -128,7 +123,13 @@ The **expanded URL** is the canonical form stored in source files. The short `sp
 2. Pre-commit hook (or spec-aware linter with `--fix`) resolves the type prefix and expands it to `https://specscore.org/github.com/acme/myproject/spec/features/cli/task/claim`
 3. The expanded URL is what gets committed and stored in the repository
 
-The short form is never persisted in committed source — it exists only between authoring and the next lint/commit cycle.
+#### REQ: canonical-url-form
+
+The canonical form of a source reference MUST be the fully expanded `https://specscore.org/...` URL. The short `specscore:` notation MUST NOT be persisted in committed source files.
+
+#### REQ: auto-expansion
+
+The linter or pre-commit hook MUST auto-expand short `specscore:` notation to the canonical URL form before commit. After expansion, no `specscore:` prefixed references (other than within `https://specscore.org/` URLs) SHOULD remain in committed source.
 
 ### Detection strategy
 
@@ -178,6 +179,14 @@ Users with uncommon comment syntax can open an issue to expand the prefix set, o
 
 The linter auto-expands short notation to URLs, so committed code should only contain expanded URLs. The short form is accepted as input for authoring convenience.
 
+#### REQ: comment-prefix-required
+
+A source reference MUST be preceded on the same line by a recognized comment prefix (`//`, `#`, `--`, `*`, `/*`, `%`, `;`) followed by optional whitespace. References not preceded by a comment prefix MUST NOT be detected or processed.
+
+#### REQ: two-forms-recognized
+
+The detection strategy MUST recognize exactly two reference forms: short notation (`specscore:` prefix) and expanded URLs (`https://specscore.org/` prefix). Both forms MUST match only when preceded by a comment prefix.
+
 ### Host/org/repo resolution
 
 When a reference omits `@{host}/{org}/{repo}`, the current project's host, org, and repo must be inferred:
@@ -192,6 +201,14 @@ project:
   org: acme
   repo: myproject
 ```
+
+#### REQ: git-remote-default
+
+When no `@{host}/{org}/{repo}` suffix is present and no project config override exists, the resolver MUST infer host, org, and repo from the `origin` git remote URL.
+
+#### REQ: config-override
+
+When `specscore-project.yaml` declares `project.host`, `project.org`, and `project.repo`, those values MUST override git remote inference for same-repo reference expansion.
 
 ### Validation
 
@@ -210,6 +227,18 @@ References are validated strictly — a reference to a non-existent resource is 
 - **Linter** — a spec-aware linter scans source files, validates all references, reports errors with file:line locations
 - **Pre-commit hook** — runs the linter on staged files before commit
 - **PR check** — CI workflow that runs the linter on changed files
+
+#### REQ: nonexistent-is-error
+
+A reference that resolves to a path that does not exist in the target repository MUST produce an error. Non-existent references MUST NOT be treated as warnings.
+
+#### REQ: unresolvable-context-error
+
+When a same-repo reference cannot resolve host/org/repo (no git remote and no project config override), the linter MUST report an error. Expansion MUST NOT proceed with incomplete context.
+
+#### REQ: cross-repo-reachability
+
+When a cross-repo reference uses `@{host}/{org}/{repo}`, the validator SHOULD verify that the target repository is accessible. This check MAY be deferred to CI.
 
 ### Integration with spec-aware tools
 
@@ -235,8 +264,39 @@ This enables bidirectional traceability: spec-to-spec via dependency sections, a
 
 ## Acceptance Criteria
 
-Not defined yet.
+### AC: notation-and-resolution
+
+**Requirements:** source-references#req:specscore-prefix, source-references#req:type-prefix-expansion, source-references#req:resolution-order
+
+A `specscore:` reference with a known type prefix is expanded to the correct repo path. A reference without a known type prefix is treated as a repo-root-relative path. Both forms resolve to the same canonical location.
+
+### AC: canonical-expansion
+
+**Requirements:** source-references#req:canonical-url-form, source-references#req:auto-expansion, source-references#req:url-structure
+
+Short `specscore:` notation is auto-expanded to a fully qualified `https://specscore.org/...` URL before commit. The expanded URL contains the resolved repo-root-relative path, not the type prefix. No short-form references remain in committed source.
+
+### AC: detection-accuracy
+
+**Requirements:** source-references#req:comment-prefix-required, source-references#req:two-forms-recognized
+
+References preceded by a recognized comment prefix are detected. References without a comment prefix (bare text, string literals) are ignored. Both short notation and expanded URL forms are recognized.
+
+### AC: strict-validation
+
+**Requirements:** source-references#req:nonexistent-is-error, source-references#req:unresolvable-context-error, source-references#req:cross-repo-reachability
+
+References to non-existent resources produce errors, not warnings. Missing host/org/repo context produces an error. Cross-repo reachability is optionally checked.
+
+### AC: context-resolution
+
+**Requirements:** source-references#req:git-remote-default, source-references#req:config-override, source-references#req:cross-repo-suffix
+
+Same-repo references resolve host/org/repo from git remote by default. Project config overrides git remote inference. Cross-repo references use the explicit `@{host}/{org}/{repo}` suffix.
 
 ## Outstanding Questions
 
-None at this time.
+- Should the set of recognized comment prefixes be extensible via project configuration, or is the built-in set sufficient?
+- How should the linter handle references in files with no recognized comment syntax (e.g., plain text files)?
+- Should cross-repo reachability checks be mandatory in CI, or always optional?
+- What is the behavior when a type prefix expansion fails but the literal path (with the type prefix) exists as a repo-root-relative path?
