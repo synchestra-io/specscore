@@ -1,9 +1,25 @@
-import { describe, it } from 'node:test';
+import { describe, it, before } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { renderMermaidBlocks } from './render-mermaid.js';
 
+const execFileAsync = promisify(execFile);
+
+// Check if mmdc/Chrome can actually run
+let mmdcAvailable = false;
+before(async () => {
+  const mmdc = new URL('../node_modules/.bin/mmdc', import.meta.url).pathname;
+  try {
+    await execFileAsync(mmdc, ['--version']);
+    mmdcAvailable = true;
+  } catch {
+    mmdcAvailable = false;
+  }
+});
+
 describe('renderMermaidBlocks', () => {
-  it('replaces mermaid code blocks with SVG', async () => {
+  it('replaces mermaid code blocks with SVG', { skip: !mmdcAvailable && 'mmdc/Chrome not available' }, async () => {
     const md = [
       'Some text.',
       '',
@@ -30,7 +46,7 @@ describe('renderMermaidBlocks', () => {
     assert.equal(result, md);
   });
 
-  it('handles multiple mermaid blocks', async () => {
+  it('handles multiple mermaid blocks', { skip: !mmdcAvailable && 'mmdc/Chrome not available' }, async () => {
     const md = [
       '```mermaid',
       'graph LR',

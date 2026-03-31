@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "node build.js",
-    "clean": "rm -rf ../../public"
+    "clean": "rm -rf ../../public",
+    "test": "node --test lib/**/*.test.js"
   },
   "dependencies": {
     "markdown-it": "^14.0.0",
