@@ -1,0 +1,65 @@
+name: Site Generator CI
+
+on:
+  push:
+    paths:
+      - '.github/workflows/site-ci.yml'
+      - 'tools/site-generator/**'
+      - 'spec/**'
+  pull_request:
+    paths:
+      - '.github/workflows/site-ci.yml'
+      - 'tools/site-generator/**'
+      - 'spec/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/site-generator/package-lock.json
+
+      - name: Install dependencies
+        working-directory: tools/site-generator
+        run: npm ci
+
+      - name: Install Chrome with system deps
+        run: npx puppeteer browsers install chrome --install-deps
+
+      - name: Run tests
+        working-directory: tools/site-generator
+        run: npm test
+
+      - name: Build site
+        working-directory: tools/site-generator
+        run: npm run build
+
+      - name: Verify no mermaid code blocks in HTML
+        run: |
+          if grep -r '```mermaid' public/*.html; then
+            echo "ERROR: Found unrendered mermaid blocks in HTML output"
+            exit 1
+          fi
+
+      - name: Verify mermaid SVGs rendered
+        run: |
+          for f in public/feature-specification.html public/development-plan-specification.html; do
+            if ! grep -q '<svg' "$f"; then
+              echo "ERROR: No SVG found in $f"
+              exit 1
+            fi
+          done
