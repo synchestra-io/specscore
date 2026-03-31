@@ -44,8 +44,8 @@ body {
 
 /* === HEADER === */
 .site-header {
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  background: #4f46e5;
+  border-bottom: 1px solid #4338ca;
   height: 56px;
   padding: 0 2rem;
   display: flex;
@@ -60,9 +60,35 @@ body {
   font-family: 'Source Serif 4', Georgia, serif;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--text);
+  color: #ffffff;
   text-decoration: none;
   letter-spacing: -0.01em;
+}
+
+.wordmark-clef {
+  display: inline-block;
+  position: relative;
+  font-size: 1.75rem;
+  line-height: 1;
+  vertical-align: middle;
+  padding: 0 3px;
+}
+
+.wordmark-clef::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 3px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.22;
+  box-shadow:
+    0 5px 0 currentColor,
+    0 10px 0 currentColor,
+    0 15px 0 currentColor,
+    0 20px 0 currentColor;
+  pointer-events: none;
 }
 
 .header-right {
@@ -73,21 +99,26 @@ body {
 
 .header-right a {
   font-size: 0.875rem;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
 }
 
-.header-right a:hover { color: var(--accent); }
+.header-right a:hover { color: #ffffff; }
 
 #theme-toggle {
   background: none;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 6px;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 1rem;
   line-height: 1;
+}
+
+#theme-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #ffffff;
 }
 
 .theme-icon-dark { display: none; }
@@ -149,6 +180,46 @@ body {
   background: var(--accent-light);
   color: var(--accent);
   font-weight: 600;
+}
+
+/* === COLLAPSIBLE SIDEBAR GROUP === */
+.sidebar-summary {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  padding: 0 0.6rem;
+}
+
+.sidebar-expand {
+  display: block;
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.sidebar-expand:hover {
+  text-decoration: underline;
+}
+
+.sidebar-collapsible-list {
+  display: none;
+}
+
+.sidebar-collapsible.is-expanded .sidebar-summary {
+  display: none;
+}
+
+.sidebar-collapsible.is-expanded .sidebar-expand {
+  display: none;
+}
+
+.sidebar-collapsible.is-expanded .sidebar-collapsible-list {
+  display: block;
 }
 
 /* === MAIN CONTENT === */
