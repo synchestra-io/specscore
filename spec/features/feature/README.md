@@ -4,13 +4,13 @@
 
 ## Summary
 
-A feature is the atomic unit of product specification in SpecScore. It describes a capability the product should have — what it does, why it matters, and how it behaves. Features live in the spec repository under `spec/features/` as directories with a mandatory `README.md`. They can nest (sub-features), accept change requests via [proposals](../proposals/README.md), trigger [development plans](../development-plan/README.md), and ultimately drive execution through task management tools.
+A feature is the atomic unit of product specification in SpecScore. It describes a capability the product should have — what it does, why it matters, and how it behaves. Features live in the spec repository under `spec/features/` as directories with a mandatory `README.md`. They can nest (sub-features), accept change requests via [proposals](../proposals/README.md), trigger [development plans](../development-plan/README.md), and drive execution through task management tools.
 
 This specification defines the structure, metadata, lifecycle, and conventions that every feature must follow.
 
 ## Problem
 
-Projects that use structured specifications often have implicit conventions — scattered across contributor guides, root README files, and learned by example from existing features. There is no single document that answers:
+Projects that use structured specifications often have implicit conventions — scattered across contributor guides, root README files, and learned by example. There is no single document that answers:
 
 - What must a feature directory contain?
 - What metadata does a feature carry?
@@ -33,7 +33,7 @@ graph LR
     B -->|generates| C
 ```
 
-Features are **living documents**. Unlike development plans, which are frozen once approved, a feature spec evolves as proposals are accepted and incorporated. The feature README always reflects the current desired behavior of the product — not a historical snapshot.
+Features are **living documents**. Unlike development plans, which are frozen once approved, a feature spec evolves as proposals are accepted and incorporated. The feature README always reflects the current desired behavior — not a historical snapshot.
 
 ## Behavior
 
@@ -43,37 +43,49 @@ Features live under `spec/features/` in the spec repository:
 
 ```
 spec/features/
-  README.md                     ← feature index
+  README.md                     <- feature index
   {feature-slug}/
-    README.md                   ← feature specification
-    _acs/                       ← acceptance criteria (optional)
+    README.md                   <- feature specification
+    _acs/                       <- acceptance criteria (optional)
       {ac-slug}.md
-    _tests/                     ← feature-scoped test scenarios (optional)
+    _tests/                     <- feature-scoped test scenarios (optional)
       {scenario-slug}.md
       flows/
-    proposals/                  ← change requests (optional)
+    proposals/                  <- change requests (optional)
       README.md
       {proposal-slug}/
         README.md
-    {sub-feature-slug}/         ← sub-feature (optional)
+    {sub-feature-slug}/         <- sub-feature (optional)
       README.md
 ```
 
-`{feature-slug}` is a URL/path-safe identifier using lowercase letters, numbers, and hyphens (e.g., `claim-and-push`, `model-selection`, `ui`).
+### REQ: directory-readme
+
+Every feature directory MUST contain a `README.md` file. This file is the feature specification — the single source of truth for what the feature does and how it behaves.
+
+### REQ: slug-format
+
+Feature slugs MUST be lowercase, hyphen-separated, and URL-safe. Underscores, spaces, and special characters are not permitted.
+
+Examples of valid slugs: `claim-and-push`, `model-selection`, `ui`, `source-references`.
 
 ### Reserved `_` prefix convention
 
-Directories prefixed with `_` are reserved for SpecScore tooling and extensions and are **not** sub-features. They are excluded from the feature index and Contents table.
+Directories prefixed with `_` are reserved for SpecScore tooling and extensions:
 
-| Directory | Purpose | Notes |
+| Directory | Purpose | Spec |
 |---|---|---|
-| `_acs/` | Acceptance criteria | See [Acceptance Criteria](../acceptance-criteria/README.md) |
+| `_acs/` | Acceptance criteria | [Acceptance Criteria](../acceptance-criteria/README.md) |
 | `_args/` | Argument documentation | Extension point for CLI tooling |
-| `_tests/` | Feature-scoped test scenarios | See [Scenario](../scenario/README.md) |
+| `_tests/` | Feature-scoped test scenarios | [Scenario](../scenario/README.md) |
+
+### REQ: underscore-reserved
+
+Directories prefixed with `_` are NOT sub-features. They MUST be excluded from the feature index and Contents table.
 
 ### Feature README structure
 
-Every feature README follows this structure:
+Every feature README follows this template:
 
 ```markdown
 # Feature: {Title}
@@ -121,7 +133,7 @@ convention. See [Requirement](../requirement/README.md).
 
 Not defined yet.
 
-(Or: a table of ACs when defined. See [Acceptance Criteria](../acceptance-criteria/README.md).)
+(Or: a table of ACs when defined.)
 
 ## Outstanding Questions
 
@@ -131,40 +143,65 @@ Not defined yet.
 (Or: "None at this time." — the section is never omitted.)
 ```
 
-### Required sections
+### REQ: title-format
 
-| Section                 | Required | Notes                                                             |
-|-------------------------|----------|-------------------------------------------------------------------|
-| Title (`# Feature: X`) | Yes      | Always prefixed with `Feature:`                                   |
-| Status                  | Yes      | Immediately after the title                                       |
-| Summary                 | Yes      | 1-3 sentences                                                     |
-| Contents                | Conditional | Required when the feature has child directories                |
-| Problem                 | Yes      | Why the feature exists                                            |
-| Behavior                | Yes      | How the feature works                                             |
-| Proposals               | Conditional | Present when the feature has a `proposals/` directory. See [Proposals](../proposals/README.md). |
-| Plans                   | Conditional | Present when a [development plan](../development-plan/README.md) touches this feature. |
-| Acceptance Criteria     | Yes      | Always present. States "Not defined yet." if empty; must also raise an Outstanding Question. See [Acceptance Criteria](../acceptance-criteria/README.md). |
-| Outstanding Questions   | Yes      | Always present. Explicitly states "None at this time." if empty.  |
+Every feature README title MUST use the `# Feature: {Title}` format. The `Feature:` prefix is required.
+
+### REQ: status-field
+
+A `**Status:**` field MUST appear immediately after the title. The value MUST be one of: `Conceptual`, `In Progress`, `Stable`, `Deprecated`.
+
+### REQ: required-sections
+
+Every feature README MUST include these sections:
+
+| Section                 | Required    | Notes                                                             |
+|-------------------------|-------------|-------------------------------------------------------------------|
+| Title (`# Feature: X`) | Yes         | Always prefixed with `Feature:`                                   |
+| Status                  | Yes         | Immediately after the title                                       |
+| Summary                 | Yes         | 1-3 sentences                                                     |
+| Contents                | Conditional | Required when the feature has child directories                   |
+| Problem                 | Yes         | Why the feature exists                                            |
+| Behavior                | Yes         | How the feature works                                             |
+| Proposals               | Conditional | Present when the feature has a `proposals/` directory             |
+| Plans                   | Conditional | Present when a [development plan](../development-plan/README.md) touches this feature |
+| Acceptance Criteria     | Yes         | Always present. See [REQ: ac-section](#req-ac-section).           |
+| Outstanding Questions   | Yes         | Always present. See [REQ: outstanding-questions](#req-outstanding-questions). |
 
 ### Optional sections
 
-Features may include additional sections as needed. Common patterns seen across existing features:
+Features MAY include additional sections as needed:
 
-| Section                       | When to use                                              |
-|-------------------------------|----------------------------------------------------------|
-| Dependencies                  | When the feature depends on other features. A bullet list of feature IDs. Consumed by spec tooling. Omit if the feature is independent. |
-| Design Principles             | When the feature has guiding architectural constraints    |
-| Interaction with Other Features | When the feature has notable dependencies or touchpoints |
-| Configuration                 | When the feature introduces project settings             |
+| Section                         | When to use                                              |
+|---------------------------------|----------------------------------------------------------|
+| Dependencies                    | When the feature depends on other features. A bullet list of feature IDs. Consumed by spec tooling. Omit if independent. |
+| Design Principles               | When the feature has guiding architectural constraints    |
+| Interaction with Other Features | When the feature has notable dependencies or touchpoints  |
+| Configuration                   | When the feature introduces project settings              |
+
+### REQ: outstanding-questions
+
+The Outstanding Questions section MUST always be present in every feature README. If there are no open questions, it MUST explicitly state "None at this time." The section MUST NOT be omitted.
+
+### REQ: ac-section
+
+The Acceptance Criteria section MUST always be present in every feature README. When no ACs are defined, it MUST state "Not defined yet." and a corresponding Outstanding Question ("Acceptance criteria not yet defined for this feature.") MUST be raised.
+
+### REQ: contents-when-children
+
+When a feature has child directories (sub-features), its README MUST include a Contents section with:
+
+1. An index table listing each child directory with a description
+2. A 1-7 sentence summary for each child, giving readers context without requiring them to open each child
 
 ### Feature statuses
 
-| Status        | Description                                                                  |
-|---------------|------------------------------------------------------------------------------|
-| `Conceptual`  | Feature is described at a high level; design decisions remain open            |
-| `In Progress` | Feature is actively being specified and/or implemented                        |
-| `Stable`      | Feature is fully specified and implemented; changes go through proposals      |
-| `Deprecated`  | Feature is being phased out; a successor or removal plan exists               |
+| Status        | Description                                                                   |
+|---------------|-------------------------------------------------------------------------------|
+| `Conceptual`  | Feature is described at a high level; design decisions remain open             |
+| `In Progress` | Feature is actively being specified and/or implemented                         |
+| `Stable`      | Feature is fully specified and implemented; changes go through proposals       |
+| `Deprecated`  | Feature is being phased out; a successor or removal plan exists                |
 
 ```mermaid
 graph LR
@@ -186,48 +223,41 @@ Features can contain sub-features as child directories. Each sub-feature is a fu
 
 ```
 spec/features/ui/
-  README.md                  ← parent feature
+  README.md                  <- parent feature
   hub/
-    README.md                ← sub-feature
+    README.md                <- sub-feature
   tui/
-    README.md                ← sub-feature
+    README.md                <- sub-feature
 ```
 
-When a feature has children, its README must include a **Contents** section with:
-1. An index table listing each child directory with a description
-2. A brief summary (1-7 sentences) for each child, giving readers high-level context without requiring them to open each child
+### REQ: path-identification
 
-This is enforced by the project conventions.
+Features MUST be identified by their path relative to `spec/features/`. This path is the canonical identifier used in development plans, source references, and spec tooling.
 
-### Feature identification
-
-Features are identified by their path relative to `spec/features/`:
-
-| Feature path        | Identifier          |
-|---------------------|---------------------|
-| `spec/features/authentication/` | `authentication`               |
-| `spec/features/billing/payments/` | `billing/payments` |
-| `spec/features/user-management/` | `user-management` |
-
-This path-based identification is used in development plans and spec tooling.
+| Feature path                      | Identifier          |
+|-----------------------------------|---------------------|
+| `spec/features/authentication/`   | `authentication`    |
+| `spec/features/billing/payments/` | `billing/payments`  |
+| `spec/features/user-management/`  | `user-management`   |
 
 ### Feature index
 
-The feature index (`spec/features/README.md`) lists all features. It contains:
+The feature index (`spec/features/README.md`) is the entry point for understanding the product's planned capabilities. It contains:
 
 1. An **Index** table with columns: Feature, Status, Description
 2. A **Feature Summaries** section with a paragraph per feature
 3. A **Feature dependency graph** showing relationships
 4. An **Outstanding Questions** section
-5. A list of features with outstanding questions and their counts
 
-The index is the entry point for understanding the product's planned capabilities.
+### REQ: index-completeness
+
+The feature index (`spec/features/README.md`) MUST list every top-level feature. An unlisted feature is a validation error.
 
 ## Relationship to Other Artifacts
 
 ### Features and proposals
 
-[Proposals](../proposals/README.md) are change requests attached to a feature. They live under `{feature}/proposals/` and follow the proposal lifecycle (`draft → submitted → approved → implemented`). A proposal is non-normative until its content is incorporated into the feature's main README.
+[Proposals](../proposals/README.md) are change requests attached to a feature. They live under `{feature}/proposals/` and follow the proposal lifecycle (`draft -> submitted -> approved -> implemented`). A proposal is non-normative until its content is incorporated into the feature's main README.
 
 ```mermaid
 graph LR
@@ -239,7 +269,7 @@ graph LR
 
 ### Features and development plans
 
-[Development plans](../development-plan/README.md) bridge features to execution. A plan is triggered by either a new feature spec or an approved proposal (change request). Plans live separately in `spec/plans/` but reference the features they affect.
+[Development plans](../development-plan/README.md) bridge features to execution. A plan is triggered by either a new feature spec or an approved proposal. Plans live separately in `spec/plans/` but reference the features they affect.
 
 Every plan lists its affected features in its header. Each affected feature's README includes a **Plans** section back-referencing active plans.
 
@@ -263,19 +293,9 @@ Features do not directly reference execution units. The development plan bridges
 
 Every feature maintains an [Outstanding Questions](../outstanding-questions/README.md) section. Questions follow the standard question lifecycle defined by the Outstanding Questions feature.
 
-## Structural Rules
-
-These rules are enforced by schema validation and pre-commit hooks:
-
-1. **Every feature directory must contain a `README.md`.**
-2. **Every feature README must have an Outstanding Questions section.** If there are none, it explicitly states "None at this time."
-3. **Every feature README with child directories must have a Contents section** with an index table and brief summaries.
-4. **Feature slugs must be lowercase, hyphen-separated, and URL-safe.** No underscores, spaces, or special characters.
-5. **The feature index (`spec/features/README.md`) must list every top-level feature.** Unlisted features are a validation error.
-
 ## Tooling Support
 
-SpecScore features can be queried programmatically by spec-aware tools. Common operations include:
+SpecScore features can be queried programmatically by spec-aware tools:
 
 - **Feature info** — Retrieve structured metadata (status, parent, children, dependency counts) plus section table-of-contents with line ranges.
 - **Feature list** — Flat listing of all feature IDs.
@@ -299,6 +319,22 @@ Feature behavior is configured through the project definition file. See [Project
 | [Outstanding Questions](../outstanding-questions/README.md) | Every feature maintains an Outstanding Questions section with the standard question lifecycle. |
 
 For tool integrations (CLI, UI, API, LSP), see [Synchestra](https://synchestra.io).
+
+## Acceptance Criteria
+
+| AC | Requirement | Summary |
+|---|---|---|
+| [directory-readme](_acs/directory-readme.md) | feature#req:directory-readme | Feature directories contain a README.md |
+| [slug-format](_acs/slug-format.md) | feature#req:slug-format | Feature slugs are lowercase, hyphen-separated, URL-safe |
+| [underscore-reserved](_acs/underscore-reserved.md) | feature#req:underscore-reserved | Underscore-prefixed directories excluded from feature index |
+| [title-format](_acs/title-format.md) | feature#req:title-format | Feature titles use the `Feature:` prefix |
+| [status-field](_acs/status-field.md) | feature#req:status-field | Status field is present with a valid value |
+| [required-sections](_acs/required-sections.md) | feature#req:required-sections | All required sections are present |
+| [outstanding-questions](_acs/outstanding-questions.md) | feature#req:outstanding-questions | Outstanding Questions has correct empty-state text |
+| [ac-section](_acs/ac-section.md) | feature#req:ac-section | AC section has correct empty-state behavior |
+| [contents-when-children](_acs/contents-when-children.md) | feature#req:contents-when-children | Features with children include a Contents section |
+| [path-identification](_acs/path-identification.md) | feature#req:path-identification | Features use path-based identification |
+| [index-completeness](_acs/index-completeness.md) | feature#req:index-completeness | Feature index lists all top-level features |
 
 ## Outstanding Questions
 
