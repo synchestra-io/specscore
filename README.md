@@ -101,7 +101,6 @@ You own your specs. Use them anywhere.
 - [SpecScore Features](spec/features/README.md)
 - [Rehearse](https://github.com/synchestra-io/rehearse) — Test your specs
 - [Synchestra](https://synchestra.io) — Orchestrate your specs
-- [Synchestra Marketing](https://github.com/synchestra-io/synchestra-marketing) — Ecosystem positioning
 
 ## License
 
