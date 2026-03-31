@@ -4,17 +4,17 @@
 
 ## Summary
 
-A scenario is a concrete example of system behavior written in Given/When/Then format. Scenarios live in a feature's `_tests/` directory as standalone markdown files, each describing a specific interaction flow with exact inputs and expected outputs. They are the executable proof layer — validating that acceptance criteria hold under real conditions. Scenarios are optionally linked to the ACs they validate and are executable by the [Rehearse test runner](https://github.com/synchestra-io/rehearse).
+A scenario is a concrete example of system behavior written in Given/When/Then format. Scenarios live in a feature's `_tests/` directory as standalone markdown files, each describing a specific interaction flow with exact inputs and expected outputs. They are the executable proof layer — validating that requirements and acceptance criteria hold under real conditions. Scenarios are linked to the REQs or ACs they validate and are executable by the [Rehearse test runner](https://github.com/synchestra-io/rehearse).
 
 ## Problem
 
-SpecScore's acceptance criteria define *what must be true* — abstract conditions like "creating a todo without a title is rejected." But ACs deliberately omit concrete inputs, flows, and edge-case sequences. This creates a gap:
+SpecScore's requirements define *what rules must hold* — formal obligations like "A todo MUST have a non-empty title." But requirements deliberately omit concrete inputs, flows, and edge-case sequences. This creates a gap:
 
 - **Developers** need concrete examples to understand expected behavior
 - **Test runners** need exact inputs and expected outputs to execute
 - **Reviewers** need specific flows to verify during acceptance
 
-Without a formal scenario concept, concrete examples end up mixed into ACs (blurring the abstract/concrete distinction) or scattered in ad-hoc test files with no link back to the specification.
+Without a formal scenario concept, concrete examples end up mixed into requirements (blurring the abstract/concrete distinction) or scattered in ad-hoc test files with no link back to the specification.
 
 ## Design Philosophy
 
@@ -58,12 +58,22 @@ spec/features/{feature-slug}/
 
 The `_tests/` directory follows the reserved `_` prefix convention — it is not a sub-feature and is excluded from the feature index.
 
+#### REQ: tests-dir-only
+
+Scenarios MUST live in `_tests/` directories only. A scenario file is NOT valid elsewhere in the feature tree.
+
+#### REQ: tests-readme
+
+Every `_tests/` directory MUST contain a `README.md` with a scenario index table listing all scenarios in that directory.
+
 ### Scenario file format
+
+Every scenario file follows this structure:
 
 ```markdown
 # Scenario: {Title}
 
-**Validates:** {feature-slug}/{ac-slug}, {feature-slug}/{ac-slug-2}
+**Validates:** [feature-path#req:slug](../README.md#req-slug)
 
 ## Steps
 
@@ -81,29 +91,49 @@ AND {additional outcome}
 \`\`\`
 ```
 
-### Required sections
+#### REQ: title-prefix
 
-| Section | Required | Notes |
-|---|---|---|
-| Title (`# Scenario: X`) | Yes | Always prefixed with `Scenario:` |
-| Validates | No | Links to ACs. Omit for exploratory or cross-feature scenarios. |
-| Steps | Yes | Given/When/Then format |
-| Rehearse | No | Executable script block for test automation |
+Every scenario file MUST begin with a heading using the `# Scenario: {Title}` format. The `Scenario:` prefix is required.
+
+#### REQ: steps-required
+
+Every scenario file MUST include a `## Steps` section containing Given/When/Then steps.
+
+### Scenario filename conventions
+
+#### REQ: filename-slug
+
+Scenario filenames MUST be lowercase, hyphen-separated, URL-safe slugs with a `.md` extension. Underscores, spaces, and special characters are NOT permitted.
+
+Examples of valid filenames: `add-todo-without-title.md`, `overdue-filter.md`, `empty-list-display.md`.
 
 ### Validates metadata
 
-The `**Validates:**` field links a scenario to one or more acceptance criteria:
+The `**Validates:**` field links a scenario to one or more requirements or acceptance criteria:
 
 ```markdown
-**Validates:** todo-item/manage/added-to-list, todo-item/manage/title-required
+**Validates:** [scenario#req:title-prefix](../README.md#req-title-prefix)
 ```
 
-The reference format is `{feature-path}/{ac-slug}`, where `{ac-slug}` matches the filename (without `.md`) in the feature's `_acs/` directory.
+Or referencing multiple targets:
 
-**Rules:**
-- The link is **many-to-many**: a scenario can validate multiple ACs, and an AC can be validated by multiple scenarios
-- The field is **optional**: scenarios without AC links are valid — they serve as exploratory behavior examples, integration flows, or cross-feature demonstrations
-- When present, tooling can verify that referenced ACs exist
+```markdown
+**Validates:** [scenario#req:title-prefix](../README.md#req-title-prefix), [scenario#req:steps-required](../README.md#req-steps-required)
+```
+
+The reference format uses the standard requirement identifier `{feature-path}#req:{slug}` or `{feature-path}#ac:{slug}`, wrapped in a markdown link pointing to the anchor in the feature README.
+
+#### REQ: validates-format
+
+When present, the `**Validates:**` field MUST use the format `[{feature-path}#req:{slug}](../README.md#req-{slug})` for requirements or `[{feature-path}#ac:{slug}](../README.md#ac-{slug})` for acceptance criteria. Each reference MUST be a valid markdown link.
+
+#### REQ: validates-optional
+
+The `**Validates:**` field is optional. Scenarios without a validates link are valid — they serve as exploratory behavior examples, integration flows, or cross-feature demonstrations.
+
+#### REQ: validates-many-to-many
+
+The validates relationship is many-to-many: a scenario MAY validate multiple REQs or ACs, and a single REQ or AC MAY be validated by multiple scenarios.
 
 ### Given/When/Then format
 
@@ -116,25 +146,17 @@ Scenarios use the Gherkin-inspired Given/When/Then structure:
 | THEN | Expected outcome | One or more (use AND for additional) |
 | AND | Continues the preceding keyword | Zero or more |
 
-Keywords are uppercase by convention for visual clarity.
+#### REQ: keywords-uppercase
 
-**Example:**
+Step keywords (GIVEN, WHEN, THEN, AND) MUST be uppercase.
 
-```markdown
-## Steps
+#### REQ: single-when
 
-GIVEN a todo list with two active items
-AND one item has due date 2026-01-01
-AND today is 2026-04-01
-WHEN the user runs `todo list --overdue`
-THEN the output contains exactly one item
-AND the item is the one with due date 2026-01-01
-AND the output does not contain the item without a due date
-```
+Each scenario MUST contain exactly one WHEN step. Multiple actions MUST be split into separate scenarios.
 
 ### Rehearse script block
 
-Scenarios may include a fenced `rehearse` code block containing an executable script:
+Scenarios MAY include a fenced `rehearse` code block containing an executable script:
 
 ````markdown
 ## Rehearse
@@ -148,11 +170,17 @@ assert_contains "$output" "[active]"
 ```
 ````
 
-**Rules:**
-- The script language is determined by the shebang line (`#!/bin/bash`, `#!/usr/bin/env python3`, etc.)
-- Scripts use assertion helpers provided by the Rehearse framework (`assert_contains`, `assert_not_contains`, `assert_eq`, `assert_exit_code`)
-- Scripts are executed by the [Rehearse test runner](https://github.com/synchestra-io/rehearse) — SpecScore defines the format, Rehearse executes it
-- The `rehearse` fence tag distinguishes executable blocks from regular code examples
+#### REQ: rehearse-fence-tag
+
+When a scenario includes an executable script, the fenced code block MUST use the `rehearse` fence tag to distinguish it from regular code examples.
+
+#### REQ: rehearse-shebang
+
+Rehearse script blocks MUST begin with a shebang line (e.g., `#!/bin/bash`, `#!/usr/bin/env python3`) to declare the script language.
+
+#### REQ: rehearse-section
+
+The rehearse script block MUST appear under a `## Rehearse` section heading. It MUST NOT appear inline within the Steps section.
 
 ### Shared flows
 
@@ -173,28 +201,25 @@ WHEN the user runs `todo complete 1`
 THEN ...
 ```
 
+#### REQ: flow-location
+
+Shared flow files MUST live in the `_tests/flows/` subdirectory. They MUST NOT be placed directly in `_tests/`.
+
+#### REQ: flow-format
+
+Flow files MUST follow the same Given/When/Then format as scenario files. They are reusable step sequences, not free-form prose.
+
 ### Cross-feature scenarios
 
-Scenarios that exercise multiple features are placed in the `_tests/` directory of the feature that is the primary subject. The `**Validates:**` field can reference ACs from any feature:
+Scenarios that exercise multiple features are placed in the `_tests/` directory of the feature that is the primary subject. The `**Validates:**` field can reference REQs or ACs from any feature.
 
-```markdown
-**Validates:** due-dates/overdue-detection, todo-list/filter-by-status
+#### REQ: cross-feature-placement
 
-## Steps
+Cross-feature scenarios MUST be placed in the `_tests/` directory of the primary feature under test. They MUST NOT be duplicated across multiple features.
 
-GIVEN a todo with due date in the past
-AND the todo is active
-WHEN the user runs `todo list --overdue`
-THEN the overdue todo appears in the output
-```
+#### REQ: cross-feature-validates
 
-## Structural Rules
-
-1. **Scenarios live in `_tests/` directories only.** They are not valid elsewhere in the feature tree.
-2. **Scenario filenames are slugs.** Lowercase, hyphen-separated, URL-safe, with `.md` extension.
-3. **Scenario titles use the `# Scenario: X` format.** The `Scenario:` prefix is required.
-4. **Steps section uses Given/When/Then keywords.** Keywords are uppercase.
-5. **Each scenario has exactly one WHEN.** Multiple actions require multiple scenarios.
+Cross-feature scenarios SHOULD reference REQs or ACs from all exercised features in the `**Validates:**` field, enabling traceability across feature boundaries.
 
 ## Interaction with Other Features
 
@@ -202,15 +227,36 @@ THEN the overdue todo appears in the output
 |---|---|
 | [Feature](../feature/README.md) | Scenarios live in a feature's `_tests/` directory, following the reserved `_` prefix convention. |
 | [Acceptance Criteria](../acceptance-criteria/README.md) | Scenarios validate ACs via the `**Validates:**` metadata field. An AC is abstract; a scenario is its concrete proof. |
-| [Requirement](../requirement/README.md) | Scenarios indirectly verify requirements through the AC layer: Scenario -> AC -> Requirement. |
+| [Requirement](../requirement/README.md) | Scenarios validate requirements directly via `**Validates:**` or indirectly through bundled ACs. |
 
 ## Acceptance Criteria
 
-Not defined yet.
+### AC: valid-scenario-file
+
+**Requirements:** scenario#req:title-prefix, scenario#req:steps-required, scenario#req:filename-slug
+
+A scenario file has a correctly formatted title (`# Scenario: {Title}`), contains a Steps section with Given/When/Then steps, and uses a valid slug filename.
+
+### AC: valid-validates-metadata
+
+**Requirements:** scenario#req:validates-format, scenario#req:validates-optional, scenario#req:validates-many-to-many
+
+When a validates field is present, each reference uses the correct link format and points to a valid REQ or AC. Scenarios without validates fields are accepted. Multiple references in a single field and multiple scenarios referencing the same REQ are both valid.
+
+### AC: correct-step-format
+
+**Requirements:** scenario#req:keywords-uppercase, scenario#req:single-when
+
+Step keywords are uppercase. Each scenario has exactly one WHEN step. Scenarios with lowercase keywords or multiple WHEN steps are rejected by validation.
+
+### AC: valid-rehearse-block
+
+**Requirements:** scenario#req:rehearse-fence-tag, scenario#req:rehearse-shebang, scenario#req:rehearse-section
+
+When a rehearse block is present, it uses the `rehearse` fence tag, starts with a shebang line, and appears under a `## Rehearse` section heading.
 
 ## Outstanding Questions
 
-- Acceptance criteria not yet defined for this feature.
 - Should scenarios support parameterized/templated steps (e.g., run the same scenario with different inputs)? Or should each input combination be a separate scenario file?
 - Should the `flows/` convention support nesting (flows referencing other flows), or is one level sufficient?
 - How should scenario failures be reported — per-step or pass/fail for the whole scenario?
