@@ -162,7 +162,7 @@ main {
 /* === EYEBROW === */
 .page-eyebrow {
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -268,7 +268,7 @@ table {
 
 th {
   background: var(--bg-secondary);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
