@@ -20,12 +20,27 @@ describe('loadConfig', () => {
     );
   });
 
-  it('builds sorted nav items', async () => {
+  it('builds sidebar groups from navGroup fields', async () => {
     const config = await loadConfig(new URL('../site-config.json', import.meta.url));
-    assert.ok(config.navItems.length > 0);
-    // nav items should be sorted by navOrder
-    for (let i = 1; i < config.navItems.length; i++) {
-      assert.ok(config.navItems[i].navOrder >= config.navItems[i - 1].navOrder);
+    assert.ok(Array.isArray(config.sidebarGroups));
+    assert.ok(config.sidebarGroups.length > 0);
+    for (const group of config.sidebarGroups) {
+      assert.ok(typeof group.label === 'string');
+      assert.ok(Array.isArray(group.items));
+      assert.ok(group.items.length > 0);
     }
+  });
+
+  it('sidebar groups contain Feature Specs entries', async () => {
+    const config = await loadConfig(new URL('../site-config.json', import.meta.url));
+    const featureGroup = config.sidebarGroups.find((g) => g.label === 'Feature Specs');
+    assert.ok(featureGroup, 'Feature Specs group should exist');
+    assert.ok(featureGroup.items.some((p) => p.slug === 'feature-specification'));
+  });
+
+  it('excludes nav:false pages from sidebar groups', async () => {
+    const config = await loadConfig(new URL('../site-config.json', import.meta.url));
+    const allItems = config.sidebarGroups.flatMap((g) => g.items);
+    assert.ok(!allItems.some((p) => p.slug === 'index'), 'index should not appear in sidebar');
   });
 });
