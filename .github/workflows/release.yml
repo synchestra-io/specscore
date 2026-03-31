@@ -6,6 +6,10 @@ on:
       - main
     tags:
       - 'v*'
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
   workflow_dispatch:
     inputs:
       tag:
