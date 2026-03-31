@@ -1,0 +1,60 @@
+{
+  "pages": [
+    {
+      "source": "spec/README.md",
+      "slug": "index",
+      "title": "SpecScore",
+      "nav": true,
+      "navLabel": "Home",
+      "navOrder": 0
+    },
+    {
+      "source": "spec/features/README.md",
+      "slug": "specifications",
+      "title": "Specifications",
+      "nav": true,
+      "navLabel": "Specifications",
+      "navOrder": 1
+    },
+    {
+      "source": "spec/features/feature/README.md",
+      "slug": "feature-specification",
+      "title": "Feature Specification",
+      "nav": true,
+      "navLabel": "Feature",
+      "navOrder": 2
+    },
+    {
+      "source": "spec/features/development-plan/README.md",
+      "slug": "development-plan-specification",
+      "title": "Development Plan Specification",
+      "nav": true,
+      "navLabel": "Development Plan",
+      "navOrder": 3
+    },
+    {
+      "source": "spec/features/acceptance-criteria/README.md",
+      "slug": "acceptance-criteria-specification",
+      "title": "Acceptance Criteria Specification",
+      "nav": true,
+      "navLabel": "Acceptance Criteria",
+      "navOrder": 4
+    },
+    {
+      "source": "spec/features/project-definition/README.md",
+      "slug": "project-definition-specification",
+      "title": "Project Definition Specification",
+      "nav": true,
+      "navLabel": "Project Definition",
+      "navOrder": 5
+    },
+    {
+      "source": "spec/features/source-references/README.md",
+      "slug": "source-references-specification",
+      "title": "Source References Specification",
+      "nav": true,
+      "navLabel": "Source References",
+      "navOrder": 6
+    }
+  ]
+}
