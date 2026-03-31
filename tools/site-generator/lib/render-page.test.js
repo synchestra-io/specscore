@@ -24,36 +24,119 @@ describe('renderMarkdownToHtml', () => {
 });
 
 describe('injectIntoTemplate', () => {
-  const template = '<title>{{title}} - SpecScore</title>{{nav}}<main>{{content}}</main><a href="{{mdUrl}}">md</a>';
+  const template =
+    '<title>{{title}} - SpecScore</title>' +
+    '<aside>{{sidebar}}</aside>' +
+    '{{eyebrow}}' +
+    '<main>{{content}}</main>' +
+    '{{viewMarkdown}}';
 
-  const navItems = [
-    { slug: 'index', navLabel: 'Home' },
-    { slug: 'specifications', navLabel: 'Specifications' },
+  const sidebarGroups = [
+    {
+      label: 'Getting Started',
+      items: [
+        { slug: 'specifications', navLabel: 'Specifications', navOrder: 1 },
+      ],
+    },
+    {
+      label: 'Feature Specs',
+      items: [
+        { slug: 'feature-specification', navLabel: 'Feature', navOrder: 2 },
+        { slug: 'source-references-specification', navLabel: 'Source References', navOrder: 6 },
+      ],
+    },
   ];
 
-  it('replaces all placeholders', () => {
+  it('replaces title and content placeholders', () => {
     const result = injectIntoTemplate(template, {
       title: 'Feature Specification',
       content: '<h1>Feature</h1>',
       slug: 'feature-specification',
-      navItems,
+      sidebarGroups,
+      eyebrow: 'Feature Specs',
     });
 
     assert.ok(result.includes('<title>Feature Specification - SpecScore</title>'));
     assert.ok(result.includes('<h1>Feature</h1>'));
-    assert.ok(result.includes('href="/feature-specification.md"'));
-    assert.ok(result.includes('href="/"'));
-    assert.ok(result.includes('href="/specifications"'));
   });
 
-  it('marks the current page as active in nav', () => {
+  it('generates sidebar HTML with group labels and links', () => {
     const result = injectIntoTemplate(template, {
-      title: 'Specifications',
-      content: '<p>List</p>',
-      slug: 'specifications',
-      navItems,
+      title: 'Feature Specification',
+      content: '',
+      slug: 'feature-specification',
+      sidebarGroups,
+      eyebrow: 'Feature Specs',
+    });
+
+    assert.ok(result.includes('Getting Started'));
+    assert.ok(result.includes('Feature Specs'));
+    assert.ok(result.includes('href="/specifications"'));
+    assert.ok(result.includes('href="/feature-specification"'));
+  });
+
+  it('marks the current page as active in sidebar', () => {
+    const result = injectIntoTemplate(template, {
+      title: 'Feature Specification',
+      content: '',
+      slug: 'feature-specification',
+      sidebarGroups,
+      eyebrow: 'Feature Specs',
     });
 
     assert.ok(result.includes('class="active"'));
+    // The active link should be the feature-specification one
+    assert.match(result, /href="\/feature-specification"[^>]*class="active"/);
+  });
+
+  it('renders eyebrow label when provided', () => {
+    const result = injectIntoTemplate(template, {
+      title: 'Feature Specification',
+      content: '',
+      slug: 'feature-specification',
+      sidebarGroups,
+      eyebrow: 'Feature Specs',
+    });
+
+    assert.ok(result.includes('class="page-eyebrow"'));
+    assert.ok(result.includes('Feature Specs'));
+  });
+
+  it('omits eyebrow div when eyebrow is empty', () => {
+    const result = injectIntoTemplate(template, {
+      title: 'SpecScore',
+      content: '',
+      slug: 'index',
+      sidebarGroups,
+      eyebrow: '',
+    });
+
+    assert.ok(!result.includes('class="page-eyebrow"'));
+  });
+
+  it('includes view-markdown link by default', () => {
+    const result = injectIntoTemplate(template, {
+      title: 'Feature Specification',
+      content: '',
+      slug: 'feature-specification',
+      sidebarGroups,
+      eyebrow: 'Feature Specs',
+    });
+
+    assert.ok(result.includes('href="/feature-specification.md"'));
+    assert.ok(result.includes('View as Markdown'));
+  });
+
+  it('omits view-markdown link when showViewMarkdown is false', () => {
+    const result = injectIntoTemplate(template, {
+      title: 'SpecScore',
+      content: '',
+      slug: 'index',
+      sidebarGroups,
+      eyebrow: '',
+      showViewMarkdown: false,
+    });
+
+    assert.ok(!result.includes('View as Markdown'));
   });
 });
