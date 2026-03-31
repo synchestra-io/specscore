@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 
+	"charm.land/fang/v2"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +38,7 @@ func Run(args []string) error {
 	if len(args) > 1 {
 		rootCmd.SetArgs(args[1:])
 	}
-	return rootCmd.ExecuteContext(context.Background())
+	return fang.Execute(context.Background(), rootCmd, fang.WithVersion(version), fang.WithCommit(commit))
 }
 
 func versionCommand() *cobra.Command {
