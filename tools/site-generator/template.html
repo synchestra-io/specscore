@@ -21,7 +21,7 @@
 </head>
 <body>
   <header class="site-header">
-    <a href="/" class="wordmark">SpecScore</a>
+    <a href="/" class="wordmark"><span class="wordmark-clef">𝄞</span> SpecScore.org</a>
     <div class="header-right">
       <a href="https://github.com/synchestra-io/specscore">GitHub</a>
       <button id="theme-toggle" type="button" aria-label="Toggle dark/light theme">
@@ -33,12 +33,6 @@
   <div class="site-body">
     <aside class="sidebar">
       {{sidebar}}
-      <div class="sidebar-section">
-        <span class="sidebar-label">Resources</span>
-        <ul class="sidebar-nav">
-          <li><a href="https://github.com/synchestra-io/specscore">GitHub ↗</a></li>
-        </ul>
-      </div>
     </aside>
     <main>
       {{eyebrow}}
@@ -49,6 +43,7 @@
   <footer>
     <div class="footer-inner">
       <span>Apache License 2.0</span>
+      <a href="https://specscore.org">specscore.org</a>
       <a href="https://github.com/synchestra-io/specscore">GitHub</a>
     </div>
   </footer>
@@ -58,6 +53,21 @@
       var next = current === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('specscore-theme', next);
+    });
+  </script>
+  <script>
+    document.querySelectorAll('[data-collapsible]').forEach(function(section) {
+      var btn = section.querySelector('.sidebar-expand');
+      var hasActive = section.querySelector('.sidebar-nav li a.active');
+      if (hasActive) {
+        section.classList.add('is-expanded');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+      btn.addEventListener('click', function() {
+        section.classList.toggle('is-expanded');
+        var expanded = section.classList.contains('is-expanded');
+        btn.setAttribute('aria-expanded', String(expanded));
+      });
     });
   </script>
 </body>
