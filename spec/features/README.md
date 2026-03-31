@@ -6,6 +6,8 @@ Core features of the SpecScore specification framework:
 |---------|--------|-------------|
 | [feature](feature/README.md) | Conceptual | Feature specification structure, metadata, lifecycle, and conventions |
 | [acceptance-criteria](acceptance-criteria/README.md) | Conceptual | Acceptance criteria format and conventions |
+| [requirement](requirement/README.md) | Conceptual | Discrete testable rules within feature Behavior sections |
+| [scenario](scenario/README.md) | Conceptual | Concrete Given/When/Then behavior examples in `_tests/` directories |
 | [source-references](source-references/README.md) | Conceptual | Code-to-spec traceability via inline annotations |
 | [development-plan](development-plan/README.md) | Conceptual | Planning documents that bridge specs to execution |
 | [project-definition](project-definition/README.md) | Conceptual | SpecScore project configuration and root structure |
@@ -15,7 +17,9 @@ Core features of the SpecScore specification framework:
 ```
 spec/features/
 ├── feature/               # How to structure and write features
-├── acceptance-criteria/   # How to define and verify acceptance criteria
+├── requirement/           # How to define addressable rules in Behavior sections
+├── acceptance-criteria/   # How to define abstract verification conditions
+├── scenario/              # How to write concrete behavior examples
 ├── source-references/     # How to link code to specifications
 ├── development-plan/      # How to structure planning documents
 └── project-definition/    # Project config and top-level structure
