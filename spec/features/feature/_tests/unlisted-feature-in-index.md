@@ -1,6 +1,6 @@
 # Scenario: Feature missing from index is a validation error
 
-**Validates:** feature#req:index-completeness
+**Validates:** [feature#req:index-completeness](../README.md#req-index-completeness)
 
 ## Steps
 

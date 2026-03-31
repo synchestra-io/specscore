@@ -1,6 +1,6 @@
 # Scenario: Underscore-prefixed directory excluded from feature index
 
-**Validates:** feature#req:underscore-reserved
+**Validates:** [feature#req:underscore-reserved](../README.md#req-underscore-reserved)
 
 ## Steps
 

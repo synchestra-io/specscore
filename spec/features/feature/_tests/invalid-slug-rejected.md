@@ -1,6 +1,6 @@
 # Scenario: Feature slug with invalid characters is rejected
 
-**Validates:** feature#req:slug-format
+**Validates:** [feature#req:slug-format](../README.md#req-slug-format)
 
 ## Steps
 
