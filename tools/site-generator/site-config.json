@@ -13,8 +13,8 @@
       "slug": "specifications",
       "title": "Specifications",
       "nav": true,
-      "navLabel": "Specifications",
-      "navGroup": "Getting Started",
+      "navLabel": "Overview",
+      "navGroup": "Specification",
       "navOrder": 1
     },
     {
@@ -23,7 +23,7 @@
       "title": "Feature Specification",
       "nav": true,
       "navLabel": "Feature",
-      "navGroup": "Feature Specs",
+      "navGroup": "Specification",
       "navOrder": 2
     },
     {
@@ -32,7 +32,7 @@
       "title": "Development Plan Specification",
       "nav": true,
       "navLabel": "Development Plan",
-      "navGroup": "Feature Specs",
+      "navGroup": "Specification",
       "navOrder": 3
     },
     {
@@ -41,7 +41,7 @@
       "title": "Acceptance Criteria Specification",
       "nav": true,
       "navLabel": "Acceptance Criteria",
-      "navGroup": "Feature Specs",
+      "navGroup": "Specification",
       "navOrder": 4
     },
     {
@@ -50,7 +50,7 @@
       "title": "Project Definition Specification",
       "nav": true,
       "navLabel": "Project Definition",
-      "navGroup": "Feature Specs",
+      "navGroup": "Specification",
       "navOrder": 5
     },
     {
@@ -59,8 +59,92 @@
       "title": "Source References Specification",
       "nav": true,
       "navLabel": "Source References",
-      "navGroup": "Feature Specs",
+      "navGroup": "Specification",
       "navOrder": 6
+    },
+    {
+      "source": "docs/installation.md",
+      "slug": "install",
+      "title": "Installation",
+      "nav": true,
+      "navLabel": "Installation",
+      "navGroup": "Getting Started",
+      "navOrder": 7
+    },
+    {
+      "source": "docs/demo/todo-app.md",
+      "slug": "demo/todo-app",
+      "title": "Demo: Todo App",
+      "nav": true,
+      "navLabel": "Demo Project",
+      "navGroup": "Getting Started",
+      "navOrder": 8
+    },
+    {
+      "source": "docs/for/developers.md",
+      "slug": "for/developers",
+      "title": "SpecScore for Developers",
+      "nav": true,
+      "navLabel": "Developers",
+      "navGroup": "SpecScore for",
+      "navOrder": 10
+    },
+    {
+      "source": "docs/for/product-owners.md",
+      "slug": "for/product-owners",
+      "title": "SpecScore for Product Owners",
+      "nav": true,
+      "navLabel": "Product Owners",
+      "navGroup": "SpecScore for",
+      "navOrder": 11
+    },
+    {
+      "source": "docs/for/business-analysts.md",
+      "slug": "for/business-analysts",
+      "title": "SpecScore for Business Analysts",
+      "nav": true,
+      "navLabel": "Business Analysts",
+      "navGroup": "SpecScore for",
+      "navOrder": 12
+    },
+    {
+      "source": "docs/for/qas.md",
+      "slug": "for/qas",
+      "title": "SpecScore for QAs",
+      "nav": true,
+      "navLabel": "QAs",
+      "navGroup": "SpecScore for",
+      "navOrder": 13
+    },
+    {
+      "source": "docs/for/project-managers.md",
+      "slug": "for/project-managers",
+      "title": "SpecScore for Project Managers",
+      "nav": true,
+      "navLabel": "Project Managers",
+      "navGroup": "SpecScore for",
+      "navOrder": 14
+    },
+    {
+      "source": "docs/for/architects.md",
+      "slug": "for/architects",
+      "title": "SpecScore for Architects",
+      "nav": true,
+      "navLabel": "Architects",
+      "navGroup": "SpecScore for",
+      "navOrder": 15
+    }
+  ],
+  "externalLinks": [
+    {
+      "navGroup": "Resources",
+      "navLabel": "GitHub",
+      "href": "https://github.com/synchestra-io/specscore"
+    },
+    {
+      "navGroup": "Resources",
+      "navLabel": "Rehearse.ink",
+      "href": "https://rehearse.ink"
     }
   ]
 }

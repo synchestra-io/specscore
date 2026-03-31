@@ -26,11 +26,27 @@ function buildSidebarHtml(sidebarGroups, currentSlug) {
     .map((group) => {
       const links = group.items
         .map((item) => {
-          const href = item.slug === 'index' ? '/' : `/${item.slug}`;
+          if (item.external) {
+            return `<li><a href="${item.href}" target="_blank" rel="noopener noreferrer">${item.navLabel} &#8599;</a></li>`;
+          }
+          const href = item.slug === 'index' ? '/' : `/${item.slug}.html`;
           const active = item.slug === currentSlug ? ' class="active"' : '';
           return `<li><a href="${href}"${active}>${item.navLabel}</a></li>`;
         })
         .join('\n          ');
+
+      if (group.collapsible) {
+        const summary = group.items.map((item) => item.navLabel).join(', ');
+        return `<div class="sidebar-section sidebar-collapsible" data-collapsible>
+        <span class="sidebar-label">${group.label}</span>
+        <p class="sidebar-summary">${summary}</p>
+        <button class="sidebar-expand" type="button" aria-expanded="false" aria-label="Expand ${group.label}">Show all &#9662;</button>
+        <ul class="sidebar-nav sidebar-collapsible-list">
+          ${links}
+        </ul>
+      </div>`;
+      }
+
       return `<div class="sidebar-section">
         <span class="sidebar-label">${group.label}</span>
         <ul class="sidebar-nav">
