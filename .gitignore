@@ -1,3 +1,4 @@
 .worktrees/
 public/
 node_modules/
+.superpowers/
