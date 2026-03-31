@@ -67,11 +67,13 @@ async function build() {
 
     // 5. Write HTML file
     const htmlFile = join(OUTPUT, `${page.slug}.html`);
+    await mkdir(dirname(htmlFile), { recursive: true });
     await writeFile(htmlFile, htmlPage, 'utf-8');
 
     // 6. Rewrite links for markdown output and write .md file
     const mdContent = rewriteLinks(rawMarkdown, page.source, config.sourceToSlug, 'md');
     const mdFile = join(OUTPUT, `${page.slug}.md`);
+    await mkdir(dirname(mdFile), { recursive: true });
     await writeFile(mdFile, mdContent, 'utf-8');
 
     console.log(`  ${page.slug}.html + ${page.slug}.md`);
