@@ -1,6 +1,6 @@
 # Scenario: README missing a required section is rejected
 
-**Validates:** feature/required-sections
+**Validates:** feature#ac:readme-structure, feature#req:required-sections
 
 ## Steps
 

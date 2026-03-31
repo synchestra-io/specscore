@@ -1,6 +1,6 @@
 # Scenario: Feature slug with invalid characters is rejected
 
-**Validates:** feature/slug-format
+**Validates:** feature#req:slug-format
 
 ## Steps
 

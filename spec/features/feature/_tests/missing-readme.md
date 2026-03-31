@@ -1,6 +1,6 @@
 # Scenario: Feature directory without README is rejected
 
-**Validates:** feature/directory-readme
+**Validates:** feature#req:directory-readme
 
 ## Steps
 

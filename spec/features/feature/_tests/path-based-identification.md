@@ -1,6 +1,6 @@
 # Scenario: Feature identified by path relative to spec/features
 
-**Validates:** feature/path-identification
+**Validates:** feature#req:path-identification
 
 ## Steps
 

@@ -1,6 +1,6 @@
 # Scenario: README without Feature prefix in title is rejected
 
-**Validates:** feature/title-format
+**Validates:** feature#ac:readme-structure, feature#req:title-format
 
 ## Steps
 

@@ -1,6 +1,6 @@
 # Scenario: Undefined ACs trigger a mandatory Outstanding Question
 
-**Validates:** feature/ac-section
+**Validates:** feature#ac:empty-state-text, feature#req:ac-section
 
 ## Steps
 

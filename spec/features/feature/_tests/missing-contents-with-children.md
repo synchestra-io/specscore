@@ -1,6 +1,6 @@
 # Scenario: Feature with children but no Contents section is rejected
 
-**Validates:** feature/contents-when-children
+**Validates:** feature#req:contents-when-children
 
 ## Steps
 

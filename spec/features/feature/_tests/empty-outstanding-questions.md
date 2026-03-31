@@ -1,6 +1,6 @@
 # Scenario: Outstanding Questions with no items uses placeholder text
 
-**Validates:** feature/outstanding-questions
+**Validates:** feature#ac:empty-state-text, feature#req:outstanding-questions
 
 ## Steps
 

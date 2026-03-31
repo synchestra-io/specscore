@@ -1,6 +1,6 @@
 # Scenario: Unrecognized status value is rejected
 
-**Validates:** feature/status-field
+**Validates:** feature#ac:readme-structure, feature#req:status-field
 
 ## Steps
 

@@ -46,9 +46,7 @@ spec/features/
   README.md                     <- feature index
   {feature-slug}/
     README.md                   <- feature specification
-    _acs/                       <- acceptance criteria (optional)
-      {ac-slug}.md
-    _tests/                     <- feature-scoped test scenarios (optional)
+    _tests/                     <- test scenarios (optional)
       {scenario-slug}.md
       flows/
     proposals/                  <- change requests (optional)
@@ -63,15 +61,11 @@ spec/features/
 
 Every feature directory MUST contain a `README.md` file. This file is the feature specification — the single source of truth for what the feature does and how it behaves.
 
-**AC:** [directory-readme](_acs/directory-readme.md)
-
 ### REQ: slug-format
 
 Feature slugs MUST be lowercase, hyphen-separated, and URL-safe. Underscores, spaces, and special characters are not permitted.
 
 Examples of valid slugs: `claim-and-push`, `model-selection`, `ui`, `source-references`.
-
-**AC:** [slug-format](_acs/slug-format.md)
 
 ### Reserved `_` prefix convention
 
@@ -79,15 +73,12 @@ Directories prefixed with `_` are reserved for SpecScore tooling and extensions:
 
 | Directory | Purpose | Spec |
 |---|---|---|
-| `_acs/` | Acceptance criteria | [Acceptance Criteria](../acceptance-criteria/README.md) |
 | `_args/` | Argument documentation | Extension point for CLI tooling |
 | `_tests/` | Feature-scoped test scenarios | [Scenario](../scenario/README.md) |
 
 ### REQ: underscore-reserved
 
 Directories prefixed with `_` are NOT sub-features. They MUST be excluded from the feature index and Contents table.
-
-**AC:** [underscore-reserved](_acs/underscore-reserved.md)
 
 ### Feature README structure
 
@@ -153,13 +144,9 @@ Not defined yet.
 
 Every feature README title MUST use the `# Feature: {Title}` format. The `Feature:` prefix is required.
 
-**AC:** [title-format](_acs/title-format.md)
-
 ### REQ: status-field
 
 A `**Status:**` field MUST appear immediately after the title. The value MUST be one of: `Conceptual`, `In Progress`, `Stable`, `Deprecated`.
-
-**AC:** [status-field](_acs/status-field.md)
 
 ### REQ: required-sections
 
@@ -178,8 +165,6 @@ Every feature README MUST include these sections:
 | Acceptance Criteria     | Yes         | Always present. See [REQ: ac-section](#req-ac-section).           |
 | Outstanding Questions   | Yes         | Always present. See [REQ: outstanding-questions](#req-outstanding-questions). |
 
-**AC:** [required-sections](_acs/required-sections.md)
-
 ### Optional sections
 
 Features MAY include additional sections as needed:
@@ -195,13 +180,9 @@ Features MAY include additional sections as needed:
 
 The Outstanding Questions section MUST always be present in every feature README. If there are no open questions, it MUST explicitly state "None at this time." The section MUST NOT be omitted.
 
-**AC:** [outstanding-questions](_acs/outstanding-questions.md)
-
 ### REQ: ac-section
 
 The Acceptance Criteria section MUST always be present in every feature README. When no ACs are defined, it MUST state "Not defined yet." and a corresponding Outstanding Question ("Acceptance criteria not yet defined for this feature.") MUST be raised.
-
-**AC:** [ac-section](_acs/ac-section.md)
 
 ### REQ: contents-when-children
 
@@ -209,8 +190,6 @@ When a feature has child directories (sub-features), its README MUST include a C
 
 1. An index table listing each child directory with a description
 2. A 1-7 sentence summary for each child, giving readers context without requiring them to open each child
-
-**AC:** [contents-when-children](_acs/contents-when-children.md)
 
 ### Feature statuses
 
@@ -252,8 +231,6 @@ spec/features/ui/
 
 Features MUST be identified by their path relative to `spec/features/`. This path is the canonical identifier used in development plans, source references, and spec tooling.
 
-**AC:** [path-identification](_acs/path-identification.md)
-
 | Feature path                      | Identifier          |
 |-----------------------------------|---------------------|
 | `spec/features/authentication/`   | `authentication`    |
@@ -272,8 +249,6 @@ The feature index (`spec/features/README.md`) is the entry point for understandi
 ### REQ: index-completeness
 
 The feature index (`spec/features/README.md`) MUST list every top-level feature. An unlisted feature is a validation error.
-
-**AC:** [index-completeness](_acs/index-completeness.md)
 
 ## Relationship to Other Artifacts
 
@@ -336,27 +311,26 @@ Feature behavior is configured through the project definition file. See [Project
 |---------|-------------|
 | [Proposals](../proposals/README.md) | Proposals attach change requests to features. Features display recent proposals in their README. |
 | [Development Plan](../development-plan/README.md) | Plans reference features they affect. Features back-reference active plans. |
-| [Requirement](../requirement/README.md) | Requirements are named subsections (`### REQ:`) within a feature's Behavior section. They are the addressable rules that ACs verify. |
-| [Scenario](../scenario/README.md) | Scenarios are concrete behavior examples in the feature's `_tests/` directory. They validate ACs with Given/When/Then flows. |
+| [Requirement](../requirement/README.md) | Requirements are named subsections (`### REQ:`) within a feature's Behavior section. They are the addressable rules that scenarios verify. |
+| [Acceptance Criteria](../acceptance-criteria/README.md) | ACs are optional inline sections (`### AC:`) that bundle related requirements into composite verification conditions. |
+| [Scenario](../scenario/README.md) | Scenarios are concrete behavior examples in the feature's `_tests/` directory. They validate REQs or ACs with Given/When/Then flows. |
 | [Outstanding Questions](../outstanding-questions/README.md) | Every feature maintains an Outstanding Questions section with the standard question lifecycle. |
 
 For tool integrations (CLI, UI, API, LSP), see [Synchestra](https://synchestra.io).
 
 ## Acceptance Criteria
 
-| AC | Requirement | Summary |
-|---|---|---|
-| [directory-readme](_acs/directory-readme.md) | feature#req:directory-readme | Feature directories contain a README.md |
-| [slug-format](_acs/slug-format.md) | feature#req:slug-format | Feature slugs are lowercase, hyphen-separated, URL-safe |
-| [underscore-reserved](_acs/underscore-reserved.md) | feature#req:underscore-reserved | Underscore-prefixed directories excluded from feature index |
-| [title-format](_acs/title-format.md) | feature#req:title-format | Feature titles use the `Feature:` prefix |
-| [status-field](_acs/status-field.md) | feature#req:status-field | Status field is present with a valid value |
-| [required-sections](_acs/required-sections.md) | feature#req:required-sections | All required sections are present |
-| [outstanding-questions](_acs/outstanding-questions.md) | feature#req:outstanding-questions | Outstanding Questions has correct empty-state text |
-| [ac-section](_acs/ac-section.md) | feature#req:ac-section | AC section has correct empty-state behavior |
-| [contents-when-children](_acs/contents-when-children.md) | feature#req:contents-when-children | Features with children include a Contents section |
-| [path-identification](_acs/path-identification.md) | feature#req:path-identification | Features use path-based identification |
-| [index-completeness](_acs/index-completeness.md) | feature#req:index-completeness | Feature index lists all top-level features |
+### AC: readme-structure
+
+**Requirements:** feature#req:title-format, feature#req:status-field, feature#req:required-sections
+
+A feature README has a correctly formatted title (`# Feature: {Title}`), a valid status field immediately after the title, and all required sections present. A README that violates any of these is rejected by validation.
+
+### AC: empty-state-text
+
+**Requirements:** feature#req:outstanding-questions, feature#req:ac-section
+
+Sections with no content use their prescribed placeholder text. Outstanding Questions says "None at this time." when empty. Acceptance Criteria says "Not defined yet." when undefined, and a corresponding Outstanding Question is raised.
 
 ## Outstanding Questions
 
