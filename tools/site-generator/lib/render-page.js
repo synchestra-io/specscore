@@ -29,7 +29,7 @@ function buildSidebarHtml(sidebarGroups, currentSlug) {
           if (item.external) {
             return `<li><a href="${item.href}" target="_blank" rel="noopener noreferrer">${item.navLabel} &#8599;</a></li>`;
           }
-          const href = item.slug === 'index' ? '/' : `/${item.slug}.html`;
+          const href = item.slug === 'index' ? '/' : `/${item.slug}`;
           const active = item.slug === currentSlug ? ' class="active"' : '';
           return `<li><a href="${href}"${active}>${item.navLabel}</a></li>`;
         })
