@@ -65,7 +65,17 @@ spec/plans/
 
 `{plan-slug}` is a URL/path-safe identifier (e.g., `add-batch-mode`, `user-auth`).
 
-Plans always list their affected features. There is no distinction between single-feature and multi-feature plans — every plan uniformly declares the features it touches.
+#### REQ: plan-directory
+
+Every plan MUST reside in a dedicated directory under `spec/plans/` with a `README.md` file as the plan document.
+
+#### REQ: plan-slug-format
+
+Plan slugs MUST be lowercase, hyphen-separated, and URL-safe. Underscores, spaces, and special characters MUST NOT be used.
+
+#### REQ: features-field-uniform
+
+Every plan MUST list its affected features in the header. There is no distinction between single-feature and multi-feature plans — every plan uniformly declares the features it touches.
 
 ### Plan document structure
 
@@ -158,6 +168,14 @@ Step 1 --> Step 2 --> Step 3
 None at this time.
 ```
 
+#### REQ: plan-title-format
+
+Every plan document MUST use the `# Plan: {Title}` format for its title. The `Plan:` prefix is required.
+
+#### REQ: plan-required-sections
+
+Every plan document MUST include the following sections: title (`# Plan: X`), header metadata fields, Context, Acceptance criteria, and Steps. A Dependency graph section and Risks and open decisions section are OPTIONAL.
+
 ### Header fields
 
 | Field | Required | Description |
@@ -173,6 +191,18 @@ None at this time.
 | **Effort** | No | `S` \| `M` \| `L` \| `XL` — see [Optional ROI metadata](#optional-roi-metadata) |
 | **Impact** | No | `low` \| `medium` \| `high` \| `critical` — see [Optional ROI metadata](#optional-roi-metadata) |
 
+#### REQ: required-header-fields
+
+Every plan MUST include these header fields: Status, Features, Source type, Source, Author, and Created. The Approver and Approved fields MUST be present when the plan status is `approved`. Effort and Impact are OPTIONAL.
+
+#### REQ: source-type-values
+
+The Source type field MUST be either `feature` or `change-request`. No other values are permitted.
+
+#### REQ: proposal-forward-reference
+
+When a plan is triggered by a change request (proposal), the Source field MUST link directly to the proposal. The proposal in turn MUST include a forward reference to the plan.
+
 When a plan is triggered by a change request (proposal), the **Source** field links directly to the proposal. The proposal in turn gets a forward reference to the plan:
 
 ```markdown
@@ -184,9 +214,103 @@ When a plan is triggered by a change request (proposal), the **Source** field li
 | Plan   | [migrate-to-v2](../../../plans/migrate-to-v2/)    |
 ```
 
-### Acceptance criteria
+### Plan statuses
 
-Acceptance criteria can be specified in two ways:
+| Status | Description |
+|---|---|
+| `draft` | Plan is being written, not ready for review |
+| `in_review` | Submitted for human review |
+| `approved` | Reviewed and approved — work items can be generated |
+| `superseded` | Replaced by a newer plan (includes link to successor) |
+
+Plans do not have `completed` or `failed` statuses — those are execution concerns. A plan is either the current approved approach (`approved`) or it has been replaced (`superseded`).
+
+#### REQ: valid-statuses
+
+A plan's Status field MUST be one of: `draft`, `in_review`, `approved`, or `superseded`. No other values are permitted.
+
+#### REQ: no-execution-status
+
+Plans MUST NOT carry `completed` or `failed` statuses. Completion tracking is an execution concern, not a plan concern.
+
+### Status transitions
+
+```mermaid
+graph LR
+    A["draft"]
+    B["in_review"]
+    C["approved"]
+    D["superseded"]
+
+    A -->|submit| B
+    B -->|revisions<br/>requested| A
+    B -->|approve| C
+    C -->|superseded| D
+```
+
+#### REQ: status-transitions
+
+Plan status transitions MUST follow these rules: `draft` MAY transition to `in_review`; `in_review` MAY transition back to `draft` (revisions requested) or forward to `approved`; `approved` MAY transition only to `superseded`. No other transitions are permitted.
+
+### Immutability after approval
+
+Once a plan reaches `approved`, its content is frozen. The freeze is a convention that can be enforced by tooling (e.g., pre-commit hooks, linters, or orchestration tools).
+
+If the approach needs to change after approval, create a new plan that supersedes the current one rather than editing the approved plan. The superseded plan remains as a historical record.
+
+#### REQ: immutability-after-approval
+
+Once a plan reaches `approved` status, its content MUST NOT be modified. If the approach needs to change, a new plan MUST be created that supersedes the approved plan. The original plan MUST remain as a historical record.
+
+### Nesting limit
+
+Plans support a maximum of **two levels** of nesting: steps (level 1) and sub-steps (level 2, e.g., "2.1"). Anything deeper is execution detail that belongs in work item decomposition, not the plan.
+
+This constraint is intentional — it keeps plans scannable. A reviewer should be able to read the full plan in under two minutes.
+
+#### REQ: nesting-limit
+
+Plan steps MUST NOT exceed two levels of nesting: steps (level 1) and sub-steps (level 2, e.g., "2.1"). Deeper nesting MUST be deferred to work item decomposition.
+
+### Steps and dependencies
+
+Steps that do not declare a `Depends on` field may execute in parallel. The dependency graph determines the critical path.
+
+For complex plans, an optional **Dependency graph** section visualizes the parallelism:
+
+```mermaid
+graph LR
+    A["Step 1"]
+    B["Step 2"]
+    C["Step 3"]
+    D["Step 4"]
+    E["Step 5<br/>(independent)"]
+
+    A --> B
+    B --> C
+    B --> D
+```
+
+This section is optional — useful for complex plans, noise for simple sequential ones.
+
+#### REQ: parallel-eligibility
+
+Steps that do not declare a `Depends on` field MUST be treated as parallel-eligible. The dependency graph determines the critical path; steps without dependencies MAY execute concurrently.
+
+### Plan-level and step-level acceptance criteria
+
+Acceptance criteria appear at two levels:
+
+- **Plan-level** (the `## Acceptance criteria` section): cross-cutting criteria that span multiple steps. These inform integration and end-to-end tests.
+- **Step-level** (within each step): criteria specific to that step's deliverable. These inform unit and component tests.
+
+Both levels can be consumed by execution tools to populate work item descriptions, giving agents and test authors clear targets.
+
+#### REQ: two-level-acceptance-criteria
+
+Plans MUST support acceptance criteria at two levels: plan-level (cross-cutting, in the `## Acceptance criteria` section) and step-level (per-step deliverables, inline within each step). Both levels are consumed by execution tools.
+
+Acceptance criteria can also use a subdirectory format for complex criteria:
 
 **Inline (simple).** Include them directly in the plan as bullet points. Suitable for straightforward criteria that fit in a line or two.
 
@@ -208,12 +332,6 @@ spec/plans/user-auth/
 
 This allows criteria to be as simple or as complex as needed without cluttering the plan document.
 
-### Nesting limit
-
-Plans support a maximum of **two levels** of nesting: steps (level 1) and sub-steps (level 2, e.g., "2.1"). Anything deeper is execution detail that belongs in work item decomposition, not the plan.
-
-This constraint is intentional — it keeps plans scannable. A reviewer should be able to read the full plan in under two minutes.
-
 ### Plan hierarchy
 
 Plans can nest to mirror the feature tree convention. A **roadmap** is a parent plan that defines ordering between child plans. A **child plan** has the same format as today's standalone plans. A **standalone plan** (no children) works exactly as before.
@@ -233,12 +351,17 @@ spec/plans/
     README.md                        <- standalone plan (no children)
 ```
 
-#### Rules
+#### REQ: roadmap-no-steps
 
-- A **roadmap** (parent plan) defines ordering and dependencies between child plans. It does not have implementation steps — its Steps section is replaced by a Child Plans table listing child plans with their relationships.
-- A **child plan** has steps and acceptance criteria — the same format as today's plans.
-- A **standalone plan** (no children) works exactly as today. No changes required.
-- Nesting is limited to **2 levels**: roadmap -> child plan. Deeper nesting belongs in work item decomposition.
+A roadmap (parent plan) MUST NOT have implementation steps. Its Steps section MUST be replaced by a Child Plans table listing child plans with their relationships.
+
+#### REQ: child-plan-format
+
+A child plan MUST follow the same format as a standalone plan, including steps and acceptance criteria.
+
+#### REQ: hierarchy-nesting-limit
+
+Plan hierarchy MUST NOT exceed two levels: roadmap (parent) and child plan. Deeper nesting MUST be deferred to work item decomposition.
 
 #### Roadmap document structure
 
@@ -274,7 +397,7 @@ phases, each with its own child plan.
 | 2 | [chat-workflow-engine](chat-workflow-engine/) | draft | M | high |
 ```
 
-#### Roadmap status derivation
+### Roadmap status derivation
 
 A roadmap's status is derived from its children:
 
@@ -285,6 +408,10 @@ A roadmap's status is derived from its children:
 | All children are `approved` | `approved` |
 | At least one child plan has linked work items in progress | `in_progress` |
 | Explicitly set when the roadmap is replaced | `superseded` |
+
+#### REQ: roadmap-status-derivation
+
+A roadmap's status MUST be derived from the statuses of its child plans according to these rules: if at least one child is `draft`, the roadmap is `draft`; if all children are `in_review` or `approved`, the roadmap is `in_review`; if all children are `approved`, the roadmap is `approved`; if at least one child has linked work items in progress, the roadmap is `in_progress`; the roadmap MAY be explicitly set to `superseded` when replaced.
 
 ### Optional ROI metadata
 
@@ -298,6 +425,14 @@ Two optional fields can be added to the plan document header:
 Both fields are **optional**. When absent, tooling may infer effort from step count, dependency depth, and acceptance criteria complexity. It may infer impact from feature importance and downstream dependents. During plan authoring, the tooling **suggests** values. The user accepts, declines, or overwrites.
 
 For roadmaps, effort/impact describe the aggregate. Child plans carry independent estimates.
+
+#### REQ: effort-values
+
+When present, the Effort field MUST be one of: `S`, `M`, `L`, or `XL`.
+
+#### REQ: impact-values
+
+When present, the Impact field MUST be one of: `low`, `medium`, `high`, or `critical`.
 
 #### Effort scale
 
@@ -316,68 +451,6 @@ For roadmaps, effort/impact describe the aggregate. Child plans carry independen
 | medium | Improves existing capability, some users benefit |
 | high | Enables important new capability, many users benefit |
 | critical | Unblocks core functionality or other critical work |
-
-### Steps without dependencies are parallel-eligible
-
-Steps that do not declare a `Depends on` field may execute in parallel. The dependency graph determines the critical path.
-
-For complex plans, an optional **Dependency graph** section visualizes the parallelism:
-
-```mermaid
-graph LR
-    A["Step 1"]
-    B["Step 2"]
-    C["Step 3"]
-    D["Step 4"]
-    E["Step 5<br/>(independent)"]
-
-    A --> B
-    B --> C
-    B --> D
-```
-
-This section is optional — useful for complex plans, noise for simple sequential ones.
-
-### Acceptance criteria
-
-Acceptance criteria appear at two levels:
-
-- **Plan-level** (the `## Acceptance criteria` section): cross-cutting criteria that span multiple steps. These inform integration and end-to-end tests.
-- **Step-level** (within each step): criteria specific to that step's deliverable. These inform unit and component tests.
-
-Both levels can be consumed by execution tools to populate work item descriptions, giving agents and test authors clear targets.
-
-### Plan statuses
-
-| Status | Description |
-|---|---|
-| `draft` | Plan is being written, not ready for review |
-| `in_review` | Submitted for human review |
-| `approved` | Reviewed and approved — work items can be generated |
-| `superseded` | Replaced by a newer plan (includes link to successor) |
-
-Plans do not have `completed` or `failed` statuses — those are execution concerns. A plan is either the current approved approach (`approved`) or it has been replaced (`superseded`).
-
-### Status transitions
-
-```mermaid
-graph LR
-    A["draft"]
-    B["in_review"]
-    C["approved"]
-    D["superseded"]
-
-    A -->|submit| B
-    B -->|revisions<br/>requested| A
-    B -->|approve| C
-    C -->|superseded| D
-```
-
-### Immutability after approval
-
-Once a plan reaches `approved`, its content is frozen. The freeze is a convention that can be enforced by tooling (e.g., pre-commit hooks, linters, or orchestration tools).
-
-If the approach needs to change after approval, create a new plan that supersedes the current one rather than editing the approved plan. The superseded plan remains as a historical record.
 
 ### Plans index
 
@@ -406,9 +479,21 @@ If the approach needs to change after approval, create a new plan that supersede
 None at this time.
 ```
 
-Child plans are indented with `&ensp;` and their link paths include the parent directory (e.g., `chat-feature/chat-infrastructure/`). The **Effort** and **Impact** columns show [optional ROI metadata](#optional-roi-metadata) when present, or `-` when absent.
+#### REQ: index-completeness
 
-The **Recently Closed** section shows completed or superseded plans from the last N (configurable per project, default: 5) plans.
+The plans index (`spec/plans/README.md`) MUST list every plan. An unlisted plan is a validation error.
+
+#### REQ: index-child-indentation
+
+Child plans in the index MUST be indented with `&ensp;` and their link paths MUST include the parent directory (e.g., `chat-feature/chat-infrastructure/`).
+
+#### REQ: index-roi-columns
+
+The plans index MUST include Effort and Impact columns. When ROI metadata is absent from a plan, the column value MUST display `-`.
+
+#### REQ: index-recently-closed
+
+The plans index MUST include a Recently Closed section showing completed or superseded plans from the last N plans (configurable per project, default: 5).
 
 ### Feature README back-reference
 
@@ -426,6 +511,32 @@ Each affected feature's README includes a **Plans** section linking to plans tha
 ```
 
 A feature appearing in both a roadmap and its child plan is valid — the roadmap covers it broadly, the child plan implements a slice. A feature linked only to a roadmap (no child plan yet) signals "planned but not decomposed."
+
+#### REQ: feature-back-reference
+
+Each affected feature's README MUST include a Plans section with a table linking to plans that touch it. The table MUST include columns for Plan, Status, Author, and Approved.
+
+### Step artifacts
+
+An artifact is a named output that a step produces. It is not code (code lives in code repos on branches). It is the metadata, decisions, schemas, and intermediate results that downstream steps need to do their work.
+
+Examples:
+
+| Artifact | Produced by | Consumed by |
+|---|---|---|
+| JSON Schema definition | "Define data model" step | "Implement endpoints" step, "Build UI" step |
+| API contract (OpenAPI snippet) | "Design API" step | "Implement client" step, "Write integration tests" step |
+| Migration plan | "Analyze existing data" step | "Write migration script" step |
+| Architecture decision record | "Evaluate auth approach" step | All downstream steps |
+| Test fixtures / seed data | "Generate test data" step | Any step running tests |
+
+#### REQ: artifact-declaration
+
+Plan steps that produce outputs SHOULD declare them using the `**Produces:**` field with a bulleted list of named artifacts and their descriptions.
+
+#### REQ: artifact-dependency-flow
+
+When a step depends on another step, it MUST have access to that step's declared artifacts. The dependency is made explicit through the `Depends on` and `Produces` fields.
 
 ## Workflow
 
@@ -496,67 +607,6 @@ Key integration points:
 - Each plan step can carry metadata (like a step identifier) that execution tools use to create and link work items.
 - `Depends on` fields in the plan map to dependency relationships in the execution system.
 - Acceptance criteria from plan steps can be copied into generated work item descriptions.
-
-## Step Artifacts
-
-### What is an artifact?
-
-An artifact is a named output that a step produces. It is not code (code lives in code repos on branches). It is the metadata, decisions, schemas, and intermediate results that downstream steps need to do their work.
-
-Examples:
-
-| Artifact | Produced by | Consumed by |
-|---|---|---|
-| JSON Schema definition | "Define data model" step | "Implement endpoints" step, "Build UI" step |
-| API contract (OpenAPI snippet) | "Design API" step | "Implement client" step, "Write integration tests" step |
-| Migration plan | "Analyze existing data" step | "Write migration script" step |
-| Architecture decision record | "Evaluate auth approach" step | All downstream steps |
-| Test fixtures / seed data | "Generate test data" step | Any step running tests |
-
-### Declaring artifacts in the plan
-
-Plan steps declare expected artifacts using the `Produces` field:
-
-```markdown
-### 1. Define auth data model (API)
-
-**Produces:**
-  - `data-model-schema.json` — JSON Schema for user and session entities
-  - `migration-plan.md` — sequence of DB migrations with rollback steps
-```
-
-This serves two purposes:
-
-- **For reviewers:** makes the plan's data flow visible at a glance.
-- **For execution tools:** produced artifacts become part of the work item's acceptance criteria — the work is not complete until these artifacts exist.
-
-### Consuming artifacts
-
-When a step depends on another step, it has access to that step's artifacts. This dependency is made explicit in the plan via `Depends on` and `Produces` fields. Execution tools can use this information to make upstream artifacts available to downstream work items.
-
-### How artifacts flow through the dependency graph
-
-```mermaid
-graph LR
-    A["Step A<br/>define schema"]
-    B["Step B<br/>implement API"]
-    C["Step C<br/>build UI"]
-
-    ArtifactA1["schema.json"]
-    ArtifactA2["migration.md"]
-    ArtifactB["openapi-snippet.yaml"]
-
-    A --> ArtifactA1
-    A --> ArtifactA2
-    ArtifactA1 --> B
-    ArtifactA1 --> C
-    B --> ArtifactB
-    ArtifactB --> C
-    A -->|depends_on| B
-    B -->|depends_on| C
-```
-
-Artifacts make the data flow between steps explicit and traceable. Instead of needing to figure out "what did the previous step produce that I need?" — it is declared in the plan. This is especially important for AI agents, which benefit enormously from explicit context rather than implicit assumptions.
 
 ## Retrospective
 
@@ -644,8 +694,61 @@ Planning settings are configured in the project definition file. See [Project De
 | Feature | Interaction |
 |---|---|
 | [Feature](../feature/README.md) | Features are the source artifacts that trigger plans. Plans list affected features; features back-reference active plans in their README. |
+| [Requirement](../requirement/README.md) | Requirements are `#### REQ:` subsections within a feature's Behavior section. Development plan REQs define the rules for plan structure and lifecycle. |
+| [Acceptance Criteria](../acceptance-criteria/README.md) | Plan-level and step-level ACs follow the same format as feature ACs but are frozen with the plan. |
+| [Scenario](../scenario/README.md) | Scenarios in `_tests/` validate development plan REQs with concrete Given/When/Then flows. |
 | [Proposals](../proposals/README.md) | A proposal (change request) is a trigger for plan creation. Approved proposals link forward to their plan; plans link back to their source proposal. |
 | [Outstanding Questions](../outstanding-questions/README.md) | Plan steps may surface outstanding questions. These follow the existing question lifecycle. |
+
+## Acceptance Criteria
+
+### AC: plan-document-validity
+
+**Requirements:** development-plan#req:plan-title-format, development-plan#req:plan-required-sections, development-plan#req:required-header-fields, development-plan#req:source-type-values
+
+A plan document has a correctly formatted title (`# Plan: {Title}`), all required sections present (Context, Acceptance criteria, Steps), all required header fields populated (Status, Features, Source type, Source, Author, Created), and a valid Source type value (`feature` or `change-request`). A document that violates any of these is rejected by validation.
+
+### AC: plan-location-validity
+
+**Requirements:** development-plan#req:plan-directory, development-plan#req:plan-slug-format, development-plan#req:features-field-uniform
+
+A plan resides in a dedicated directory under `spec/plans/` with a slug-formatted name and a `README.md` file. The plan uniformly declares all affected features in its header regardless of how many features are touched.
+
+### AC: status-lifecycle
+
+**Requirements:** development-plan#req:valid-statuses, development-plan#req:no-execution-status, development-plan#req:status-transitions
+
+A plan's status is always one of `draft`, `in_review`, `approved`, or `superseded`. Status transitions follow the defined state machine. Plans never carry execution-level statuses like `completed` or `failed`.
+
+### AC: approved-plan-frozen
+
+**Requirements:** development-plan#req:immutability-after-approval
+
+An approved plan's content cannot be modified. Changes require creating a new superseding plan. The original remains as a historical record.
+
+### AC: plan-structure-constraints
+
+**Requirements:** development-plan#req:nesting-limit, development-plan#req:parallel-eligibility, development-plan#req:two-level-acceptance-criteria
+
+Plan steps use at most two levels of nesting (steps and sub-steps). Steps without `Depends on` are parallel-eligible. Acceptance criteria exist at both plan-level and step-level.
+
+### AC: hierarchy-validity
+
+**Requirements:** development-plan#req:roadmap-no-steps, development-plan#req:child-plan-format, development-plan#req:hierarchy-nesting-limit, development-plan#req:roadmap-status-derivation
+
+Roadmaps have a Child Plans table instead of implementation steps. Child plans follow the standard plan format. Hierarchy does not exceed two levels. Roadmap status is derived from child plan statuses.
+
+### AC: index-validity
+
+**Requirements:** development-plan#req:index-completeness, development-plan#req:index-child-indentation, development-plan#req:index-roi-columns, development-plan#req:index-recently-closed
+
+The plans index lists every plan, indents child plans with `&ensp;`, includes Effort and Impact columns (showing `-` when absent), and has a Recently Closed section.
+
+### AC: cross-artifact-links
+
+**Requirements:** development-plan#req:feature-back-reference, development-plan#req:proposal-forward-reference
+
+Affected features back-reference plans in a Plans table. Proposals triggered by change requests include forward references to their plans. Bidirectional traceability is maintained.
 
 ## Outstanding Questions
 
