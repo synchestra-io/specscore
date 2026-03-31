@@ -63,11 +63,15 @@ spec/features/
 
 Every feature directory MUST contain a `README.md` file. This file is the feature specification — the single source of truth for what the feature does and how it behaves.
 
+**AC:** [directory-readme](_acs/directory-readme.md)
+
 ### REQ: slug-format
 
 Feature slugs MUST be lowercase, hyphen-separated, and URL-safe. Underscores, spaces, and special characters are not permitted.
 
 Examples of valid slugs: `claim-and-push`, `model-selection`, `ui`, `source-references`.
+
+**AC:** [slug-format](_acs/slug-format.md)
 
 ### Reserved `_` prefix convention
 
@@ -82,6 +86,8 @@ Directories prefixed with `_` are reserved for SpecScore tooling and extensions:
 ### REQ: underscore-reserved
 
 Directories prefixed with `_` are NOT sub-features. They MUST be excluded from the feature index and Contents table.
+
+**AC:** [underscore-reserved](_acs/underscore-reserved.md)
 
 ### Feature README structure
 
@@ -147,9 +153,13 @@ Not defined yet.
 
 Every feature README title MUST use the `# Feature: {Title}` format. The `Feature:` prefix is required.
 
+**AC:** [title-format](_acs/title-format.md)
+
 ### REQ: status-field
 
 A `**Status:**` field MUST appear immediately after the title. The value MUST be one of: `Conceptual`, `In Progress`, `Stable`, `Deprecated`.
+
+**AC:** [status-field](_acs/status-field.md)
 
 ### REQ: required-sections
 
@@ -168,6 +178,8 @@ Every feature README MUST include these sections:
 | Acceptance Criteria     | Yes         | Always present. See [REQ: ac-section](#req-ac-section).           |
 | Outstanding Questions   | Yes         | Always present. See [REQ: outstanding-questions](#req-outstanding-questions). |
 
+**AC:** [required-sections](_acs/required-sections.md)
+
 ### Optional sections
 
 Features MAY include additional sections as needed:
@@ -183,9 +195,13 @@ Features MAY include additional sections as needed:
 
 The Outstanding Questions section MUST always be present in every feature README. If there are no open questions, it MUST explicitly state "None at this time." The section MUST NOT be omitted.
 
+**AC:** [outstanding-questions](_acs/outstanding-questions.md)
+
 ### REQ: ac-section
 
 The Acceptance Criteria section MUST always be present in every feature README. When no ACs are defined, it MUST state "Not defined yet." and a corresponding Outstanding Question ("Acceptance criteria not yet defined for this feature.") MUST be raised.
+
+**AC:** [ac-section](_acs/ac-section.md)
 
 ### REQ: contents-when-children
 
@@ -193,6 +209,8 @@ When a feature has child directories (sub-features), its README MUST include a C
 
 1. An index table listing each child directory with a description
 2. A 1-7 sentence summary for each child, giving readers context without requiring them to open each child
+
+**AC:** [contents-when-children](_acs/contents-when-children.md)
 
 ### Feature statuses
 
@@ -234,6 +252,8 @@ spec/features/ui/
 
 Features MUST be identified by their path relative to `spec/features/`. This path is the canonical identifier used in development plans, source references, and spec tooling.
 
+**AC:** [path-identification](_acs/path-identification.md)
+
 | Feature path                      | Identifier          |
 |-----------------------------------|---------------------|
 | `spec/features/authentication/`   | `authentication`    |
@@ -252,6 +272,8 @@ The feature index (`spec/features/README.md`) is the entry point for understandi
 ### REQ: index-completeness
 
 The feature index (`spec/features/README.md`) MUST list every top-level feature. An unlisted feature is a validation error.
+
+**AC:** [index-completeness](_acs/index-completeness.md)
 
 ## Relationship to Other Artifacts
 
