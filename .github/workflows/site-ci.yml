@@ -63,3 +63,41 @@ jobs:
               exit 1
             fi
           done
+
+  deploy:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/site-generator/package-lock.json
+
+      - name: Install dependencies
+        working-directory: tools/site-generator
+        run: npm ci
+
+      - name: Install Chrome with system deps
+        run: npx puppeteer browsers install chrome --install-deps
+
+      - name: Build site
+        working-directory: tools/site-generator
+        run: npm run build
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: Deploy to Firebase Hosting
+        run: npx firebase-tools@latest deploy --only hosting:specscore-org --non-interactive
