@@ -39,19 +39,23 @@ export async function renderMermaidBlocks(markdown) {
       const outputFile = join(workDir, `diagram-${i}.svg`);
 
       await writeFile(inputFile, mermaidSource, 'utf-8');
-      await execFileAsync(mmdc, [
-        '-i', inputFile,
-        '-o', outputFile,
-        '-b', 'transparent',
-        '--quiet',
-      ]);
+      try {
+        await execFileAsync(mmdc, [
+          '-i', inputFile,
+          '-o', outputFile,
+          '-b', 'transparent',
+          '--quiet',
+        ]);
 
-      const svg = await readFile(outputFile, 'utf-8');
-      // Replace the full code block (``` to ```) with the SVG
-      result =
-        result.slice(0, block.index) +
-        svg.trim() +
-        result.slice(block.index + block[0].length);
+        const svg = await readFile(outputFile, 'utf-8');
+        // Replace the full code block (``` to ```) with the SVG
+        result =
+          result.slice(0, block.index) +
+          svg.trim() +
+          result.slice(block.index + block[0].length);
+      } catch (err) {
+        console.warn(`  warning: mermaid rendering failed for diagram ${i}, keeping code block`);
+      }
     }
 
     return result;
