@@ -1,4 +1,5 @@
 .worktrees/
+.claude/worktrees/
 public/
 node_modules/
 .superpowers/
