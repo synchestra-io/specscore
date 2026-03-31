@@ -32,21 +32,27 @@ graph LR
 
 ### Requirement format
 
-Requirements are subsections within a feature's `## Behavior` section, using the `### REQ:` prefix:
+Requirements live within a feature's `## Behavior` section, scoped under topic headings. Topic headings (`###`) provide narrative context; requirements (`#### REQ:`) state the enforceable rules within that topic:
 
 ```markdown
 ## Behavior
 
-### REQ: title-required
+### Item management
+
+Todos are created, edited, and deleted through the CLI.
+
+#### REQ: title-required
 
 A todo item MUST have a non-empty title. Creating a todo without a title MUST be rejected with an error message.
 
-### REQ: slug-format
+#### REQ: slug-format
 
 Feature slugs MUST be lowercase, hyphen-separated, and URL-safe. Underscores, spaces, and special characters are not permitted.
 ```
 
-The `### REQ:` prefix distinguishes requirements from organizational subsections. Subsection headings without the `REQ:` prefix remain valid for grouping and narrative — not every subsection is a requirement.
+The `REQ:` prefix distinguishes requirements from other subsections. Topic headings without the `REQ:` prefix are organizational — they group related requirements and provide context, but are not themselves requirements.
+
+Requirements are always **one heading level below their containing topic**. In the typical case (`### topic` under `## Behavior`), requirements use `####`. The heading level may vary if the topic is nested deeper, but requirements are always direct children of their topic.
 
 ### Requirement identification
 
@@ -85,35 +91,45 @@ Each requirement expresses a **single testable obligation**. If a requirement co
 
 **Good** — single obligation:
 ```markdown
-### REQ: title-required
+#### REQ: title-required
 A todo item MUST have a non-empty title.
 ```
 
 **Bad** — multiple obligations bundled:
 ```markdown
-### REQ: title-rules
+#### REQ: title-rules
 A todo item MUST have a non-empty title, MUST NOT exceed 200 characters,
 and SHOULD be unique within the list.
 ```
 
 Split the bad example into `title-required`, `title-max-length`, and `title-unique`.
 
-### Referencing requirements from ACs
+### Referencing requirements from ACs and scenarios
 
-Acceptance criteria reference the requirement(s) they verify using the `**Requirement:**` metadata field:
+Acceptance criteria and scenarios reference requirements using the `{feature-path}#req:{slug}` identifier.
+
+**From an inline AC** (in the Acceptance Criteria section of a feature README):
 
 ```markdown
-# AC: title-required
+### AC: item-validation
 
-**Requirement:** todo-item/manage#req:title-required
+**Requirements:** todo-item/manage#req:title-required, todo-item/manage#req:title-max-length
 
-Creating a todo without a title is rejected. Creating a todo with a title succeeds.
+Creating a todo without a title or with a title exceeding the limit is rejected.
 ```
 
-An AC may reference multiple requirements when it verifies a condition that spans them:
+ACs are optional. They bundle related requirements into composite verification conditions. When an AC does not add value beyond the REQ itself, scenarios MAY reference the requirement directly.
+
+**From a scenario** (in `_tests/`):
 
 ```markdown
-**Requirement:** todo-item/manage#req:title-required, todo-item/manage#req:title-max-length
+**Validates:** [todo-item/manage#req:title-required](../README.md#req-title-required)
+```
+
+Or referencing a bundled AC:
+
+```markdown
+**Validates:** [todo-item/manage#ac:item-validation](../README.md#ac-item-validation)
 ```
 
 ### Parent features and requirements
@@ -122,18 +138,19 @@ A parent feature MAY define requirements that apply broadly to its sub-features.
 
 ## Structural Rules
 
-1. **Requirement headings use the `### REQ: {slug}` format.** The `REQ:` prefix is case-sensitive and followed by a space and the slug.
-2. **Requirement slugs are unique within a feature.** Two requirements in the same feature cannot share a slug.
-3. **Requirements live in Behavior sections only.** The `### REQ:` convention is not valid outside `## Behavior`.
-4. **Each requirement is a single testable obligation.** Multi-condition requirements should be split.
+1. **Requirements are scoped under topic headings.** A topic heading provides narrative context; requirements are one heading level below (typically `#### REQ: {slug}` under a `###` topic within `## Behavior`).
+2. **The `REQ:` prefix is case-sensitive** and followed by a space and the slug.
+3. **Requirement slugs are unique within a feature.** Two requirements in the same feature cannot share a slug.
+4. **Requirements live in Behavior sections only.** The `REQ:` convention is not valid outside `## Behavior`.
+5. **Each requirement is a single testable obligation.** Multi-condition requirements should be split.
 
 ## Interaction with Other Features
 
 | Feature | Interaction |
 |---|---|
-| [Feature](../feature/README.md) | Requirements live within a feature's Behavior section as named subsections. |
-| [Acceptance Criteria](../acceptance-criteria/README.md) | ACs reference requirements via the `**Requirement:**` metadata field. |
-| [Scenario](../scenario/README.md) | Scenarios validate ACs, which in turn verify requirements — completing the traceability chain. |
+| [Feature](../feature/README.md) | Requirements live within a feature's Behavior section as `#### REQ:` subsections under topic headings. |
+| [Acceptance Criteria](../acceptance-criteria/README.md) | ACs optionally bundle requirements via the `**Requirements:**` metadata field. |
+| [Scenario](../scenario/README.md) | Scenarios validate requirements directly or through bundled ACs — completing the traceability chain. |
 
 ## Acceptance Criteria
 

@@ -57,11 +57,11 @@ spec/features/
       README.md
 ```
 
-### REQ: directory-readme
+#### REQ: directory-readme
 
 Every feature directory MUST contain a `README.md` file. This file is the feature specification — the single source of truth for what the feature does and how it behaves.
 
-### REQ: slug-format
+#### REQ: slug-format
 
 Feature slugs MUST be lowercase, hyphen-separated, and URL-safe. Underscores, spaces, and special characters are not permitted.
 
@@ -76,7 +76,7 @@ Directories prefixed with `_` are reserved for SpecScore tooling and extensions:
 | `_args/` | Argument documentation | Extension point for CLI tooling |
 | `_tests/` | Feature-scoped test scenarios | [Scenario](../scenario/README.md) |
 
-### REQ: underscore-reserved
+#### REQ: underscore-reserved
 
 Directories prefixed with `_` are NOT sub-features. They MUST be excluded from the feature index and Contents table.
 
@@ -112,8 +112,9 @@ Why this feature exists. What gap or pain point it addresses.
 ## Behavior
 
 How the feature works. The bulk of the spec — structure, rules,
-examples, edge cases. Individual rules use the `### REQ: {slug}`
-convention. See [Requirement](../requirement/README.md).
+examples, edge cases. Topics use ### headings; individual rules
+use `#### REQ: {slug}` under their topic.
+See [Requirement](../requirement/README.md).
 
 ## Interaction with Other Features
 
@@ -140,15 +141,15 @@ Not defined yet.
 (Or: "None at this time." — the section is never omitted.)
 ```
 
-### REQ: title-format
+#### REQ: title-format
 
 Every feature README title MUST use the `# Feature: {Title}` format. The `Feature:` prefix is required.
 
-### REQ: status-field
+#### REQ: status-field
 
 A `**Status:**` field MUST appear immediately after the title. The value MUST be one of: `Conceptual`, `In Progress`, `Stable`, `Deprecated`.
 
-### REQ: required-sections
+#### REQ: required-sections
 
 Every feature README MUST include these sections:
 
@@ -165,7 +166,7 @@ Every feature README MUST include these sections:
 | Acceptance Criteria     | Yes         | Always present. See [REQ: ac-section](#req-ac-section).           |
 | Outstanding Questions   | Yes         | Always present. See [REQ: outstanding-questions](#req-outstanding-questions). |
 
-### Optional sections
+#### Optional sections
 
 Features MAY include additional sections as needed:
 
@@ -176,15 +177,19 @@ Features MAY include additional sections as needed:
 | Interaction with Other Features | When the feature has notable dependencies or touchpoints  |
 | Configuration                   | When the feature introduces project settings              |
 
-### REQ: outstanding-questions
+### Required section behavior
+
+These requirements define how specific required sections behave when they have no content.
+
+#### REQ: outstanding-questions
 
 The Outstanding Questions section MUST always be present in every feature README. If there are no open questions, it MUST explicitly state "None at this time." The section MUST NOT be omitted.
 
-### REQ: ac-section
+#### REQ: ac-section
 
 The Acceptance Criteria section MUST always be present in every feature README. When no ACs are defined, it MUST state "Not defined yet." and a corresponding Outstanding Question ("Acceptance criteria not yet defined for this feature.") MUST be raised.
 
-### REQ: contents-when-children
+#### REQ: contents-when-children
 
 When a feature has child directories (sub-features), its README MUST include a Contents section with:
 
@@ -214,7 +219,7 @@ graph LR
 
 These statuses describe the feature's **specification maturity**, not its implementation progress. A feature can be `Stable` in spec while its implementation is still in development — the spec is the source of truth for desired behavior.
 
-### Feature nesting (sub-features)
+### Feature nesting and identification
 
 Features can contain sub-features as child directories. Each sub-feature is a full feature with its own `README.md`, status, and lifecycle.
 
@@ -227,7 +232,7 @@ spec/features/ui/
     README.md                <- sub-feature
 ```
 
-### REQ: path-identification
+#### REQ: path-identification
 
 Features MUST be identified by their path relative to `spec/features/`. This path is the canonical identifier used in development plans, source references, and spec tooling.
 
@@ -246,7 +251,7 @@ The feature index (`spec/features/README.md`) is the entry point for understandi
 3. A **Feature dependency graph** showing relationships
 4. An **Outstanding Questions** section
 
-### REQ: index-completeness
+#### REQ: index-completeness
 
 The feature index (`spec/features/README.md`) MUST list every top-level feature. An unlisted feature is a validation error.
 
@@ -311,8 +316,8 @@ Feature behavior is configured through the project definition file. See [Project
 |---------|-------------|
 | [Proposals](../proposals/README.md) | Proposals attach change requests to features. Features display recent proposals in their README. |
 | [Development Plan](../development-plan/README.md) | Plans reference features they affect. Features back-reference active plans. |
-| [Requirement](../requirement/README.md) | Requirements are named subsections (`### REQ:`) within a feature's Behavior section. They are the addressable rules that scenarios verify. |
-| [Acceptance Criteria](../acceptance-criteria/README.md) | ACs are optional inline sections (`### AC:`) that bundle related requirements into composite verification conditions. |
+| [Requirement](../requirement/README.md) | Requirements are `#### REQ:` subsections under topic headings within a feature's Behavior section. They are the addressable rules that scenarios verify. |
+| [Acceptance Criteria](../acceptance-criteria/README.md) | ACs are optional `### AC:` sections in the Acceptance Criteria section that bundle related requirements into composite verification conditions. |
 | [Scenario](../scenario/README.md) | Scenarios are concrete behavior examples in the feature's `_tests/` directory. They validate REQs or ACs with Given/When/Then flows. |
 | [Outstanding Questions](../outstanding-questions/README.md) | Every feature maintains an Outstanding Questions section with the standard question lifecycle. |
 
