@@ -65,4 +65,12 @@ describe('renderMermaidBlocks', () => {
     const svgCount = (result.match(/<svg/g) || []).length;
     assert.equal(svgCount, 2, 'should have 2 SVGs');
   });
+
+  it('wraps SVG in mermaid-wrap container', { skip: !mmdcAvailable && 'mmdc/Chrome not available' }, async () => {
+    const md = ['```mermaid', 'graph LR', '    A --> B', '```'].join('\n');
+    const result = await renderMermaidBlocks(md);
+    assert.ok(result.includes('class="mermaid-wrap"'), 'should have mermaid-wrap wrapper');
+    assert.ok(result.includes('class="mermaid-label"'), 'should have mermaid-label');
+    assert.ok(result.includes('class="mermaid-body"'), 'should have mermaid-body');
+  });
 });

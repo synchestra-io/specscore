@@ -53,10 +53,14 @@ export async function renderMermaidBlocks(markdown) {
         ]);
 
         const svg = await readFile(outputFile, 'utf-8');
-        // Replace the full code block (``` to ```) with the SVG
+        const wrapped =
+          '<div class="mermaid-wrap">\n' +
+          '<div class="mermaid-label">Diagram</div>\n' +
+          '<div class="mermaid-body">' + svg.trim() + '</div>\n' +
+          '</div>';
         result =
           result.slice(0, block.index) +
-          svg.trim() +
+          wrapped +
           result.slice(block.index + block[0].length);
       } catch (err) {
         console.warn(`  warning: mermaid rendering failed for diagram ${i}, keeping code block`);
