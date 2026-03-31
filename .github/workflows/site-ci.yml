@@ -38,7 +38,7 @@ jobs:
         run: npm ci
 
       - name: Install Chrome with system deps
-        run: npx puppeteer browsers install chrome --install-deps
+        run: sudo npx puppeteer browsers install chrome --install-deps
 
       - name: Run tests
         working-directory: tools/site-generator
@@ -87,7 +87,7 @@ jobs:
         run: npm ci
 
       - name: Install Chrome with system deps
-        run: npx puppeteer browsers install chrome --install-deps
+        run: sudo npx puppeteer browsers install chrome --install-deps
 
       - name: Build site
         working-directory: tools/site-generator
