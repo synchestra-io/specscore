@@ -99,13 +99,7 @@ deploy:
         service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
 
     - name: Deploy to Firebase Hosting
-      uses: FirebaseExtended/action-hosting-deploy@v0
-      with:
-        repoToken: ${{ secrets.GITHUB_TOKEN }}
-        firebaseServiceAccount: ''
-        projectId: synchestra-io
-        target: specscore-org
-        channelId: live
+      run: npx firebase-tools@latest deploy --only hosting:specscore-org --non-interactive
 ```
 
 ## What This Design Does Not Cover
