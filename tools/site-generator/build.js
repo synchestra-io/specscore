@@ -28,6 +28,22 @@ async function build() {
   console.log(`Building ${config.pages.length} pages...`);
 
   for (const page of config.pages) {
+    // Landing page: inject hand-crafted HTML instead of rendering markdown
+    if (page.slug === 'index') {
+      const landingContent = await readFile(join(__dirname, 'landing.html'), 'utf-8');
+      const htmlPage = injectIntoTemplate(template, {
+        title: page.title,
+        content: landingContent,
+        slug: page.slug,
+        sidebarGroups: config.sidebarGroups,
+        eyebrow: '',
+        showViewMarkdown: false,
+      });
+      await writeFile(join(OUTPUT, 'index.html'), htmlPage, 'utf-8');
+      console.log('  index.html (landing)');
+      continue;
+    }
+
     const sourcePath = join(ROOT, page.source);
     const rawMarkdown = await readFile(sourcePath, 'utf-8');
 
@@ -45,7 +61,8 @@ async function build() {
       title: page.title,
       content: htmlContent,
       slug: page.slug,
-      navItems: config.navItems,
+      sidebarGroups: config.sidebarGroups,
+      eyebrow: page.navGroup || '',
     });
 
     // 5. Write HTML file
