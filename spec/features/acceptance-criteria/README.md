@@ -4,7 +4,9 @@
 
 ## Summary
 
-Acceptance criteria are the contract between what a feature promises and what the system actually delivers. Each AC is a standalone markdown file — readable by product owners, auditable by reviewers, and executable by the [test runner](https://github.com/synchestra-io/rehearse/blob/main/spec/features/testing-framework/test-runner/). ACs live alongside the features they verify, carry their own lifecycle, and compose into [test scenarios](https://github.com/synchestra-io/rehearse/blob/main/spec/features/testing-framework/test-scenario/) for end-to-end validation.
+Acceptance criteria are **abstract verification conditions** — success/failure statements that define what must be true for a requirement to be satisfied. Each AC is a standalone markdown file that states a condition without prescribing specific inputs, flows, or implementation details. ACs are readable by product owners, auditable by reviewers, and verifiable through [scenarios](../scenario/README.md) that provide concrete Given/When/Then proof.
+
+ACs answer: **"What must be true?"** — not **"How do we test it?"** That is the [scenario](../scenario/README.md)'s job.
 
 The full specification for this feature — file format, supported languages, identification scheme, statuses, and validation rules — lives in the [synchestra-io/rehearse](https://github.com/synchestra-io/rehearse/blob/main/spec/features/acceptance-criteria/) repository.
 
@@ -15,6 +17,45 @@ SpecScore extends the base AC specification with project-specific conventions:
 ### Mandatory AC section in feature READMEs
 
 Every SpecScore feature README must include an **Acceptance Criteria** section. The "Not defined yet." state triggers a mandatory Outstanding Question: "Acceptance criteria not yet defined for this feature." This ensures missing ACs are visible — not forgotten.
+
+### Requirement traceability
+
+Each AC SHOULD include a `**Requirement:**` metadata field linking it to the requirement(s) it verifies:
+
+```markdown
+# AC: title-required
+
+**Requirement:** todo-item/manage#req:title-required
+
+Creating a todo without a title is rejected. Creating a todo with a title succeeds.
+```
+
+The reference format is `{feature-path}#req:{slug}`. An AC may reference multiple requirements as a comma-separated list when it verifies a condition spanning them.
+
+### Acceptance criteria vs scenarios
+
+ACs and [scenarios](../scenario/README.md) are complementary but distinct:
+
+| | Acceptance Criteria | Scenario |
+|---|---|---|
+| **Abstraction** | Abstract condition | Concrete flow |
+| **Format** | Prose statement | Given/When/Then steps |
+| **Location** | `_acs/` directory | `_tests/` directory |
+| **Purpose** | Define what must be true | Prove it with specific inputs |
+| **Executable** | No (verified through scenarios) | Yes (via Rehearse) |
+
+**Example pair:**
+
+AC (`_acs/title-required.md`):
+> Creating a todo without a title is rejected. Creating a todo with a title succeeds.
+
+Scenario (`_tests/create-without-title.md`):
+> GIVEN an empty todo list
+> WHEN the user runs `todo add ""`
+> THEN the CLI prints "Error: title is required"
+> AND the list remains empty
+
+The AC states the rule; the scenario proves it with a concrete example.
 
 ### Relationship to development plan ACs
 
@@ -39,6 +80,8 @@ If the AC section says "Not defined yet.", the Outstanding Questions section mus
 | Feature | Interaction |
 |---|---|
 | [Feature](../feature/README.md) | Features gain a mandatory Acceptance Criteria section and `_acs/` directory convention. The feature spec defines the structural rules; this feature defines what goes inside. |
+| [Requirement](../requirement/README.md) | ACs reference requirements via the `**Requirement:**` metadata field, creating traceability from verification conditions back to specific behavioral rules. |
+| [Scenario](../scenario/README.md) | Scenarios validate ACs with concrete Given/When/Then flows. An AC is abstract; a scenario is its executable proof. |
 | [Development Plan](../development-plan/README.md) | Plan step ACs may reference feature ACs. Plan-level ACs follow the same format but are frozen with the plan. |
 | [Testing Framework](../testing-framework/README.md) | Test scenarios reference ACs via table syntax. The test runner resolves and executes verification scripts. |
 | [Outstanding Questions](../outstanding-questions/README.md) | Missing ACs surface as outstanding questions, keeping them visible until addressed. |
