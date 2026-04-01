@@ -1,4 +1,6 @@
-# Task — Test Scenarios
+# Scenarios: Task
+
+Test scenarios for the [Task](../README.md) specification.
 
 | Scenario | Validates |
 |---|---|
