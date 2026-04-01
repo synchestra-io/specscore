@@ -11,5 +11,8 @@
   "dependencies": {
     "markdown-it": "^14.0.0",
     "@mermaid-js/mermaid-cli": "^11.4.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["puppeteer"]
   }
 }
