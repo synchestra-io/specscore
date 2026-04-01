@@ -35,18 +35,6 @@ function buildSidebarHtml(sidebarGroups, currentSlug) {
         })
         .join('\n          ');
 
-      if (group.collapsible) {
-        const summary = group.items.map((item) => item.navLabel).join(', ');
-        return `<div class="sidebar-section sidebar-collapsible" data-collapsible>
-        <span class="sidebar-label">${group.label}</span>
-        <p class="sidebar-summary">${summary}</p>
-        <button class="sidebar-expand" type="button" aria-expanded="false" aria-label="Expand ${group.label}">Show all &#9662;</button>
-        <ul class="sidebar-nav sidebar-collapsible-list">
-          ${links}
-        </ul>
-      </div>`;
-      }
-
       return `<div class="sidebar-section">
         <span class="sidebar-label">${group.label}</span>
         <ul class="sidebar-nav">

@@ -33,12 +33,9 @@ export async function loadConfig(configPath) {
     groupMap.get(label).push({ navLabel: link.navLabel, href: link.href, external: true });
   }
 
-  const COLLAPSIBLE_GROUPS = new Set(['SpecScore for']);
-
   const sidebarGroups = Array.from(groupMap.entries()).map(([label, items]) => ({
     label,
     items,
-    collapsible: COLLAPSIBLE_GROUPS.has(label),
   }));
 
   return { pages, sourceToSlug, sidebarGroups };

@@ -55,20 +55,5 @@
       localStorage.setItem('specscore-theme', next);
     });
   </script>
-  <script>
-    document.querySelectorAll('[data-collapsible]').forEach(function(section) {
-      var btn = section.querySelector('.sidebar-expand');
-      var hasActive = section.querySelector('.sidebar-nav li a.active');
-      if (hasActive) {
-        section.classList.add('is-expanded');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-      btn.addEventListener('click', function() {
-        section.classList.toggle('is-expanded');
-        var expanded = section.classList.contains('is-expanded');
-        btn.setAttribute('aria-expanded', String(expanded));
-      });
-    });
-  </script>
 </body>
 </html>

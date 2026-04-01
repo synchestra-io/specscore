@@ -44,10 +44,10 @@ describe('loadConfig', () => {
     assert.ok(!allItems.some((p) => p.slug === 'index'), 'index should not appear in sidebar');
   });
 
-  it('marks "SpecScore for" sidebar group as collapsible', async () => {
+  it('includes "SpecScore for" sidebar group', async () => {
     const config = await loadConfig(new URL('../site-config.json', import.meta.url));
     const forGroup = config.sidebarGroups.find((g) => g.label === 'SpecScore for');
     assert.ok(forGroup, '"SpecScore for" group should exist');
-    assert.equal(forGroup.collapsible, true);
+    assert.ok(forGroup.items.length > 0);
   });
 });
