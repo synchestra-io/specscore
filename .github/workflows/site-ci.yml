@@ -53,6 +53,7 @@ jobs:
             libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
             libxrandr2 libgbm1
           pnpm exec puppeteer browsers install chrome
+          pnpm exec puppeteer browsers install chrome-headless-shell
 
       - name: Run tests
         working-directory: tools/site-generator
