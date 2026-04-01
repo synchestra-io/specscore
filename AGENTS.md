@@ -13,7 +13,7 @@ These are also run by the CI workflow in `.github/workflows/go-ci.yml`.
 
 SpecScore is both the specification format definition and its reference tooling:
 
-- `spec/` is the technical source of truth for the SpecScore format (features, acceptance criteria, development plans, project definition, source references).
+- `spec/` is the technical source of truth for the SpecScore format (features, acceptance criteria, plans, project definition, source references).
 - `pkg/` contains the Go library packages — the public API importable by other tools (synchestra, rehearse, etc.).
 - `internal/cli/` contains thin cobra command wrappers around `pkg/` functions.
 - `cmd/specscore/` is the CLI entry point.

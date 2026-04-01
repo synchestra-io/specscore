@@ -260,7 +260,7 @@ This enables bidirectional traceability: spec-to-spec via dependency sections, a
 |---|---|
 | [Feature](../feature/README.md) | Source references point to features; dependency analysis tools consume them |
 | [Project Definition](../project-definition/README.md) | `specscore-project.yaml` provides org/repo override for resolution |
-| [Development Plan](../development-plan/README.md) | Plans are a referenceable resource type |
+| [Plan](../plan/README.md) | Plans are a referenceable resource type |
 
 ## Acceptance Criteria
 

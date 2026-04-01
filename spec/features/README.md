@@ -9,7 +9,8 @@ Core features of the SpecScore specification framework:
 | [requirement](requirement/README.md) | Conceptual | Discrete testable rules within feature Behavior sections |
 | [scenario](scenario/README.md) | Conceptual | Concrete Given/When/Then behavior examples in `_tests/` directories |
 | [source-references](source-references/README.md) | Conceptual | Code-to-spec traceability via inline annotations |
-| [development-plan](development-plan/README.md) | Conceptual | Planning documents that bridge specs to execution |
+| [plan](plan/README.md) | Conceptual | Planning documents that bridge specs to execution |
+| [task](task/README.md) | Conceptual | Discrete units of work within a plan |
 | [project-definition](project-definition/README.md) | Conceptual | SpecScore project configuration and root structure |
 
 ## Feature Hierarchy
@@ -21,7 +22,8 @@ spec/features/
 ├── acceptance-criteria/   # How to define abstract verification conditions
 ├── scenario/              # How to write concrete behavior examples
 ├── source-references/     # How to link code to specifications
-├── development-plan/      # How to structure planning documents
+├── plan/                  # How to structure planning documents
+├── task/                  # How to define discrete units of work within a plan
 └── project-definition/    # Project config and top-level structure
 ```
 

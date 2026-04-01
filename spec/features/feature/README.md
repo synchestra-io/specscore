@@ -4,7 +4,7 @@
 
 ## Summary
 
-A feature is the atomic unit of product specification in SpecScore. It describes a capability the product should have — what it does, why it matters, and how it behaves. Features live in the spec repository under `spec/features/` as directories with a mandatory `README.md`. They can nest (sub-features), accept change requests via [proposals](../proposals/README.md), trigger [development plans](../development-plan/README.md), and drive execution through task management tools.
+A feature is the atomic unit of product specification in SpecScore. It describes a capability the product should have — what it does, why it matters, and how it behaves. Features live in the spec repository under `spec/features/` as directories with a mandatory `README.md`. They can nest (sub-features), accept change requests via [proposals](../proposals/README.md), trigger [plans](../plan/README.md), and drive execution through task management tools.
 
 This specification defines the structure, metadata, lifecycle, and conventions that every feature must follow.
 
@@ -21,19 +21,19 @@ Without a formal definition, new features are created inconsistently, AI agents 
 
 ## Design Philosophy
 
-Features are the **"what"** layer of a specification. They describe desired product behavior — not how to build it (that is the [development plan](../development-plan/README.md)'s job) and not who is building it right now (that is execution/task management's job).
+Features are the **"what"** layer of a specification. They describe desired product behavior — not how to build it (that is the [plan](../plan/README.md)'s job) and not who is building it right now (that is execution/task management's job).
 
 ```mermaid
 graph LR
     A["Feature<br/>(what)"]
-    B["Development plan<br/>(how)"]
+    B["Plan<br/>(how)"]
     C["Execution<br/>(who/when)"]
 
     A -->|triggers| B
     B -->|generates| C
 ```
 
-Features are **living documents**. Unlike development plans, which are frozen once approved, a feature spec evolves as proposals are accepted and incorporated. The feature README always reflects the current desired behavior — not a historical snapshot.
+Features are **living documents**. Unlike plans, which are frozen once approved, a feature spec evolves as proposals are accepted and incorporated. The feature README always reflects the current desired behavior — not a historical snapshot.
 
 ## Behavior
 
@@ -162,7 +162,7 @@ Every feature README MUST include these sections:
 | Problem                 | Yes         | Why the feature exists                                            |
 | Behavior                | Yes         | How the feature works                                             |
 | Proposals               | Conditional | Present when the feature has a `proposals/` directory             |
-| Plans                   | Conditional | Present when a [development plan](../development-plan/README.md) touches this feature |
+| Plans                   | Conditional | Present when a [plan](../plan/README.md) touches this feature |
 | Acceptance Criteria     | Yes         | Always present. See [REQ: ac-section](#req-ac-section).           |
 | Outstanding Questions   | Yes         | Always present. See [REQ: outstanding-questions](#req-outstanding-questions). |
 
@@ -234,7 +234,7 @@ spec/features/ui/
 
 #### REQ: path-identification
 
-Features MUST be identified by their path relative to `spec/features/`. This path is the canonical identifier used in development plans, source references, and spec tooling.
+Features MUST be identified by their path relative to `spec/features/`. This path is the canonical identifier used in plans, source references, and spec tooling.
 
 | Feature path                      | Identifier          |
 |-----------------------------------|---------------------|
@@ -269,9 +269,9 @@ graph LR
     A -->|approved +<br/>incorporated| B
 ```
 
-### Features and development plans
+### Features and plans
 
-[Development plans](../development-plan/README.md) bridge features to execution. A plan is triggered by either a new feature spec or an approved proposal. Plans live separately in `spec/plans/` but reference the features they affect.
+[Plans](../plan/README.md) bridge features to execution. A plan is triggered by either a new feature spec or an approved proposal. Plans live separately in `spec/plans/` but reference the features they affect.
 
 Every plan lists its affected features in its header. Each affected feature's README includes a **Plans** section back-referencing active plans.
 
@@ -279,7 +279,7 @@ Every plan lists its affected features in its header. Each affected feature's RE
 graph LR
     A["Feature spec"]
     B["Proposal<br/>(approved)"]
-    C["Development plan"]
+    C["Plan"]
     D["Execution"]
 
     A -->|new feature| C
@@ -289,7 +289,7 @@ graph LR
 
 ### Features and execution
 
-Features do not directly reference execution units. The development plan bridges specifications to execution.
+Features do not directly reference execution units. The plan bridges specifications to execution.
 
 ### Features and outstanding questions
 
@@ -315,7 +315,7 @@ Feature behavior is configured through the project definition file. See [Project
 | Feature | Interaction |
 |---------|-------------|
 | [Proposals](../proposals/README.md) | Proposals attach change requests to features. Features display recent proposals in their README. |
-| [Development Plan](../development-plan/README.md) | Plans reference features they affect. Features back-reference active plans. |
+| [Plan](../plan/README.md) | Plans reference features they affect. Features back-reference active plans. |
 | [Requirement](../requirement/README.md) | Requirements are `#### REQ:` subsections under topic headings within a feature's Behavior section. They are the addressable rules that scenarios verify. |
 | [Acceptance Criteria](../acceptance-criteria/README.md) | ACs are optional `### AC:` sections in the Acceptance Criteria section that bundle related requirements into composite verification conditions. |
 | [Scenario](../scenario/README.md) | Scenarios are concrete behavior examples in the feature's `_tests/` directory. They validate REQs or ACs with Given/When/Then flows. |

@@ -1,6 +1,6 @@
 # Scenario: Plan directory structure
 
-**Validates:** [development-plan#req:plan-directory](../README.md#req-plan-directory), [development-plan#req:plan-slug-format](../README.md#req-plan-slug-format)
+**Validates:** [plan#req:plan-directory](../README.md#req-plan-directory), [plan#req:plan-slug-format](../README.md#req-plan-slug-format)
 
 ## Steps
 

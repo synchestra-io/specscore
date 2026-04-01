@@ -1,6 +1,6 @@
 # Scenario: Header field validation
 
-**Validates:** [development-plan#req:required-header-fields](../README.md#req-required-header-fields), [development-plan#req:source-type-values](../README.md#req-source-type-values)
+**Validates:** [plan#req:required-header-fields](../README.md#req-required-header-fields), [plan#req:source-type-values](../README.md#req-source-type-values)
 
 ## Steps
 

@@ -4,7 +4,7 @@
 
 ## Steps
 
-GIVEN a development plan step with an AC that references `my-feature#ac:input-validation`
+GIVEN a plan task with an AC that references `my-feature#ac:input-validation`
 AND the feature `my-feature` has an AC `### AC: input-validation` in its README
 WHEN the spec linter resolves the plan step AC reference
 THEN the reference resolves to the feature AC

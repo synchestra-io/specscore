@@ -1,6 +1,6 @@
 # Scenario: Features field uniform declaration
 
-**Validates:** [development-plan#req:features-field-uniform](../README.md#req-features-field-uniform)
+**Validates:** [plan#req:features-field-uniform](../README.md#req-features-field-uniform)
 
 ## Steps
 
