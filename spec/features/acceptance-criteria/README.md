@@ -88,15 +88,15 @@ Scenarios that verify a bundled condition SHOULD reference the AC in their `**Va
 
 ### Relationship to plan ACs
 
-Feature ACs and development plan ACs serve different audiences and lifecycles.
+Feature ACs and plan task ACs serve different audiences and lifecycles.
 
 #### REQ: feature-ac-long-lived
 
-Feature ACs are long-lived and evolve with the feature specification. They MUST NOT be frozen or versioned with a development plan.
+Feature ACs are long-lived and evolve with the feature specification. They MUST NOT be frozen or versioned with a plan.
 
 #### REQ: plan-ac-references
 
-Development plan step ACs MAY reference feature ACs to indicate that a plan step's completion depends on the feature AC passing. The plan step AC is frozen with the plan; the referenced feature AC continues to evolve independently.
+Plan task ACs MAY reference feature ACs to indicate that a task's completion depends on the feature AC passing. The task AC is frozen with the plan; the referenced feature AC continues to evolve independently.
 
 ## Interaction with Other Features
 
@@ -105,7 +105,7 @@ Development plan step ACs MAY reference feature ACs to indicate that a plan step
 | [Feature](../feature/README.md) | Features carry a mandatory Acceptance Criteria section. This feature defines what goes inside that section. |
 | [Requirement](../requirement/README.md) | ACs bundle requirements via the `**Requirements:**` metadata field, creating traceability from composite verification conditions back to individual behavioral rules. |
 | [Scenario](../scenario/README.md) | Scenarios validate ACs (or REQs directly) with concrete Given/When/Then flows. An AC is abstract; a scenario is its executable proof. |
-| [Development Plan](../development-plan/README.md) | Plan step ACs may reference feature ACs. Plan-level ACs follow the same format but are frozen with the plan. |
+| [Plan](../plan/README.md) | Plan task ACs may reference feature ACs. Plan-level ACs follow the same format but are frozen with the plan. |
 | [Outstanding Questions](../outstanding-questions/README.md) | Missing ACs surface as outstanding questions, keeping them visible until addressed. |
 
 ## Acceptance Criteria

@@ -7,4 +7,4 @@
 GIVEN a feature at `spec/features/billing/payments/README.md`
 WHEN the spec tooling resolves the feature identifier
 THEN the identifier is `billing/payments`
-AND development plans, source references, and other specs use `billing/payments` to reference this feature
+AND plans, source references, and other specs use `billing/payments` to reference this feature

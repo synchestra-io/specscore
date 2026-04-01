@@ -61,7 +61,7 @@ specscore/
 │   ├── features/               # Core features
 │   │   ├── feature/           # Feature specification format
 │   │   ├── architecture/       # Architecture specification format
-│   │   ├── development-plan/   # Planning document format
+│   │   ├── plan/              # Planning document format
 │   │   └── project-definition/ # Project structure and config
 │   └── README.md
 ├── tools/                       # SpecScore CLI and validators

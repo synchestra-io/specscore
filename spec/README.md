@@ -10,7 +10,7 @@ spec/
 ├── features/              # SpecScore feature specifications
 │   ├── feature/          # Feature specification format
 │   ├── architecture/      # Architecture specification format
-│   ├── development-plan/  # Planning document format
+│   ├── plan/              # Planning document format
 │   └── project-definition/# Project config and structure
 └── (more as SpecScore grows)
 ```

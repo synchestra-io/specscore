@@ -16,7 +16,7 @@ A task with subtasks is called a **plan** -- this is determined by structure, no
 
 ## Problem
 
-There is no standard definition of an executable work item in the SpecScore methodology. Development plans define the "how" at the planning level, but the atomic unit of execution -- the thing an agent or human actually picks up and completes -- has no formal specification.
+There is no standard definition of an executable work item in the SpecScore methodology. Plans define the "how" at the planning level, but the atomic unit of execution -- the thing an agent or human actually picks up and completes -- has no formal specification.
 
 Without a formal task definition:
 
@@ -229,7 +229,7 @@ When present, the `Produces` field MUST be a bulleted list of named artifacts. E
 
 | Feature | Interaction |
 |---|---|
-| [Plan](../development-plan/README.md) | A task is a leaf within a plan. A plan is a composite task -- a task with subtasks. Tasks and plans share the same status model and property format. |
+| [Plan](../plan/README.md) | A task is a leaf within a plan. A plan is a composite task -- a task with subtasks. Tasks and plans share the same status model and property format. |
 | [Feature](../feature/README.md) | Features define "what" to build. Tasks are the executable work items that implement features. Plans bridge features to tasks. |
 | [Requirement](../requirement/README.md) | Requirements are testable rules within feature specs. Task acceptance criteria may reference or derive from feature requirements. |
 | [Acceptance Criteria](../acceptance-criteria/README.md) | Task-level acceptance criteria follow the same conventions as feature-level acceptance criteria but are scoped to the individual work item. |
