@@ -33,6 +33,7 @@ func Run(args []string) error {
 		featureCommand(),
 		specCommand(),
 		codeCommand(),
+		taskCommand(),
 	)
 
 	if len(args) > 1 {
