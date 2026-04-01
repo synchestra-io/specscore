@@ -267,7 +267,7 @@ Plan status transitions MUST follow these rules: `draft` MAY transition to `in_r
 
 A snapshot is an immutable reference point within a plan's history. Instead of freezing the entire plan on approval, snapshots record meaningful moments -- approval, checkpoints, completion -- as entries in a table with a corresponding git commit hash.
 
-Snapshots replace immutability-after-approval. A plan can be edited freely at any time. When a reference point is needed, a snapshot captures the plan's state at that git hash. The snapshot table lives in the plan document:
+Snapshots remove the need to freeze a plan on approval. A plan can be edited freely at any time. When a reference point is needed, a snapshot captures the plan's state at that git hash. The snapshot table lives in the plan document:
 
 ```markdown
 ## Snapshots
@@ -649,7 +649,7 @@ The What's Next report is an AI-generated prioritization document that surfaces 
 1. **[chat-workflow-engine](chat-feature/chat-workflow-engine/)** -- Impact: high,
    Effort: M. Unblocked by chat-infrastructure completion. Advances the
    highest-impact plan.
-2. **[agent-skills-roadmap](agent-skills-roadmap/)** -- Impact: medium, Effort: L.
+2. **[agent-skills-framework](agent-skills-framework/)** -- Impact: medium, Effort: L.
    No blockers, independent of current momentum.
 
 ### Reasoning
