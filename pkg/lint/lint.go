@@ -75,13 +75,21 @@ type Checker interface {
 var customCheckers []Checker
 
 // RegisterChecker registers a custom checker that will run alongside
-// built-in checkers during Lint().
+// built-in checkers during Lint(). Must be called before any concurrent
+// use of Lint (typically during init or program startup).
 func RegisterChecker(c Checker) {
+	if c == nil {
+		return
+	}
 	customCheckers = append(customCheckers, c)
+	allRuleNames[c.Name()] = true
 }
 
 // ResetCustomCheckers clears all registered custom checkers (for testing).
 func ResetCustomCheckers() {
+	for _, c := range customCheckers {
+		delete(allRuleNames, c.Name())
+	}
 	customCheckers = nil
 }
 
