@@ -33,7 +33,7 @@ graph LR
     B -->|generates| C
 ```
 
-Features are **living documents**. Unlike plans, which are frozen once approved, a feature spec evolves as proposals are accepted and incorporated. The feature README always reflects the current desired behavior — not a historical snapshot.
+Features are **living documents**. Plans are also mutable, but use snapshots to capture immutable reference points (approval, checkpoints, completion). A feature spec evolves as proposals are accepted and incorporated. The feature README always reflects the current desired behavior — not a historical snapshot.
 
 ## Behavior
 

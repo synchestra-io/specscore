@@ -6,7 +6,7 @@ const sourceToSlug = new Map([
   ['spec/README.md', 'index'],
   ['spec/features/README.md', 'specifications'],
   ['spec/features/feature/README.md', 'feature-specification'],
-  ['spec/features/development-plan/README.md', 'development-plan-specification'],
+  ['spec/features/plan/README.md', 'plan-specification'],
 ]);
 
 describe('rewriteLinks', () => {
@@ -23,9 +23,9 @@ describe('rewriteLinks', () => {
   });
 
   it('rewrites parent-relative links', () => {
-    const md = 'See [Dev Plan](../development-plan/README.md) for planning.';
+    const md = 'See [Plan](../plan/README.md) for planning.';
     const result = rewriteLinks(md, 'spec/features/feature/README.md', sourceToSlug, 'html');
-    assert.equal(result, 'See [Dev Plan](/development-plan-specification) for planning.');
+    assert.equal(result, 'See [Plan](/plan-specification) for planning.');
   });
 
   it('leaves external URLs unchanged', () => {
@@ -48,7 +48,7 @@ describe('rewriteLinks', () => {
 
   it('handles links with anchors, preserving the fragment', () => {
     const md = 'See [statuses](../feature/README.md#feature-statuses).';
-    const result = rewriteLinks(md, 'spec/features/development-plan/README.md', sourceToSlug, 'html');
+    const result = rewriteLinks(md, 'spec/features/plan/README.md', sourceToSlug, 'html');
     assert.equal(result, 'See [statuses](/feature-specification#feature-statuses).');
   });
 });

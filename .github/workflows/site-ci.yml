@@ -62,7 +62,7 @@ jobs:
 
       - name: Verify mermaid SVGs rendered
         run: |
-          for f in public/feature-specification.html public/development-plan-specification.html; do
+          for f in public/feature-specification.html public/plan-specification.html; do
             if ! grep -q '<svg' "$f"; then
               echo "ERROR: No SVG found in $f"
               exit 1

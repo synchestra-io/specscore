@@ -92,11 +92,11 @@ Feature ACs and plan task ACs serve different audiences and lifecycles.
 
 #### REQ: feature-ac-long-lived
 
-Feature ACs are long-lived and evolve with the feature specification. They MUST NOT be frozen or versioned with a plan.
+Feature ACs are long-lived and evolve with the feature specification. They MUST NOT be versioned with a plan. Plan snapshots capture the plan's state at a point in time; feature ACs are not included in those snapshots.
 
 #### REQ: plan-ac-references
 
-Plan task ACs MAY reference feature ACs to indicate that a task's completion depends on the feature AC passing. The task AC is frozen with the plan; the referenced feature AC continues to evolve independently.
+Plan task ACs MAY reference feature ACs to indicate that a task's completion depends on the feature AC passing. The task AC is captured in plan snapshots; the referenced feature AC continues to evolve independently.
 
 ## Interaction with Other Features
 
@@ -105,7 +105,7 @@ Plan task ACs MAY reference feature ACs to indicate that a task's completion dep
 | [Feature](../feature/README.md) | Features carry a mandatory Acceptance Criteria section. This feature defines what goes inside that section. |
 | [Requirement](../requirement/README.md) | ACs bundle requirements via the `**Requirements:**` metadata field, creating traceability from composite verification conditions back to individual behavioral rules. |
 | [Scenario](../scenario/README.md) | Scenarios validate ACs (or REQs directly) with concrete Given/When/Then flows. An AC is abstract; a scenario is its executable proof. |
-| [Plan](../plan/README.md) | Plan task ACs may reference feature ACs. Plan-level ACs follow the same format but are frozen with the plan. |
+| [Plan](../plan/README.md) | Plan task ACs may reference feature ACs. Plan-level ACs follow the same format and are captured in plan snapshots. |
 | [Outstanding Questions](../outstanding-questions/README.md) | Missing ACs surface as outstanding questions, keeping them visible until addressed. |
 
 ## Acceptance Criteria
