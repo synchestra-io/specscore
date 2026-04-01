@@ -45,12 +45,14 @@ jobs:
         working-directory: tools/site-generator
         run: pnpm install --frozen-lockfile
 
-      - name: Install Chrome system libraries
+      - name: Install Chrome
+        working-directory: tools/site-generator
         run: |
           sudo apt-get install -y --no-install-recommends \
             libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 \
             libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
             libxrandr2 libgbm1
+          pnpm exec puppeteer browsers install chrome
 
       - name: Run tests
         working-directory: tools/site-generator
