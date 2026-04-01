@@ -102,6 +102,14 @@ func runTaskList(cmd *cobra.Command, _ []string) error {
 	rows := bv.Rows
 	if statusFlag != "" {
 		filterStatus := task.TaskStatus(statusFlag)
+		// Validate status value.
+		switch filterStatus {
+		case task.StatusPlanning, task.StatusQueued, task.StatusClaimed,
+			task.StatusInProgress, task.StatusCompleted, task.StatusFailed,
+			task.StatusBlocked, task.StatusAborted:
+		default:
+			return exitcode.InvalidArgsErrorf("invalid status: %s (valid: planning, queued, claimed, in_progress, completed, failed, blocked, aborted)", statusFlag)
+		}
 		var filtered []task.BoardRow
 		for _, r := range rows {
 			if r.Status == filterStatus {
@@ -271,7 +279,7 @@ func runTaskNew(cmd *cobra.Command, _ []string) error {
 	}
 
 	// Parse --depends-on
-	var deps []string
+	deps := []string{}
 	if depsFlag != "" {
 		for _, d := range strings.Split(depsFlag, ",") {
 			d = strings.TrimSpace(d)
