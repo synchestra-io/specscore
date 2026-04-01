@@ -1,6 +1,6 @@
 # Scenario: Proposal forward reference
 
-**Validates:** [development-plan#req:proposal-forward-reference](../README.md#req-proposal-forward-reference)
+**Validates:** [plan#req:proposal-forward-reference](../README.md#req-proposal-forward-reference)
 
 ## Steps
 

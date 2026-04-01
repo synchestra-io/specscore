@@ -1,6 +1,6 @@
 # Scenario: Plan document format
 
-**Validates:** [development-plan#req:plan-title-format](../README.md#req-plan-title-format), [development-plan#req:plan-required-sections](../README.md#req-plan-required-sections)
+**Validates:** [plan#req:plan-title-format](../README.md#req-plan-title-format), [plan#req:plan-required-sections](../README.md#req-plan-required-sections)
 
 ## Steps
 
@@ -13,5 +13,9 @@ WHEN the document is validated
 THEN validation rejects the document with an error indicating the `Plan:` prefix is required
 
 GIVEN a plan document that is missing the `## Context` section
+WHEN the document is validated
+THEN validation rejects the document with an error listing the missing required section
+
+GIVEN a plan document that is missing the `## Tasks` section
 WHEN the document is validated
 THEN validation rejects the document with an error listing the missing required section
