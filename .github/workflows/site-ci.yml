@@ -45,13 +45,12 @@ jobs:
         working-directory: tools/site-generator
         run: pnpm install --frozen-lockfile
 
-      - name: Install Chrome
+      - name: Install Chrome system libraries
         run: |
           sudo apt-get install -y --no-install-recommends \
             libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 \
             libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
             libxrandr2 libgbm1
-          pnpm dlx puppeteer browsers install chrome
 
       - name: Run tests
         working-directory: tools/site-generator
@@ -86,4 +85,6 @@ jobs:
 
       - name: Deploy to Firebase Hosting
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: pnpm dlx firebase-tools@latest deploy --only hosting:specscore-org --non-interactive
+        env:
+          NODE_NO_WARNINGS: 1
+        run: pnpm --config.onlyBuiltDependencies='["protobufjs","re2"]' dlx firebase-tools@latest deploy --only hosting:specscore-org --non-interactive
