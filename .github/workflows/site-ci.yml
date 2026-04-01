@@ -21,8 +21,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test-and-build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - uses: actions/checkout@v6
@@ -69,45 +73,13 @@ jobs:
             fi
           done
 
-  deploy:
-    needs: test-and-build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: tools/site-generator/package-lock.json
-
-      - name: Install dependencies
-        working-directory: tools/site-generator
-        run: npm ci
-
-      - name: Install Chrome
-        run: |
-          sudo apt-get install -y --no-install-recommends \
-            libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 \
-            libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
-            libxrandr2 libgbm1
-          npx puppeteer browsers install chrome
-
-      - name: Build site
-        working-directory: tools/site-generator
-        run: npm run build
-
       - name: Authenticate to GCP
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
           service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
 
       - name: Deploy to Firebase Hosting
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: npx firebase-tools@latest deploy --only hosting:specscore-org --non-interactive
