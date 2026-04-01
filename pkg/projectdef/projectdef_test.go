@@ -59,3 +59,48 @@ func TestSpecConfigFileExists(t *testing.T) {
 		t.Errorf("expected %s to exist", path)
 	}
 }
+
+func TestSpecConfigExtrasRoundTrip(t *testing.T) {
+	dir := t.TempDir()
+	cfg := SpecConfig{
+		Title: "Test",
+		Repos: []string{"github.com/org/code"},
+		Extras: map[string]any{
+			"synchestra": map[string]any{
+				"state_repo": "github.com/org/state",
+			},
+		},
+	}
+	if err := WriteSpecConfig(dir, cfg); err != nil {
+		t.Fatal(err)
+	}
+	got, err := ReadSpecConfig(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.Title != "Test" {
+		t.Errorf("title: got %q, want %q", got.Title, "Test")
+	}
+	synExt, ok := got.Extras["synchestra"].(map[string]any)
+	if !ok {
+		t.Fatal("synchestra extension not round-tripped")
+	}
+	if synExt["state_repo"] != "github.com/org/state" {
+		t.Errorf("state_repo: got %v", synExt["state_repo"])
+	}
+}
+
+func TestCodeConfigRoundTrip(t *testing.T) {
+	dir := t.TempDir()
+	cfg := CodeConfig{SpecRepos: []string{"github.com/org/spec"}}
+	if err := WriteCodeConfig(dir, cfg); err != nil {
+		t.Fatal(err)
+	}
+	got, err := ReadCodeConfig(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got.SpecRepos) != 1 || got.SpecRepos[0] != "github.com/org/spec" {
+		t.Errorf("unexpected SpecRepos: %v", got.SpecRepos)
+	}
+}
