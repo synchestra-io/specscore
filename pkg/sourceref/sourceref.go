@@ -4,16 +4,14 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 // Reference represents a parsed source reference found in source code.
 type Reference struct {
-	// ResolvedPath is the repo-root-relative path after type-prefix expansion
-	ResolvedPath string
-	// CrossRepoSuffix is the optional @host/org/repo (empty string if same-repo)
+	ResolvedPath    string
 	CrossRepoSuffix string
-	// Type is the inferred resource type: "feature", "plan", "doc", or "" if unknown
-	Type string
+	Type            string
 }
 
 // SourceRef represents a source file reference (file + line number).
@@ -23,8 +21,48 @@ type SourceRef struct {
 	LineContent string
 }
 
-// DetectionRegex matches source references preceded by recognized comment prefixes.
-var DetectionRegex = regexp.MustCompile(`^\s*(//|#|--|/\*|\*|%|;)\s*(synchestra:|https://synchestra\.io/)`)
+var (
+	mu       sync.Mutex
+	prefixes = []string{"specscore", "synchestra"}
+	domains  = []string{"specscore.io", "synchestra.io"}
+
+	// DetectionRegex is rebuilt when prefixes change.
+	DetectionRegex *regexp.Regexp
+)
+
+func init() {
+	DetectionRegex = buildDetectionRegex()
+}
+
+// RegisterPrefix adds a short-notation prefix (e.g. "mytool") so that
+// "mytool:feature/foo" is recognized as a source reference.
+// Also registers "mytool.io" as an expanded URL domain.
+func RegisterPrefix(prefix string) {
+	mu.Lock()
+	defer mu.Unlock()
+	for _, p := range prefixes {
+		if p == prefix {
+			return
+		}
+	}
+	prefixes = append(prefixes, prefix)
+	domains = append(domains, prefix+".io")
+	DetectionRegex = buildDetectionRegex()
+}
+
+func buildDetectionRegex() *regexp.Regexp {
+	var shortParts []string
+	var urlParts []string
+	for _, p := range prefixes {
+		shortParts = append(shortParts, regexp.QuoteMeta(p+":"))
+	}
+	for _, d := range domains {
+		urlParts = append(urlParts, regexp.QuoteMeta("https://"+d+"/"))
+	}
+	all := append(shortParts, urlParts...)
+	pattern := `^\s*(//|#|--|/\*|\*|%|;)\s*(` + strings.Join(all, "|") + `)`
+	return regexp.MustCompile(pattern)
+}
 
 // DetectReference checks if a line contains a source reference.
 func DetectReference(line string) bool {
@@ -33,24 +71,27 @@ func DetectReference(line string) bool {
 
 // ExtractReference extracts the reference string from a line.
 func ExtractReference(line string) string {
-	idx := strings.Index(line, "synchestra:")
-	if idx == -1 {
-		idx = strings.Index(line, "https://synchestra.io/")
-	}
-	if idx == -1 {
-		return ""
-	}
-	extracted := line[idx:]
-	if strings.HasPrefix(extracted, "https://") {
-		if endIdx := strings.IndexAny(extracted, " \t\n\r"); endIdx != -1 {
-			extracted = extracted[:endIdx]
-		}
-	} else if strings.HasPrefix(extracted, "synchestra:") {
-		if endIdx := strings.IndexAny(extracted, " \t\n\r"); endIdx != -1 {
-			extracted = extracted[:endIdx]
+	for _, p := range prefixes {
+		prefix := p + ":"
+		if idx := strings.Index(line, prefix); idx != -1 {
+			extracted := line[idx:]
+			if endIdx := strings.IndexAny(extracted, " \t\n\r"); endIdx != -1 {
+				extracted = extracted[:endIdx]
+			}
+			return extracted
 		}
 	}
-	return extracted
+	for _, d := range domains {
+		urlPrefix := "https://" + d + "/"
+		if idx := strings.Index(line, urlPrefix); idx != -1 {
+			extracted := line[idx:]
+			if endIdx := strings.IndexAny(extracted, " \t\n\r"); endIdx != -1 {
+				extracted = extracted[:endIdx]
+			}
+			return extracted
+		}
+	}
+	return ""
 }
 
 // ParseReference parses an extracted reference string and returns a Reference.
@@ -58,18 +99,24 @@ func ParseReference(extracted string) (*Reference, error) {
 	if extracted == "" {
 		return nil, fmt.Errorf("empty reference")
 	}
-	if strings.HasPrefix(extracted, "https://synchestra.io/") {
-		return parseExpandedURL(extracted)
+	for _, d := range domains {
+		urlPrefix := "https://" + d + "/"
+		if strings.HasPrefix(extracted, urlPrefix) {
+			return parseExpandedURL(extracted, urlPrefix)
+		}
 	}
-	if strings.HasPrefix(extracted, "synchestra:") {
-		return parseShortNotation(extracted)
+	for _, p := range prefixes {
+		prefix := p + ":"
+		if strings.HasPrefix(extracted, prefix) {
+			return parseShortNotation(extracted, prefix)
+		}
 	}
 	return nil, fmt.Errorf("unrecognized reference format: %s", extracted)
 }
 
-func parseExpandedURL(url string) (*Reference, error) {
-	url = strings.TrimPrefix(url, "https://synchestra.io/")
-	parts := strings.Split(url, "/")
+func parseExpandedURL(url, urlPrefix string) (*Reference, error) {
+	path := strings.TrimPrefix(url, urlPrefix)
+	parts := strings.Split(path, "/")
 	if len(parts) < 4 {
 		return nil, fmt.Errorf("invalid expanded URL format: too few path segments")
 	}
@@ -77,11 +124,7 @@ func parseExpandedURL(url string) (*Reference, error) {
 	org := parts[1]
 	repo := parts[2]
 	resolvedPath := strings.Join(parts[3:], "/")
-	currentHost, currentOrg, currentRepo := "github.com", "synchestra-io", "synchestra"
-	crossRepoSuffix := ""
-	if host != currentHost || org != currentOrg || repo != currentRepo {
-		crossRepoSuffix = fmt.Sprintf("@%s/%s/%s", host, org, repo)
-	}
+	crossRepoSuffix := fmt.Sprintf("@%s/%s/%s", host, org, repo)
 	refType := inferType(resolvedPath)
 	return &Reference{
 		ResolvedPath:    resolvedPath,
@@ -90,8 +133,8 @@ func parseExpandedURL(url string) (*Reference, error) {
 	}, nil
 }
 
-func parseShortNotation(notation string) (*Reference, error) {
-	notation = strings.TrimPrefix(notation, "synchestra:")
+func parseShortNotation(notation, prefix string) (*Reference, error) {
+	notation = strings.TrimPrefix(notation, prefix)
 	crossRepoSuffix := ""
 	reference := notation
 	if idx := strings.LastIndex(notation, "@"); idx != -1 {
