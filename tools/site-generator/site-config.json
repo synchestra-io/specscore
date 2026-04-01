@@ -27,13 +27,22 @@
       "navOrder": 2
     },
     {
-      "source": "spec/features/development-plan/README.md",
-      "slug": "development-plan-specification",
-      "title": "Development Plan Specification",
+      "source": "spec/features/plan/README.md",
+      "slug": "plan-specification",
+      "title": "Plan Specification",
       "nav": true,
-      "navLabel": "Development Plan",
+      "navLabel": "Plan",
       "navGroup": "Specification",
       "navOrder": 3
+    },
+    {
+      "source": "spec/features/task/README.md",
+      "slug": "task-specification",
+      "title": "Task Specification",
+      "nav": true,
+      "navLabel": "Task",
+      "navGroup": "Specification",
+      "navOrder": 4
     },
     {
       "source": "spec/features/acceptance-criteria/README.md",
@@ -42,7 +51,7 @@
       "nav": true,
       "navLabel": "Acceptance Criteria",
       "navGroup": "Specification",
-      "navOrder": 4
+      "navOrder": 5
     },
     {
       "source": "spec/features/project-definition/README.md",
@@ -51,7 +60,7 @@
       "nav": true,
       "navLabel": "Project Definition",
       "navGroup": "Specification",
-      "navOrder": 5
+      "navOrder": 6
     },
     {
       "source": "spec/features/source-references/README.md",
@@ -60,7 +69,7 @@
       "nav": true,
       "navLabel": "Source References",
       "navGroup": "Specification",
-      "navOrder": 6
+      "navOrder": 7
     },
     {
       "source": "docs/installation.md",
