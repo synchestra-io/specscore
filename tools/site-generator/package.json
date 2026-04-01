@@ -9,10 +9,13 @@
     "test": "node --test lib/**/*.test.js"
   },
   "dependencies": {
+    "@mermaid-js/mermaid-cli": "^11.4.0",
     "markdown-it": "^14.0.0",
-    "@mermaid-js/mermaid-cli": "^11.4.0"
+    "puppeteer": "^23.11.1"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["puppeteer"]
+    "onlyBuiltDependencies": [
+      "puppeteer"
+    ]
   }
 }

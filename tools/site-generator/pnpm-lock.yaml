@@ -14,6 +14,9 @@ importers:
       markdown-it:
         specifier: ^14.0.0
         version: 14.1.1
+      puppeteer:
+        specifier: ^23.11.1
+        version: 23.11.1
 
 packages:
 
