@@ -40,6 +40,11 @@ func newLinter(opts Options) *linter {
 	l.registerChecker(newPlanHierarchyChecker())
 	l.registerChecker(newPlanROIChecker())
 
+	// Register custom checkers
+	for _, c := range customCheckers {
+		l.ruleSet[c.Name()] = &customCheckerAdapter{c}
+	}
+
 	return l
 }
 
@@ -101,6 +106,17 @@ func (l *linter) lint() ([]Violation, error) {
 	}
 
 	return violations, nil
+}
+
+// customCheckerAdapter adapts the public Checker interface to the internal checker interface.
+type customCheckerAdapter struct {
+	c Checker
+}
+
+func (a *customCheckerAdapter) name() string     { return a.c.Name() }
+func (a *customCheckerAdapter) severity() string { return a.c.Severity() }
+func (a *customCheckerAdapter) check(specRoot string) ([]Violation, error) {
+	return a.c.Check(specRoot)
 }
 
 // walkSpecDirs returns subdirectory paths under specRoot, skipping hidden dirs

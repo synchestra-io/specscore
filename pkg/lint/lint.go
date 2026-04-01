@@ -64,6 +64,27 @@ func FilterBySeverity(violations []Violation, minSeverity string) []Violation {
 	return filtered
 }
 
+// Checker is the public interface for custom rule implementations.
+// External tools can implement this to add custom rules to the linter.
+type Checker interface {
+	Name() string
+	Severity() string
+	Check(specRoot string) ([]Violation, error)
+}
+
+var customCheckers []Checker
+
+// RegisterChecker registers a custom checker that will run alongside
+// built-in checkers during Lint().
+func RegisterChecker(c Checker) {
+	customCheckers = append(customCheckers, c)
+}
+
+// ResetCustomCheckers clears all registered custom checkers (for testing).
+func ResetCustomCheckers() {
+	customCheckers = nil
+}
+
 // allRuleNames is the canonical list of known rule names.
 var allRuleNames = map[string]bool{
 	"readme-exists":      true,

@@ -413,6 +413,44 @@ func TestLint_EmptyDir(t *testing.T) {
 	}
 }
 
+// --- custom checker registration ---
+
+func TestRegisterChecker(t *testing.T) {
+	defer ResetCustomCheckers()
+
+	RegisterChecker(&testChecker{
+		n: "custom-rule",
+		s: "warning",
+		violations: []Violation{{
+			File: "test.md", Line: 1, Severity: "warning",
+			Rule: "custom-rule", Message: "custom violation",
+		}},
+	})
+
+	dir := t.TempDir()
+	mkdir(t, filepath.Join(dir, "spec", "features"))
+	writeFile(t, filepath.Join(dir, "spec", "features", "README.md"),
+		"# Features\n\n## Outstanding Questions\n\nNone.\n")
+
+	violations, err := Lint(Options{SpecRoot: dir, Rules: []string{"custom-rule"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(violations) != 1 || violations[0].Rule != "custom-rule" {
+		t.Errorf("expected 1 custom violation, got %d", len(violations))
+	}
+}
+
+type testChecker struct {
+	n          string
+	s          string
+	violations []Violation
+}
+
+func (c *testChecker) Name() string                      { return c.n }
+func (c *testChecker) Severity() string                  { return c.s }
+func (c *testChecker) Check(string) ([]Violation, error) { return c.violations, nil }
+
 // --- helpers ---
 
 func setupSpecTree(t *testing.T, files map[string]string) string {
