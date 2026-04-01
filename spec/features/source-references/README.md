@@ -1,6 +1,6 @@
 # Feature: Source References
 
-**Status:** Conceptual
+**Status:** Stable
 
 ## Summary
 

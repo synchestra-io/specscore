@@ -1,6 +1,6 @@
 # Feature: Plan
 
-**Status:** Conceptual
+**Status:** Stable
 
 ## Summary
 

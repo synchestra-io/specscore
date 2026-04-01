@@ -4,14 +4,14 @@ Core features of the SpecScore specification framework:
 
 | Feature | Status | Description |
 |---------|--------|-------------|
-| [feature](feature/README.md) | Conceptual | Feature specification structure, metadata, lifecycle, and conventions |
-| [acceptance-criteria](acceptance-criteria/README.md) | Conceptual | Acceptance criteria format and conventions |
-| [requirement](requirement/README.md) | Conceptual | Discrete testable rules within feature Behavior sections |
-| [scenario](scenario/README.md) | Conceptual | Concrete Given/When/Then behavior examples in `_tests/` directories |
-| [source-references](source-references/README.md) | Conceptual | Code-to-spec traceability via inline annotations |
-| [plan](plan/README.md) | Conceptual | Planning documents that bridge specs to execution |
-| [task](task/README.md) | Conceptual | Discrete units of work within a plan |
-| [project-definition](project-definition/README.md) | Conceptual | SpecScore project configuration and root structure |
+| [feature](feature/README.md) | Stable | Feature specification structure, metadata, lifecycle, and conventions |
+| [acceptance-criteria](acceptance-criteria/README.md) | Stable | Acceptance criteria format and conventions |
+| [requirement](requirement/README.md) | Stable | Discrete testable rules within feature Behavior sections |
+| [scenario](scenario/README.md) | Stable | Concrete Given/When/Then behavior examples in `_tests/` directories |
+| [source-references](source-references/README.md) | Stable | Code-to-spec traceability via inline annotations |
+| [plan](plan/README.md) | Stable | Planning documents that bridge specs to execution |
+| [task](task/README.md) | Stable | Discrete units of work within a plan |
+| [project-definition](project-definition/README.md) | Stable | SpecScore project configuration and root structure |
 
 ## Feature Hierarchy
 

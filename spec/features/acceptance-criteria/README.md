@@ -1,6 +1,6 @@
 # Feature: Acceptance Criteria
 
-**Status:** Conceptual
+**Status:** Stable
 
 ## Summary
 
