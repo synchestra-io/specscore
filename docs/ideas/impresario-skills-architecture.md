@@ -6,7 +6,7 @@
 
 ## Decision
 
-**Impresario** is the lifecycle producer that drives projects from idea to ship. It consumes domain-specific skills from SpecScore and Synchestra to orchestrate the full development lifecycle.
+**Impresario** is the lifecycle producer that drives projects from idea to ship. It provides both **skills** (structured workflows) and **personas** (specialist roles like Marketing VP, Troubleshooter, Security Auditor) that can be called upon at any stage. It consumes domain-specific skills from SpecScore and Synchestra to orchestrate the full development lifecycle.
 
 ## Name Origin
 
@@ -46,6 +46,21 @@ Single S. Correct Italian/English spelling. No footnotes needed.
 **Impresario** owns the "what happens next" — the lifecycle sequence.
 **SpecScore Skills (Maestria)** own the "how to write/validate specs."
 **Synchestra Skills** own the "how to orchestrate agents and workflows."
+
+### Personas
+
+Beyond skills, Impresario provides **personas** — specialist roles the agent can adopt for specific tasks. An impresario assembles the right talent for each scene:
+
+| Persona | When summoned |
+|---|---|
+| **Marketing VP** | Naming, positioning, brand strategy, go-to-market |
+| **Troubleshooter** | Debugging, root cause analysis, incident response |
+| **Security Auditor** | Threat modeling, OWASP review, vulnerability assessment |
+| **Code Reviewer** | Code quality, architecture review, Staff Engineer lens |
+| **Test Engineer** | Test strategy, coverage analysis, QA perspective |
+| **Product Owner** | Requirements refinement, acceptance criteria, prioritization |
+
+Personas differ from skills: a **skill** is a workflow (steps to follow), a **persona** is a perspective (lens to think through). Impresario composes both — summon the right persona, run the right skill.
 
 ## How It Works
 
@@ -127,6 +142,14 @@ From this architecture, we can integrate the best ideas from both competitors:
 - **Skillestra** — clear family tie to Synchestra but collision risk in conversation
 - **Impressario** (double-s) — "impress" pun, but: typo friction, spelling corrections, broken imports. The real word is already better.
 - **GrandMaestro** — overkill for a skills framework name
+
+## Domain
+
+No dedicated domain needed at launch. Competitors (Superpowers, Agent-Skills) succeed with GitHub URLs alone. Developers find skills through package managers, plugin marketplaces, and GitHub search.
+
+- Primary home: `github.com/synchestra-io/impresario`
+- Marketing page if needed: `synchestra.io/impresario`
+- Candidates evaluated and parked: `impresario.show` (available, strong metaphor but reads as demo site), `impresario.run` (available, developer-friendly but generic)
 
 ## Open Questions
 
