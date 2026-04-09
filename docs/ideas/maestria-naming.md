@@ -1,4 +1,4 @@
-# Maestria — Skills Brand Name
+# Maestria — SpecScore Skills Brand Name
 
 **Status:** Approved
 **Date:** 2026-04-09
@@ -6,7 +6,7 @@
 
 ## Decision
 
-Our skills collection is named **Maestria**.
+SpecScore's skills collection is named **Maestria**.
 
 ## Name Origin
 
@@ -27,14 +27,7 @@ Hidden layer: **-ia** is **AI** reversed. Mastery for AI, encoded in the name it
 
 ## How It Fits the Synchestra Ecosystem
 
-The orchestra metaphor runs through everything:
-
-| Product | Musical Analogy |
-|---|---|
-| **Synchestra** | The synchronized orchestra (orchestration) |
-| **SpecScore** | The musical score (specifications) |
-| **Rehearse** | The rehearsal (testing) |
-| **Maestria** | The mastery/skill of the performers (skills) |
+See [impresario-skills-architecture.md](impresario-skills-architecture.md) for the full three-layer skills architecture where Maestria serves as SpecScore's domain skills consumed by Impresario.
 
 ## Usage
 
