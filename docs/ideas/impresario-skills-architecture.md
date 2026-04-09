@@ -18,33 +18,43 @@ Single S. Correct Italian/English spelling. No footnotes needed.
 
 ## The Three-Layer Architecture
 
-```
-┌─────────────────────────────────────────────────────┐
-│                    IMPRESARIO                        │
-│            (lifecycle producer)                      │
-│                                                     │
-│  impresario:idea → impresario:spec → impresario:plan│
-│  → impresario:build → impresario:test               │
-│  → impresario:review → impresario:ship              │
-└────────────┬──────────────────────┬─────────────────┘
-             │                      │
-             ▼                      ▼
-┌────────────────────┐  ┌────────────────────────────┐
-│   SPECSCORE SKILLS │  │     SYNCHESTRA SKILLS      │
-│   (Maestria)       │  │                            │
-│                    │  │                            │
-│ Spec authoring     │  │ Agent orchestration        │
-│ Spec linting       │  │ Worktree isolation         │
-│ Ideation           │  │ Parallel agent dispatch    │
-│ Plan structure     │  │ Subagent coordination      │
-│ Requirement writing│  │ Code review workflows      │
-│ Scenario design    │  │ Branch management          │
-│ Source ref linking  │  │ CI/CD integration          │
-└────────────────────┘  └────────────────────────────┘
+```mermaid
+graph TD
+    subgraph Impresario["IMPRESARIO (lifecycle producer)"]
+        idea["impresario:idea"] --> spec["impresario:spec"]
+        spec --> plan["impresario:plan"]
+        plan --> build["impresario:build"]
+        build --> test["impresario:test"]
+        test --> review["impresario:review"]
+        review --> ship["impresario:ship"]
+    end
+
+    subgraph SS["SPECSCORE SKILLS"]
+        ss1["Spec authoring"]
+        ss2["Spec linting"]
+        ss3["Ideation"]
+        ss4["Plan structure"]
+        ss5["Requirement writing"]
+        ss6["Scenario design"]
+        ss7["Source ref linking"]
+    end
+
+    subgraph SY["SYNCHESTRA SKILLS"]
+        sy1["Agent orchestration"]
+        sy2["Worktree isolation"]
+        sy3["Parallel agent dispatch"]
+        sy4["Subagent coordination"]
+        sy5["Code review workflows"]
+        sy6["Branch management"]
+        sy7["CI/CD integration"]
+    end
+
+    Impresario --> SS
+    Impresario --> SY
 ```
 
 **Impresario** owns the "what happens next" — the lifecycle sequence.
-**SpecScore Skills (Maestria)** own the "how to write/validate specs."
+**SpecScore skills** own the "how to write/validate specs."
 **Synchestra Skills** own the "how to orchestrate agents and workflows."
 
 ### Personas
@@ -103,10 +113,10 @@ impresario:<stage>      # Impresario — lifecycle commands
 | **Impresario** | The producer | Runs the show end-to-end; decides what happens when |
 | **Synchestra** | The orchestra | Coordinates the performers (agents) in concert |
 | **SpecScore** | The musical score | Defines what gets performed (specifications) |
-| **Maestria** | The performers' skill | SpecScore domain expertise (spec quality, authoring) |
+| **SpecScore skills** | The performers' technique | Spec quality, authoring, validation |
 | **Rehearse** | The rehearsal | Tests the performance before opening night |
 
-The impresario reads the score (SpecScore), calls on the orchestra (Synchestra) and its performers' mastery (Maestria), runs rehearsals (Rehearse), and produces the show.
+The impresario reads the score (SpecScore), calls on the orchestra (Synchestra) and its performers' technique (SpecScore skills), runs rehearsals (Rehearse), and produces the show.
 
 ## Comparison to Competitors
 
@@ -125,8 +135,7 @@ The key differentiator: Impresario is a **composer of skills**, not just a colle
 From this architecture, we can integrate the best ideas from both competitors:
 
 **From Agent-Skills:**
-- Reference checklists (security, performance, accessibility) → become SpecScore Skills (Maestria)
-- Anti-rationalization tables → embedded in Impresario lifecycle commands
+- Reference checklists (security, performance, accessibility) → become SpecScore Skills - Anti-rationalization tables → embedded in Impresario lifecycle commands
 - Agent personas (reviewer, auditor, tester) → available at `impresario:review`
 - `docs/ideas/` convention → already adopted
 
@@ -138,7 +147,7 @@ From this architecture, we can integrate the best ideas from both competitors:
 
 ## Alternatives Considered
 
-- **Maestria for everything** — strong standalone name but doesn't convey "lifecycle producer"
+- **Maestria** — beautiful word ("mastery" in Romance languages) but naming SpecScore skills separately was unnecessary complexity
 - **Skillestra** — clear family tie to Synchestra but collision risk in conversation
 - **Impressario** (double-s) — "impress" pun, but: typo friction, spelling corrections, broken imports. The real word is already better.
 - **GrandMaestro** — overkill for a skills framework name

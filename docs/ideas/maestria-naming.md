@@ -1,6 +1,6 @@
 # Maestria — SpecScore Skills Brand Name
 
-**Status:** Approved
+**Status:** Archived — superseded by [Impresario](impresario-skills-architecture.md). SpecScore skills don't need a separate brand.
 **Date:** 2026-04-09
 **Author:** Alexander Trakhimenok (with Claude)
 
@@ -25,29 +25,10 @@ Hidden layer: **-ia** is **AI** reversed. Mastery for AI, encoded in the name it
 | **Agent-Skills** (addyosmani) | "Skills for agents" — descriptive, functional |
 | **Maestria** (synchestra-io) | "You get mastery" — earned, professional |
 
-## How It Fits the Synchestra Ecosystem
+## Why Archived
 
-See [impresario-skills-architecture.md](impresario-skills-architecture.md) for the full three-layer skills architecture where Maestria serves as SpecScore's domain skills consumed by Impresario.
+The three-layer architecture in [impresario-skills-architecture.md](impresario-skills-architecture.md) made it clear that SpecScore skills don't need a separate brand. Impresario is the branded lifecycle producer; SpecScore and Synchestra skills are just "SpecScore skills" and "Synchestra skills" — plain, functional, no extra naming needed.
 
-## Usage
+## What Survived
 
-- Collection name: "Maestria" or "Maestria skills"
-- Individual: "the Maestria review skill" or "the review Maestria"
-- Verb potential: "Add Maestria to your project"
-- Shorthand in conversation: "Maestria"
-
-## Alternatives Considered
-
-- **SpecScore skills** — generic, no brand energy
-- **Synchestra Skills** — safe but says nothing
-- **Superpowers** — taken; aspirational but "gifted" not "earned"
-- **GrandMaestro** — strong but overkill for a skills collection
-- **Maestro** — good but names a person, not a capability; also used by other products
-- **Maestrio** — playful .io echo but reads like a Mario character
-- **Maestri** — Italian plural, clean but harder to own
-
-## Open Questions
-
-1. Domain availability: maestria.dev, maestria.io
-2. Should individual skills be called "a Maestria" (like "a superpower") or keep "skill"?
-3. Package/plugin name: `maestria`, `@synchestra/maestria`, or `specscore-maestria`?
+The brainstorming process that produced Maestria also produced **Impresario**, which became the actual brand. The orchestra metaphor exploration (Maestro → Maestria → Impresario) was productive even though the intermediate name didn't stick.
