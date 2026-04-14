@@ -1,5 +1,6 @@
 .worktrees/
-.claude/worktrees/
+.claude/
+tools/site-generator/chrome/
 public/
 node_modules/
 .superpowers/
