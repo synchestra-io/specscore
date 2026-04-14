@@ -139,6 +139,9 @@ Not defined yet.
 - Question 2
 
 (Or: "None at this time." — the section is never omitted.)
+
+---
+*This document follows the https://specscore.md/feature-specification*
 ```
 
 #### REQ: title-format
@@ -165,6 +168,7 @@ Every feature README MUST include these sections:
 | Plans                   | Conditional | Present when a [plan](../plan/README.md) touches this feature |
 | Acceptance Criteria     | Yes         | Always present. See [REQ: ac-section](#req-ac-section).           |
 | Outstanding Questions   | Yes         | Always present. See [REQ: outstanding-questions](#req-outstanding-questions). |
+| Adherence footer        | Yes         | Always the last line. See [REQ: adherence-footer](#req-adherence-footer).     |
 
 #### Optional sections
 
@@ -188,6 +192,21 @@ The Outstanding Questions section MUST always be present in every feature README
 #### REQ: ac-section
 
 The Acceptance Criteria section MUST always be present in every feature README. When no ACs are defined, it MUST state "Not defined yet." and a corresponding Outstanding Question ("Acceptance criteria not yet defined for this feature.") MUST be raised.
+
+#### REQ: adherence-footer
+
+Every feature README MUST end with a footer that references the SpecScore Feature Specification. The footer is a single italic line preceded by a horizontal rule (`---`), and MUST contain the bare URL `https://specscore.md/feature-specification` (trailing slash optional). The URL MUST appear in bare form (not wrapped in Markdown link syntax) so it remains clickable in terminals and other renderers that detect URLs but do not parse Markdown.
+
+The recommended form is:
+
+```markdown
+---
+*This document follows the https://specscore.md/feature-specification*
+```
+
+Authors MAY reword the surrounding prose, but the specification URL MUST be present. `specscore lint` matches on the URL, not the sentence.
+
+The specification URL is unversioned by design. SpecScore commits to additive-only evolution of the feature format; breaking changes are not planned. If a breaking change ever becomes necessary, the canonical URL will be reissued rather than branched into parallel versions.
 
 #### REQ: contents-when-children
 
@@ -331,6 +350,12 @@ For tool integrations (CLI, UI, API, LSP), see [Synchestra](https://synchestra.i
 
 A feature README has a correctly formatted title (`# Feature: {Title}`), a valid status field immediately after the title, and all required sections present. A README that violates any of these is rejected by validation.
 
+### AC: adherence-footer-present
+
+**Requirements:** feature#req:adherence-footer
+
+Every feature README ends with an adherence footer whose link target is `https://specscore.md/feature-specification` (trailing slash optional). A README missing the footer or pointing to a different URL is rejected by `specscore lint`.
+
 ### AC: empty-state-text
 
 **Requirements:** feature#req:outstanding-questions, feature#req:ac-section
@@ -342,3 +367,6 @@ Sections with no content use their prescribed placeholder text. Outstanding Ques
 - Should features have a machine-readable metadata format (YAML frontmatter) in addition to the markdown convention (`**Status:** X`), or is the markdown convention sufficient for both humans and parsers?
 - Should sub-feature status roll up to the parent? (e.g., if all sub-features are `Stable`, is the parent automatically `Stable`?)
 - How should features handle versioning? When a feature undergoes a major redesign, should the old spec be archived or superseded in place?
+
+---
+*This document follows the https://specscore.md/feature-specification*
