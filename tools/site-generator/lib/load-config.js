@@ -11,7 +11,9 @@ export async function loadConfig(configPath) {
 
   const sourceToSlug = new Map();
   for (const page of pages) {
-    sourceToSlug.set(page.source, page.slug);
+    if (page.source) {
+      sourceToSlug.set(page.source, page.slug);
+    }
   }
 
   // Build grouped sidebar structure from nav:true pages

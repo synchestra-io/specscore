@@ -144,6 +144,15 @@
       "navOrder": 15
     },
     {
+      "source": null,
+      "slug": "blog",
+      "title": "Blog",
+      "nav": true,
+      "navLabel": "Blog",
+      "navGroup": "Resources",
+      "navOrder": 19
+    },
+    {
       "source": "docs/ecosystem.md",
       "slug": "ecosystem",
       "title": "Ecosystem",

@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir, cp, rm } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, cp, rm, readdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadConfig } from './lib/load-config.js';
@@ -28,6 +28,8 @@ async function build() {
   console.log(`Building ${config.pages.length} pages...`);
 
   for (const page of config.pages) {
+    if (!page.source) continue;  // blog index — built separately
+
     // Landing page: inject hand-crafted HTML instead of rendering markdown
     if (page.slug === 'index') {
       const landingContent = await readFile(join(__dirname, 'landing.html'), 'utf-8');
@@ -77,6 +79,70 @@ async function build() {
     await writeFile(mdFile, mdContent, 'utf-8');
 
     console.log(`  ${page.slug}.html + ${page.slug}.md`);
+  }
+
+  // --- Blog ---
+  const { parseBlogPost, buildBlogIndex } = await import('./lib/build-blog.js');
+
+  const blogDir = join(ROOT, 'blog');
+  let blogFiles = [];
+  try {
+    blogFiles = (await readdir(blogDir)).filter(f => f.endsWith('.md') && f !== 'README.md').sort();
+  } catch {
+    // blog/ directory doesn't exist yet — skip
+  }
+
+  if (blogFiles.length > 0) {
+    const blogPostTemplate = await readFile(join(__dirname, 'blog-post.html'), 'utf-8');
+    const blogIndexTemplate = await readFile(join(__dirname, 'blog-index.html'), 'utf-8');
+
+    const posts = [];
+    for (const file of blogFiles) {
+      const raw = await readFile(join(blogDir, file), 'utf-8');
+      const post = parseBlogPost(raw, file);
+      posts.push(post);
+
+      // Render individual post
+      const htmlContent = renderMarkdownToHtml(post.body);
+      const postContent = blogPostTemplate
+        .replace('{{postDate}}', post.date)
+        .replace('{{content}}', htmlContent);
+
+      const htmlPage = injectIntoTemplate(template, {
+        title: post.title,
+        content: postContent,
+        slug: post.slug,
+        sidebarGroups: config.sidebarGroups,
+        eyebrow: 'Blog',
+      });
+
+      const postFile = join(OUTPUT, `${post.slug}.html`);
+      await mkdir(dirname(postFile), { recursive: true });
+      await writeFile(postFile, htmlPage, 'utf-8');
+      console.log(`  ${post.slug}.html (blog)`);
+    }
+
+    // Render blog index
+    const sorted = buildBlogIndex(posts);
+    const blogEntries = sorted.map(p =>
+      `<li>
+        <a href="/${p.slug}">${p.title}</a>
+        <span class="blog-entry-date">${p.date}</span>
+        ${p.description ? `<div class="blog-entry-desc">${p.description}</div>` : ''}
+      </li>`
+    ).join('\n');
+
+    const indexContent = blogIndexTemplate.replace('{{blogEntries}}', blogEntries);
+    const blogIndexPage = injectIntoTemplate(template, {
+      title: 'Blog',
+      content: indexContent,
+      slug: 'blog',
+      sidebarGroups: config.sidebarGroups,
+      eyebrow: '',
+      showViewMarkdown: false,
+    });
+    await writeFile(join(OUTPUT, 'blog.html'), blogIndexPage, 'utf-8');
+    console.log('  blog.html (index)');
   }
 
   console.log(`\nDone. Output: ${OUTPUT}`);
