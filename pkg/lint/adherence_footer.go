@@ -24,41 +24,10 @@ func (c *adherenceFooterChecker) severity() string { return "error" }
 
 func (c *adherenceFooterChecker) check(specRoot string) ([]Violation, error) {
 	var violations []Violation
-
-	featuresDir := filepath.Join(specRoot, "features")
-	info, err := os.Stat(featuresDir)
-	if err != nil || !info.IsDir() {
-		return nil, nil
-	}
-
-	err = filepath.Walk(featuresDir, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if !info.IsDir() {
-			return nil
-		}
-		// Skip reserved directories (per REQ: underscore-reserved).
-		// Do not skip featuresDir itself if its name happens to start with '_'.
-		if path != featuresDir && strings.HasPrefix(info.Name(), "_") {
-			return filepath.SkipDir
-		}
-
-		readmePath := filepath.Join(path, "README.md")
-		readmeInfo, statErr := os.Stat(readmePath)
-		if statErr != nil || readmeInfo.IsDir() {
-			return nil
-		}
-
-		content, readErr := os.ReadFile(readmePath)
-		if readErr != nil {
-			return nil
-		}
-
+	err := walkFeatureReadmes(specRoot, func(readmePath string, content []byte) {
 		if strings.Contains(string(content), adherenceFooterURL) {
-			return nil
+			return
 		}
-
 		relPath, _ := filepath.Rel(specRoot, readmePath)
 		violations = append(violations, Violation{
 			File:     relPath,
@@ -67,12 +36,25 @@ func (c *adherenceFooterChecker) check(specRoot string) ([]Violation, error) {
 			Rule:     "adherence-footer",
 			Message:  "missing required adherence footer: URL '" + adherenceFooterURL + "' not found in feature README",
 		})
-		return nil
 	})
-
 	if err != nil {
 		return nil, err
 	}
-
 	return violations, nil
+}
+
+// fix appends the canonical adherence footer to any feature README that is
+// missing it. A README already containing the URL is left untouched.
+func (c *adherenceFooterChecker) fix(specRoot string) error {
+	return walkFeatureReadmes(specRoot, func(readmePath string, content []byte) {
+		s := string(content)
+		if strings.Contains(s, adherenceFooterURL) {
+			return
+		}
+		if !strings.HasSuffix(s, "\n") {
+			s += "\n"
+		}
+		s += "\n---\n*This document follows the " + adherenceFooterURL + "*\n"
+		_ = os.WriteFile(readmePath, []byte(s), 0o644)
+	})
 }

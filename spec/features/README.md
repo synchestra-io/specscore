@@ -1,5 +1,7 @@
 # SpecScore Features
 
+> [View in Synchestra Hub](https://hub.synchestra.io/project/features?id=synchestra-io@specscore@github.com&path=spec%2Ffeatures) — graph, discussions, approvals
+
 Core features of the SpecScore specification framework:
 
 | Feature | Status | Description |

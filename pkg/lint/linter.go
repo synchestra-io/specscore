@@ -21,6 +21,13 @@ type checker interface {
 	severity() string
 }
 
+// fixer is an optional interface that checkers may implement to support
+// `specscore spec lint --fix`. A fixer mutates the spec tree to resolve
+// the violations it would otherwise report. Fixes must be idempotent.
+type fixer interface {
+	fix(specRoot string) error
+}
+
 func newLinter(opts Options) *linter {
 	l := &linter{
 		opts:    opts,
@@ -40,6 +47,7 @@ func newLinter(opts Options) *linter {
 	l.registerChecker(newPlanHierarchyChecker())
 	l.registerChecker(newPlanROIChecker())
 	l.registerChecker(newAdherenceFooterChecker())
+	l.registerChecker(newHubViewLinkChecker())
 
 	// Register custom checkers
 	for _, c := range customCheckers {
@@ -63,6 +71,38 @@ func (l *linter) isRuleEnabled(ruleName string) bool {
 	}
 
 	return true
+}
+
+// fix invokes every enabled checker that implements the fixer interface,
+// mutating the spec tree to resolve the violations those checkers report.
+// Fix failures are aggregated but do not stop subsequent fixers from running.
+func (l *linter) fix() error {
+	seen := make(map[checker]bool)
+	var firstErr error
+	for _, c := range l.ruleSet {
+		if seen[c] {
+			continue
+		}
+		seen[c] = true
+		enabled := false
+		for ruleName, rc := range l.ruleSet {
+			if rc == c && l.isRuleEnabled(ruleName) {
+				enabled = true
+				break
+			}
+		}
+		if !enabled {
+			continue
+		}
+		f, ok := c.(fixer)
+		if !ok {
+			continue
+		}
+		if err := f.fix(l.opts.SpecRoot); err != nil && firstErr == nil {
+			firstErr = fmt.Errorf("fixer %s: %v", c.name(), err)
+		}
+	}
+	return firstErr
 }
 
 // lint runs all enabled checkers and returns violations.

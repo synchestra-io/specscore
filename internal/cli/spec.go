@@ -49,6 +49,7 @@ invalid arguments, 10+ = unexpected error.`,
 	cmd.Flags().String("ignore", "", "disable specified rules (comma-separated)")
 	cmd.Flags().String("severity", "error", "minimum severity: error, warning, info")
 	cmd.Flags().String("format", "text", "output format: text, json, yaml")
+	cmd.Flags().Bool("fix", false, "apply fixes from checkers that support autofix (e.g. adherence-footer, hub-view-link)")
 	return cmd
 }
 
@@ -126,11 +127,14 @@ func runSpecLint(cmd *cobra.Command, args []string) error {
 		return exitcode.InvalidArgsError(err.Error())
 	}
 
+	fixFlag, _ := cmd.Flags().GetBool("fix")
+
 	opts := lint.Options{
 		SpecRoot: specRoot,
 		Rules:    rules,
 		Ignore:   ignore,
 		Severity: severity,
+		Fix:      fixFlag,
 	}
 
 	violations, err := lint.Lint(opts)

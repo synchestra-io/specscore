@@ -20,6 +20,7 @@ type Options struct {
 	Rules    []string // enabled rules; nil = all
 	Ignore   []string // disabled rules
 	Severity string   // minimum severity: error, warning, info
+	Fix      bool     // when true, apply fixes from checkers that support it
 }
 
 // Lint runs all enabled lint rules against the spec tree.
@@ -34,6 +35,11 @@ func Lint(opts Options) ([]Violation, error) {
 	}
 
 	l := newLinter(opts)
+	if opts.Fix {
+		if err := l.fix(); err != nil {
+			return nil, fmt.Errorf("fix error: %w", err)
+		}
+	}
 	violations, err := l.lint()
 	if err != nil {
 		return nil, fmt.Errorf("linting error: %w", err)
@@ -107,6 +113,7 @@ var allRuleNames = map[string]bool{
 	"plan-hierarchy":     true,
 	"plan-roi-metadata":  true,
 	"adherence-footer":   true,
+	"hub-view-link":      true,
 }
 
 // AllRuleNames returns the canonical set of known rule names.

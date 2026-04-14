@@ -20,12 +20,29 @@ type PlanningConfig struct {
 	WhatsNext string `yaml:"whats_next"`
 }
 
+// HubConfig controls optional Synchestra Hub integration. Presence of Host
+// (non-empty) is the opt-in signal; when omitted, no Hub-related behavior
+// (e.g. the hub-view-link lint rule) activates.
+type HubConfig struct {
+	Host string `yaml:"host"`
+}
+
 type SpecConfig struct {
 	Title     string          `yaml:"title"`
 	StateRepo string          `yaml:"state_repo"`
 	Repos     []string        `yaml:"repos"`
 	Planning  *PlanningConfig `yaml:"planning,omitempty"`
+	Hub       *HubConfig      `yaml:"hub,omitempty"`
 	Extras    map[string]any  `yaml:",inline"`
+}
+
+// HubHost returns the configured Synchestra Hub base URL, or "" if Hub
+// integration is not enabled for this project.
+func (c SpecConfig) HubHost() string {
+	if c.Hub == nil {
+		return ""
+	}
+	return strings.TrimRight(c.Hub.Host, "/")
 }
 
 // WhatsNextMode returns the effective whats_next mode, defaulting to "disabled".

@@ -1,5 +1,7 @@
 # Feature: Task
 
+> [View in Synchestra Hub](https://hub.synchestra.io/project/features?id=synchestra-io@specscore@github.com&path=spec%2Ffeatures%2Ftask) — graph, discussions, approvals
+
 **Status:** Stable
 
 ## Summary
