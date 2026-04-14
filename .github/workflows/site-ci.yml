@@ -6,11 +6,15 @@ on:
       - '.github/workflows/site-ci.yml'
       - 'tools/site-generator/**'
       - 'spec/**'
+      - 'docs/**'
+      - 'blog/**'
   pull_request:
     paths:
       - '.github/workflows/site-ci.yml'
       - 'tools/site-generator/**'
       - 'spec/**'
+      - 'docs/**'
+      - 'blog/**'
   workflow_dispatch:
 
 permissions:
