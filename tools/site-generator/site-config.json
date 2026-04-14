@@ -142,6 +142,15 @@
       "navLabel": "Architects",
       "navGroup": "SpecScore for",
       "navOrder": 15
+    },
+    {
+      "source": "docs/ecosystem.md",
+      "slug": "ecosystem",
+      "title": "Ecosystem",
+      "nav": true,
+      "navLabel": "Ecosystem",
+      "navGroup": "Resources",
+      "navOrder": 20
     }
   ],
   "externalLinks": [
