@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "specscore-org",
+    "site": "specscore-md",
     "public": "public",
     "ignore": ["firebase.json", "**/.*"],
     "cleanUrls": true,
