@@ -512,6 +512,15 @@ footer {
   color: var(--text-secondary);
 }
 
+/* === LANDING PROSE === */
+.landing-prose {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 580px;
+  margin-bottom: 1.25rem;
+}
+
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
   .site-body { flex-direction: column; }
