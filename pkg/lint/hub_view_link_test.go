@@ -246,7 +246,7 @@ func TestHubViewLink_RegisteredAsKnownRule(t *testing.T) {
 func TestBuildHubViewURL(t *testing.T) {
 	r := gitremote.Remote{Owner: "synchestra-io", Repo: "specscore", Host: "github.com"}
 	got := BuildHubViewURL(testHubHost, r, "spec/features/bots")
-	want := testHubHost + "/project/features?id=synchestra-io@specscore@github.com&path=spec%2Ffeatures%2Fbots"
+	want := testHubHost + "/project/features?id=specscore@synchestra-io@github.com&path=spec%2Ffeatures%2Fbots"
 	if got != want {
 		t.Errorf("BuildHubViewURL =\n  %q\nwant\n  %q", got, want)
 	}

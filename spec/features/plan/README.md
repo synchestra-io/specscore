@@ -1,6 +1,6 @@
 # Feature: Plan
 
-> [View in Synchestra Hub](https://hub.synchestra.io/project/features?id=synchestra-io@specscore@github.com&path=spec%2Ffeatures%2Fplan) — graph, discussions, approvals
+> [View in Synchestra Hub](https://hub.synchestra.io/project/features?id=specscore@synchestra-io@github.com&path=spec%2Ffeatures%2Fplan) — graph, discussions, approvals
 
 **Status:** Stable
 

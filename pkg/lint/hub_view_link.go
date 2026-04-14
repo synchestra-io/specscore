@@ -33,7 +33,7 @@ func (c *hubViewLinkChecker) severity() string { return "warning" }
 // at relPath (relative to the project root, e.g. "spec/features/bots").
 // host is the Hub base URL without trailing slash.
 func BuildHubViewURL(host string, r gitremote.Remote, relPath string) string {
-	id := fmt.Sprintf("%s@%s@%s", r.Owner, r.Repo, r.Host)
+	id := fmt.Sprintf("%s@%s@%s", r.Repo, r.Owner, r.Host)
 	relPath = filepath.ToSlash(relPath)
 	return fmt.Sprintf("%s/project/features?id=%s&path=%s",
 		host, id, url.QueryEscape(relPath))
