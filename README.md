@@ -1,111 +1,78 @@
 # SpecScore
 
-**SpecScore** — Specification Patterns for AI-Driven Development
+**The open specification standard for AI-driven development**
 
-An open-source framework and mental model for writing specifications that AI agents can understand and execute.
+SpecScore is an open specification format that makes requirements machine-readable without making them human-unreadable. It's Markdown and YAML — version-controlled, portable, no vendor lock-in. A linter and LSP catch ambiguity before your agents do. Use it standalone or with any orchestration tool.
 
-## What Is SpecScore?
+[Read the Spec](spec/README.md) · [specscore.md](https://specscore.md) · [Ecosystem](docs/ecosystem.md)
 
-SpecScore teaches you to think about **specifications as machine-readable blueprints**. It defines:
+---
 
-- **Format:** How to structure and write specifications (directory layout, files, conventions)
-- **Schema:** What makes a valid specification (required metadata, validation rules)
-- **Mental Model:** Best practices for specifications in AI-driven development
-- **Standards:** How specifications link to code and to each other
+## Quick Start
 
-## Getting Started
+```bash
+# Install the CLI
+go install github.com/synchestra-io/specscore/tools/cli@latest
 
-**New to SpecScore?**
-- Start with [Features](spec/features/README.md) to understand the mental model
-- Read [feature/README.md](spec/features/feature/README.md) to write your first feature spec
-- Use the SpecScore CLI to validate: `specscore lint`
+# Lint your first spec
+specscore lint ./spec
+```
 
-**Already familiar with Synchestra specs?**
-- SpecScore is the open-source foundation that Synchestra is built on
-- Format is identical. You're already using SpecScore patterns.
+Full installation guide: [docs/installation.md](docs/installation.md)
 
-## The SpecScore Approach
+---
 
-Specifications define *what* needs doing:
-- **Features:** User-facing capabilities and requirements
-- **Architecture:** System design and technical decisions
-- **Plans:** Executable steps that bridge specs to implementation
-- **Traceability:** Links from specs to code and back
+## What SpecScore Defines
 
-This clarity creates three layers of value:
+SpecScore provides a structured format for:
 
-1. **For Planning:** Clear specs prevent misunderstanding and rework
-2. **For Execution:** Machines (agents, tests) understand specifications automatically
-3. **For Validation:** Rehearse tests can verify specs work end-to-end
+- **Features** — user-facing capabilities with requirements and acceptance criteria
+- **Requirements** — scoped, testable conditions that define done
+- **Acceptance Criteria** — machine-readable conditions tied to features and tasks
+- **Plans** — ordered sequences of tasks that bridge specs to implementation
+- **Tasks** — atomic units of work assigned to agents or people
+- **Source References** — traceable links from specs to code and back
+- **Project Definition** — root configuration that ties a project together
 
-## The Orchestra
+---
 
-SpecScore is part of an ecosystem:
+## Role-Based Guides
 
-| Tool | What It Does |
-|------|-------------|
-| **SpecScore** | Defines specification format and mental model |
-| **Rehearse** | Tests and validates SpecScore specs automatically |
+SpecScore is designed for every role on a product team:
+
+| Role | Guide |
+|------|-------|
+| Developers | [docs/for/developers.md](docs/for/developers.md) |
+| Product Owners | [docs/for/product-owners.md](docs/for/product-owners.md) |
+| QA Engineers | [docs/for/qas.md](docs/for/qas.md) |
+| Business Analysts | [docs/for/business-analysts.md](docs/for/business-analysts.md) |
+| Project Managers | [docs/for/project-managers.md](docs/for/project-managers.md) |
+| Architects | [docs/for/architects.md](docs/for/architects.md) |
+
+---
+
+## Ecosystem
+
+SpecScore is the foundation layer of a three-tool stack:
+
+| Tool | Role |
+|------|------|
+| **SpecScore** | Open specification format — the standard itself |
+| **Rehearse** | Validates and tests SpecScore specs automatically |
 | **Synchestra** | Orchestrates multi-agent execution of SpecScore specs |
 
-**Use standalone:** SpecScore works with any orchestration tool.
-**Use together:** SpecScore + Rehearse + Synchestra = full spec-driven development lifecycle.
+Use SpecScore standalone with any tool, or pair it with [Rehearse](https://github.com/synchestra-io/rehearse) and [Synchestra](https://synchestra.io) for a full spec-driven development lifecycle.
 
-## Repository Structure
+See [docs/ecosystem.md](docs/ecosystem.md) for details.
 
-```
-specscore/
-├── README.md                    # This file
-├── LICENSE                      # Apache 2.0
-├── spec/                        # SpecScore specification
-│   ├── features/               # Core features
-│   │   ├── feature/           # Feature specification format
-│   │   ├── architecture/       # Architecture specification format
-│   │   ├── plan/              # Planning document format
-│   │   └── project-definition/ # Project structure and config
-│   └── README.md
-├── tools/                       # SpecScore CLI and validators
-│   └── (coming soon)
-├── examples/                    # Example SpecScore projects
-│   └── (coming soon)
-├── docs/                        # User guides and tutorials
-│   └── (coming soon)
-└── .github/                     # GitHub templates, workflows
-```
+---
 
-## Fair Questions
+## Contributing
 
-**"Isn't this the same as Synchestra's spec format?"**
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
 
-SpecScore is what Synchestra's specification layer is *built on*. Synchestra adds orchestration, tasks, and coordination on top. You can use SpecScore specs independently with any tool — but they're optimized for Synchestra.
-
-**"Can I use SpecScore without Synchestra?"**
-
-Yes. Use SpecScore specs with:
-- Your own orchestration (Linear, Jira, homegrown)
-- Rehearse for automated testing
-- Any CI/CD system that can read YAML/Markdown
-
-**"What about vendor lock-in?"**
-
-SpecScore specs are:
-- Stored as plain text (YAML/Markdown)
-- Schema-published and open
-- Tool-agnostic format
-- No proprietary extensions required
-
-You own your specs. Use them anywhere.
-
-## Links
-
-- [SpecScore Features](spec/features/README.md)
-- [Rehearse](https://github.com/synchestra-io/rehearse) — Test your specs
-- [Synchestra](https://synchestra.io) — Orchestrate your specs
+---
 
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE) for details.
-
-## Outstanding Questions
-
-None at this time.
