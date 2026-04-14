@@ -110,3 +110,6 @@ Not defined yet.
 - Should `project_dirs` support additional custom directories beyond `specifications` and `documents`?
 - How should SpecScore handle a repository that has no `specscore-project.yaml` — infer defaults or refuse to operate?
 - Acceptance criteria not yet defined for this feature.
+
+---
+*This document follows the https://specscore.md/feature-specification*

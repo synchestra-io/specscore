@@ -40,3 +40,6 @@ See [synchestra.io](https://synchestra.io) for orchestration on top of SpecScore
 ## Outstanding Questions
 
 None at this time.
+
+---
+*This document follows the https://specscore.md/feature-specification*

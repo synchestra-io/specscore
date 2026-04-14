@@ -39,6 +39,7 @@ func newLinter(opts Options) *linter {
 	l.registerChecker(newCodeAnnotationsChecker())
 	l.registerChecker(newPlanHierarchyChecker())
 	l.registerChecker(newPlanROIChecker())
+	l.registerChecker(newAdherenceFooterChecker())
 
 	// Register custom checkers
 	for _, c := range customCheckers {

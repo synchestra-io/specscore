@@ -3,7 +3,7 @@ package feature
 import "strings"
 
 // ValidStatuses lists the allowed feature lifecycle statuses.
-var ValidStatuses = []string{"draft", "approved", "implemented"}
+var ValidStatuses = []string{"Draft", "In Progress", "Stable", "Deprecated"}
 
 // IsValidStatus reports whether status matches one of the ValidStatuses
 // (case-insensitive).
@@ -71,6 +71,10 @@ func GenerateReadme(title, status, description string, deps []string) string {
 	b.WriteString("## Outstanding Questions\n")
 	b.WriteByte('\n')
 	b.WriteString("None at this time.\n")
+
+	b.WriteByte('\n')
+	b.WriteString("---\n")
+	b.WriteString("*This document follows the https://specscore.md/feature-specification*\n")
 
 	return b.String()
 }

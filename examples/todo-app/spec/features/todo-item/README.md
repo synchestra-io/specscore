@@ -1,6 +1,6 @@
 # Feature: Todo Item
 
-**Status:** Conceptual
+**Status:** Draft
 
 ## Summary
 
@@ -69,3 +69,6 @@ Not defined yet.
 ## Outstanding Questions
 
 - Acceptance criteria not yet defined for this feature.
+
+---
+*This document follows the https://specscore.md/feature-specification*

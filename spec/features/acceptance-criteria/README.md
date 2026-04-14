@@ -132,3 +132,6 @@ ACs remain abstract — they never contain Given/When/Then steps or test data. S
 
 - Should tooling enforce a minimum of two requirements per AC, or is the "optional grouping" convention sufficient without automated enforcement?
 - How should ACs handle cross-feature requirement bundles — e.g., an AC in feature A that references requirements from both feature A and feature B?
+
+---
+*This document follows the https://specscore.md/feature-specification*

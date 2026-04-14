@@ -5,7 +5,7 @@
 ## Steps
 
 GIVEN a feature README with title `# Feature: Authentication`
-AND the status field reads `**Status:** Draft`
+AND the status field reads `**Status:** Ready`
 WHEN the spec linter validates the feature
-THEN the linter reports an error: "Draft" is not a valid status
-AND the error message lists the valid values: Conceptual, In Progress, Stable, Deprecated
+THEN the linter reports an error: "Ready" is not a valid status
+AND the error message lists the valid values: Draft, In Progress, Stable, Deprecated

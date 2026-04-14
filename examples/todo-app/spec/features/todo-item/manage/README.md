@@ -1,6 +1,6 @@
 # Feature: Manage Todos
 
-**Status:** Conceptual
+**Status:** Draft
 
 ## Summary
 
@@ -52,3 +52,6 @@ Deleting a non-existent ID MUST produce an error message and exit with a non-zer
 ## Outstanding Questions
 
 None at this time.
+
+---
+*This document follows the https://specscore.md/feature-specification*

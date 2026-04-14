@@ -260,3 +260,6 @@ When a rehearse block is present, it uses the `rehearse` fence tag, starts with 
 - Should scenarios support parameterized/templated steps (e.g., run the same scenario with different inputs)? Or should each input combination be a separate scenario file?
 - Should the `flows/` convention support nesting (flows referencing other flows), or is one level sufficient?
 - How should scenario failures be reported — per-step or pass/fail for the whole scenario?
+
+---
+*This document follows the https://specscore.md/feature-specification*

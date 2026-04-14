@@ -106,6 +106,7 @@ var allRuleNames = map[string]bool{
 	"code-annotations":   true,
 	"plan-hierarchy":     true,
 	"plan-roi-metadata":  true,
+	"adherence-footer":   true,
 }
 
 // AllRuleNames returns the canonical set of known rule names.

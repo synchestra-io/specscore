@@ -83,7 +83,7 @@ func GetInfo(featuresDir, featureID string) (*Info, error) {
 }
 
 // ParseFeatureStatus extracts the status from a feature README.
-// Looks for patterns like "**Status:** Conceptual" or "Status: Implemented".
+// Looks for patterns like "**Status:** Draft" or "Status: Stable".
 func ParseFeatureStatus(readmePath string) (string, error) {
 	f, err := os.Open(readmePath)
 	if err != nil {

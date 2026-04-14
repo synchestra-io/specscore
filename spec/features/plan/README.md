@@ -744,3 +744,6 @@ Affected features back-reference plans in a Plans table. Proposals triggered by 
 - How should plan tasks reference specific sections of a feature spec when the plan implements only part of a feature?
 - What is the exact format for the plan task reference -- should it be structured metadata (YAML frontmatter) or a markdown convention (as shown in examples)?
 - Should the deviation report be generated automatically when all tasks complete, or only on demand?
+
+---
+*This document follows the https://specscore.md/feature-specification*

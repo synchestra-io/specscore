@@ -1,6 +1,6 @@
 # Feature: Todo List
 
-**Status:** Conceptual
+**Status:** Draft
 
 ## Summary
 
@@ -74,3 +74,6 @@ Showing 2 of 3 items
 ## Outstanding Questions
 
 None at this time.
+
+---
+*This document follows the https://specscore.md/feature-specification*

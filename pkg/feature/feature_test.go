@@ -185,12 +185,12 @@ func TestGenerateReadme(t *testing.T) {
 		{
 			name:        "basic feature with description no deps",
 			title:       "My Feature",
-			status:      "draft",
+			status:      "Draft",
 			description: "A cool feature.",
 			deps:        nil,
 			wantContain: []string{
 				"# Feature: My Feature",
-				"**Status:** draft",
+				"**Status:** Draft",
 				"A cool feature.",
 			},
 			wantAbsent: []string{
@@ -200,7 +200,7 @@ func TestGenerateReadme(t *testing.T) {
 		{
 			name:        "feature with deps no description",
 			title:       "Task Board",
-			status:      "approved",
+			status:      "In Progress",
 			description: "",
 			deps:        []string{"state-store", "cli"},
 			wantContain: []string{
@@ -213,7 +213,7 @@ func TestGenerateReadme(t *testing.T) {
 		{
 			name:        "feature with description and deps",
 			title:       "Test",
-			status:      "implemented",
+			status:      "Stable",
 			description: "Test desc.",
 			deps:        []string{"dep-a"},
 			wantContain: []string{
@@ -245,8 +245,12 @@ func TestGenerateReadme(t *testing.T) {
 					t.Errorf("GenerateReadme() missing required section %q", section)
 				}
 			}
-			if !strings.HasSuffix(got, "None at this time.\n") {
-				t.Error("GenerateReadme() should end with 'None at this time.\\n'")
+			const wantSuffix = "*This document follows the https://specscore.md/feature-specification*\n"
+			if !strings.HasSuffix(got, wantSuffix) {
+				t.Errorf("GenerateReadme() should end with adherence footer; got suffix:\n%q", got[max(0, len(got)-len(wantSuffix)*2):])
+			}
+			if !strings.Contains(got, "None at this time.") {
+				t.Error("GenerateReadme() should include 'None at this time.' in Outstanding Questions")
 			}
 		})
 	}
@@ -260,11 +264,15 @@ func TestIsValidStatus(t *testing.T) {
 		want   bool
 	}{
 		{"draft", true},
-		{"approved", true},
-		{"implemented", true},
 		{"Draft", true},
-		{"APPROVED", true},
+		{"DRAFT", true},
+		{"In Progress", true},
+		{"in progress", true},
+		{"Stable", true},
+		{"Deprecated", true},
 		{"conceptual", false},
+		{"approved", false},
+		{"implemented", false},
 		{"not-started", false},
 		{"", false},
 		{"in_progress", false},
@@ -485,7 +493,7 @@ func TestNew_SubFeature(t *testing.T) {
 func TestParseFeatureStatus(t *testing.T) {
 	content := `# Feature: Test
 
-**Status:** Conceptual
+**Status:** Draft
 
 ## Summary
 `
@@ -499,8 +507,8 @@ func TestParseFeatureStatus(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if status != "Conceptual" {
-		t.Errorf("status = %q, want %q", status, "Conceptual")
+	if status != "Draft" {
+		t.Errorf("status = %q, want %q", status, "Draft")
 	}
 }
 

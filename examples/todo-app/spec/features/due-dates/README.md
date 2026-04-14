@@ -1,6 +1,6 @@
 # Feature: Due Dates
 
-**Status:** Conceptual
+**Status:** Draft
 
 ## Summary
 
@@ -74,3 +74,6 @@ Overdue items are tagged with `[OVERDUE]`.
 ## Outstanding Questions
 
 None at this time.
+
+---
+*This document follows the https://specscore.md/feature-specification*

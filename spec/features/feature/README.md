@@ -150,7 +150,7 @@ Every feature README title MUST use the `# Feature: {Title}` format. The `Featur
 
 #### REQ: status-field
 
-A `**Status:**` field MUST appear immediately after the title. The value MUST be one of: `Conceptual`, `In Progress`, `Stable`, `Deprecated`.
+A `**Status:**` field MUST appear immediately after the title. The value MUST be one of: `Draft`, `In Progress`, `Stable`, `Deprecated`.
 
 #### REQ: required-sections
 
@@ -219,14 +219,14 @@ When a feature has child directories (sub-features), its README MUST include a C
 
 | Status        | Description                                                                   |
 |---------------|-------------------------------------------------------------------------------|
-| `Conceptual`  | Feature is described at a high level; design decisions remain open             |
+| `Draft`       | Feature is described at a high level; design decisions remain open             |
 | `In Progress` | Feature is actively being specified and/or implemented                         |
 | `Stable`      | Feature is fully specified and implemented; changes go through proposals       |
 | `Deprecated`  | Feature is being phased out; a successor or removal plan exists                |
 
 ```mermaid
 graph LR
-    A["Conceptual"]
+    A["Draft"]
     B["In Progress"]
     C["Stable"]
     D["Deprecated"]

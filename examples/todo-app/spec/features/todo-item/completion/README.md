@@ -1,6 +1,6 @@
 # Feature: Todo Completion
 
-**Status:** Conceptual
+**Status:** Draft
 
 ## Summary
 
@@ -47,3 +47,6 @@ Reopening an already-active todo MUST produce an error message and exit with a n
 ## Outstanding Questions
 
 None at this time.
+
+---
+*This document follows the https://specscore.md/feature-specification*

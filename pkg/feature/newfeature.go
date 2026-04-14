@@ -14,7 +14,7 @@ type NewOptions struct {
 	Title       string   // Human-readable feature title (required).
 	Slug        string   // Feature slug (directory name); auto-generated from Title if empty.
 	Parent      string   // Parent feature ID for creating a sub-feature.
-	Status      string   // Initial feature status (default "draft").
+	Status      string   // Initial feature status (default "Draft").
 	Description string   // Short description for the Summary section.
 	DependsOn   []string // Feature IDs this feature depends on.
 }
@@ -37,10 +37,10 @@ func New(featuresDir string, opts NewOptions) (*NewResult, error) {
 
 	status := opts.Status
 	if status == "" {
-		status = "draft"
+		status = "Draft"
 	}
 	if !IsValidStatus(status) {
-		return nil, exitcode.InvalidArgsErrorf("invalid status: %s (supported: draft, approved, implemented)", status)
+		return nil, exitcode.InvalidArgsErrorf("invalid status: %s (supported: Draft, In Progress, Stable, Deprecated)", status)
 	}
 
 	// Generate or validate slug.

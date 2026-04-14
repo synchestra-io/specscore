@@ -300,3 +300,6 @@ Same-repo references resolve host/org/repo from git remote by default. Project c
 - How should the linter handle references in files with no recognized comment syntax (e.g., plain text files)?
 - Should cross-repo reachability checks be mandatory in CI, or always optional?
 - What is the behavior when a type prefix expansion fails but the literal path (with the type prefix) exists as a repo-root-relative path?
+
+---
+*This document follows the https://specscore.md/feature-specification*
