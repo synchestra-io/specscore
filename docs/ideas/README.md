@@ -2,7 +2,7 @@
 
 User-facing guides for the SpecScore [Idea feature](../../spec/features/idea/README.md) — the pre-spec layer that refines concepts before they become Features.
 
-For the top-level workflow overview, see [`../ideas-workflow.md`](../ideas-workflow.md).
+For the top-level workflow overview, see [`workflow.md`](workflow.md).
 
 ## Contents
 

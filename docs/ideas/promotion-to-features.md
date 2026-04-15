@@ -2,7 +2,7 @@
 
 This is the operational deep-dive on how an Idea becomes referenced by one or more Features, how tooling keeps the two sides in sync, and what to do at the edges (reverts, archival, conflicts).
 
-If you are new to Ideas themselves, start with the [ideas workflow guide](../ideas-workflow.md) and the [Idea feature spec](../../spec/features/idea/README.md). This page assumes you already know what an Idea is.
+If you are new to Ideas themselves, start with the [ideas workflow guide](workflow.md) and the [Idea feature spec](../../spec/features/idea/README.md). This page assumes you already know what an Idea is.
 
 ## The Contract in One Paragraph
 
@@ -228,6 +228,6 @@ The third form narrows repair to the two rules that rewrite header fields and in
 
 ## Further Reading
 
-- [Ideas workflow guide](../ideas-workflow.md) — the umbrella guide.
+- [Ideas workflow guide](workflow.md) — the umbrella guide.
 - [Idea feature spec](../../spec/features/idea/README.md) — authoritative schema and all REQs.
 - [Feature feature spec](../../spec/features/feature/README.md) — the `**Source Ideas:**` field definition.
