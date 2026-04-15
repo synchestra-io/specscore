@@ -1,14 +1,14 @@
-# Ideas
+# Ideas Documentation
 
-Pre-specification ideation artifacts. Ideas live here until they mature into formal SpecScore features or are explicitly archived.
+User-facing guides for the SpecScore [Idea feature](../../spec/features/idea/README.md) — the pre-spec layer that refines concepts before they become Features.
+
+For the top-level workflow overview, see [`../ideas-workflow.md`](../ideas-workflow.md).
 
 ## Contents
 
-| Document | Status | Description |
-|----------|--------|-------------|
-| [skills-ecosystem-analysis](skills-ecosystem-analysis.md) | Draft | Comparative analysis of SpecScore, Superpowers, and Agent-Skills with integration roadmap |
-| [maestria-naming](maestria-naming.md) | Archived | Brand name exploration — superseded by Impresario |
-| [impresario-skills-architecture](impresario-skills-architecture.md) | Approved | Three-layer skills architecture: **Impresario** as lifecycle producer consuming Maestria + Synchestra skills |
+| Document | Description |
+|----------|-------------|
+| [obsolete/](obsolete/README.md) | Archived pre-spec explorations retained for historical context. Not current guidance. |
 
 ## Outstanding Questions
 
