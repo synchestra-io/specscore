@@ -34,6 +34,7 @@ func Run(args []string) error {
 		specCommand(),
 		codeCommand(),
 		taskCommand(),
+		newCommand(),
 	)
 
 	if len(args) > 1 {

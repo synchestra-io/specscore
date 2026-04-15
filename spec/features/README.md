@@ -6,6 +6,7 @@ Core features of the SpecScore specification framework:
 
 | Feature | Status | Description |
 |---------|--------|-------------|
+| [idea](idea/README.md) | Conceptual | Pre-spec one-pager that refines a concept into a promotable artifact |
 | [feature](feature/README.md) | Stable | Feature specification structure, metadata, lifecycle, and conventions |
 | [acceptance-criteria](acceptance-criteria/README.md) | Stable | Acceptance criteria format and conventions |
 | [requirement](requirement/README.md) | Stable | Discrete testable rules within feature Behavior sections |
@@ -19,6 +20,7 @@ Core features of the SpecScore specification framework:
 
 ```
 spec/features/
+├── idea/                  # How to structure pre-spec ideation artifacts
 ├── feature/               # How to structure and write features
 ├── requirement/           # How to define addressable rules in Behavior sections
 ├── acceptance-criteria/   # How to define abstract verification conditions

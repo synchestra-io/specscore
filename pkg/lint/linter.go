@@ -49,6 +49,13 @@ func newLinter(opts Options) *linter {
 	l.registerChecker(newAdherenceFooterChecker())
 	l.registerChecker(newHubViewLinkChecker())
 
+	// Register idea checker under every idea-* rule name.
+	ic := newIdeaChecker()
+	ic.fix = opts.Fix
+	for _, n := range ideaRuleNames {
+		l.ruleSet[n] = ic
+	}
+
 	// Register custom checkers
 	for _, c := range customCheckers {
 		l.ruleSet[c.Name()] = &customCheckerAdapter{c}

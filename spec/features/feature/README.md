@@ -90,6 +90,7 @@ Every feature README follows this template:
 # Feature: {Title}
 
 **Status:** {status}
+**Source Ideas:** — *(optional; comma-separated Idea slugs — see [Idea linkage](#idea-linkage))*
 
 ## Summary
 
@@ -162,6 +163,7 @@ Every feature README MUST include these sections:
 |-------------------------|-------------|-------------------------------------------------------------------|
 | Title (`# Feature: X`) | Yes         | Always prefixed with `Feature:`                                   |
 | Status                  | Yes         | Immediately after the title                                       |
+| Source Ideas            | Optional    | Body-metadata line after Status. See [Idea linkage](#idea-linkage). |
 | Summary                 | Yes         | 1-3 sentences                                                     |
 | Contents                | Conditional | Required when the feature has child directories                   |
 | Problem                 | Yes         | Why the feature exists                                            |
@@ -276,6 +278,33 @@ The feature index (`spec/features/README.md`) is the entry point for understandi
 
 The feature index (`spec/features/README.md`) MUST list every top-level feature. An unlisted feature is a validation error.
 
+### Idea linkage
+
+Features MAY originate from one or more [Ideas](../idea/README.md). When they do, the Feature declares its ancestry with a `**Source Ideas:**` header field listing one or more Idea slugs:
+
+```markdown
+**Source Ideas:** payment-fraud-signals, offline-mode
+```
+
+The field is optional — many Features are authored directly, without a preceding Idea artifact. When present, its value is either `—` (empty) or a comma-separated list of Idea slugs. The relationship is **many-to-many**: a Feature may synthesize multiple Ideas, and a single Idea may be referenced by multiple Features.
+
+The Feature carries the authoritative link. The reverse index lives on each Idea as a `**Promotes To:**` field, which is managed by tooling — never hand-edited. See the [Idea feature](../idea/README.md) for the Idea side of the contract.
+
+#### REQ: source-ideas-field
+
+A Feature README MAY include a `**Source Ideas:**` body-metadata line. The field is OPTIONAL — a Feature without a source Idea is valid.
+
+When the field is present:
+
+- Its value MUST be either `—` (empty) or a comma-separated list of Idea slugs.
+- Every slug MUST resolve to an existing Idea file at `spec/ideas/<slug>.md` or `spec/ideas/archived/<slug>.md`.
+- Every referenced Idea MUST have `Status ∈ {Approved, Specified}`. Referencing an Idea with `Status` of `Draft`, `Under Review`, or `Archived` is a validation error.
+- The relationship is many-to-many: a Feature MAY list multiple Source Ideas, and the same Idea MAY appear in the `**Source Ideas:**` of multiple Features.
+
+#### REQ: source-ideas-drive-idea-status
+
+Creating or updating a Feature's `**Source Ideas:**` field triggers tooling to reconcile each referenced Idea's `**Promotes To:**` and `**Status:**` (see [Idea#req:specified-derivation](../idea/README.md#req-specified-derivation) and [Idea#req:sync-lint-strict](../idea/README.md#req-sync-lint-strict)). Features declare the reference; `specscore lint --fix` (or the equivalent Feature-creation tooling) reconciles Idea status. Feature authors MUST NOT edit an Idea's `**Promotes To:**` or `**Status:**` directly to reflect a Feature link — the Feature's `**Source Ideas:**` entry is the only authoritative input.
+
 ## Relationship to Other Artifacts
 
 ### Features and proposals
@@ -335,6 +364,7 @@ Feature behavior is configured through the project definition file. See [Project
 
 | Feature | Interaction |
 |---------|-------------|
+| [Idea](../idea/README.md) | Features MAY declare one or more source Ideas via the `**Source Ideas:**` header field. The relationship is many-to-many. Tooling uses this link to derive each Idea's `**Promotes To:**` and `**Status:**`; Features do not manage Idea state directly. |
 | [Proposals](../proposals/README.md) | Proposals attach change requests to features. Features display recent proposals in their README. |
 | [Plan](../plan/README.md) | Plans reference features they affect. Features back-reference active plans. |
 | [Requirement](../requirement/README.md) | Requirements are `#### REQ:` subsections under topic headings within a feature's Behavior section. They are the addressable rules that scenarios verify. |
@@ -363,6 +393,12 @@ Every feature README ends with an adherence footer whose link target is `https:/
 **Requirements:** feature#req:outstanding-questions, feature#req:ac-section
 
 Sections with no content use their prescribed placeholder text. Outstanding Questions says "None at this time." when empty. Acceptance Criteria says "Not defined yet." when undefined, and a corresponding Outstanding Question is raised.
+
+### AC: source-ideas-linkage
+
+**Requirements:** feature#req:source-ideas-field, feature#req:source-ideas-drive-idea-status
+
+A Feature MAY declare zero or more source Ideas via a `**Source Ideas:**` header field. Every listed slug resolves to an existing Idea with `Status ∈ {Approved, Specified}`; any other target (missing file, `Draft`, `Under Review`, or `Archived`) is rejected by lint. Adding or removing a slug triggers tooling to reconcile the referenced Idea's `**Promotes To:**` and `**Status:**` — Features never mutate Idea state directly.
 
 ## Outstanding Questions
 

@@ -20,7 +20,7 @@ type Options struct {
 	Rules    []string // enabled rules; nil = all
 	Ignore   []string // disabled rules
 	Severity string   // minimum severity: error, warning, info
-	Fix      bool     // when true, apply fixes from checkers that support it
+	Fix      bool     // when true, auto-fixable violations are repaired on disk by checkers that support it
 }
 
 // Lint runs all enabled lint rules against the spec tree.
@@ -114,6 +114,28 @@ var allRuleNames = map[string]bool{
 	"plan-roi-metadata":  true,
 	"adherence-footer":   true,
 	"hub-view-link":      true,
+	// Idea lint rules.
+	"idea-location":                     true,
+	"idea-slug-format":                  true,
+	"idea-single-file":                  true,
+	"idea-title-format":                 true,
+	"idea-header-fields":                true,
+	"idea-id-is-slug":                   true,
+	"idea-required-sections":            true,
+	"idea-not-doing-non-empty":          true,
+	"idea-must-be-true-present":         true,
+	"idea-hmw-framing":                  true,
+	"idea-status-values":                true,
+	"idea-specified-requires-promotion": true,
+	"idea-archived-location":            true,
+	"idea-archive-reason":               true,
+	"idea-supersedes-target-archived":   true,
+	"idea-related-ideas-format":         true,
+	"idea-related-ideas-target-exists":  true,
+	"idea-sync-lint-strict":             true,
+	"idea-feature-cross-reference":      true,
+	"idea-index-completeness":           true,
+	"idea-archived-index-chronological": true,
 }
 
 // AllRuleNames returns the canonical set of known rule names.
