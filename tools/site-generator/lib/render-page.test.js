@@ -26,6 +26,7 @@ describe('renderMarkdownToHtml', () => {
 describe('injectIntoTemplate', () => {
   const template =
     '<title>{{title}} - SpecScore</title>' +
+    '{{alternateLink}}' +
     '<aside>{{sidebar}}</aside>' +
     '{{eyebrow}}' +
     '<main>{{content}}</main>' +
@@ -138,5 +139,32 @@ describe('injectIntoTemplate', () => {
     });
 
     assert.ok(!result.includes('View as Markdown'));
+  });
+
+  it('includes <link rel="alternate" type="text/markdown"> by default', () => {
+    const result = injectIntoTemplate(template, {
+      title: 'Feature Specification',
+      content: '',
+      slug: 'feature-specification',
+      sidebarGroups,
+      eyebrow: 'Feature Specs',
+    });
+
+    assert.ok(result.includes('rel="alternate"'));
+    assert.ok(result.includes('type="text/markdown"'));
+    assert.ok(result.includes('href="/feature-specification.md"'));
+  });
+
+  it('omits <link rel="alternate"> when showViewMarkdown is false', () => {
+    const result = injectIntoTemplate(template, {
+      title: 'SpecScore',
+      content: '',
+      slug: 'index',
+      sidebarGroups,
+      eyebrow: '',
+      showViewMarkdown: false,
+    });
+
+    assert.ok(!result.includes('rel="alternate"'));
   });
 });

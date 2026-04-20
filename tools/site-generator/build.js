@@ -5,6 +5,7 @@ import { loadConfig } from './lib/load-config.js';
 import { rewriteLinks } from './lib/rewrite-links.js';
 import { renderMermaidBlocks } from './lib/render-mermaid.js';
 import { renderMarkdownToHtml, injectIntoTemplate } from './lib/render-page.js';
+import { writeLlmsFiles } from './lib/build-llms.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..', '..');
@@ -144,6 +145,10 @@ async function build() {
     await writeFile(join(OUTPUT, 'blog.html'), blogIndexPage, 'utf-8');
     console.log('  blog.html (index)');
   }
+
+  // --- llms.txt + llms-full.txt for AI agents ---
+  await writeLlmsFiles(config, OUTPUT, ROOT);
+  console.log('  llms.txt + llms-full.txt');
 
   console.log(`\nDone. Output: ${OUTPUT}`);
 }

@@ -4,6 +4,68 @@
     "public": "public",
     "ignore": ["firebase.json", "**/.*"],
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": false,
+    "headers": [
+      {
+        "source": "/specifications",
+        "headers": [
+          { "key": "Link", "value": "</specifications.md>; rel=\"alternate\"; type=\"text/markdown\"" }
+        ]
+      },
+      {
+        "source": "/feature-specification",
+        "headers": [
+          { "key": "Link", "value": "</feature-specification.md>; rel=\"alternate\"; type=\"text/markdown\"" }
+        ]
+      },
+      {
+        "source": "/plan-specification",
+        "headers": [
+          { "key": "Link", "value": "</plan-specification.md>; rel=\"alternate\"; type=\"text/markdown\"" }
+        ]
+      },
+      {
+        "source": "/task-specification",
+        "headers": [
+          { "key": "Link", "value": "</task-specification.md>; rel=\"alternate\"; type=\"text/markdown\"" }
+        ]
+      },
+      {
+        "source": "/acceptance-criteria-specification",
+        "headers": [
+          { "key": "Link", "value": "</acceptance-criteria-specification.md>; rel=\"alternate\"; type=\"text/markdown\"" }
+        ]
+      },
+      {
+        "source": "/project-definition-specification",
+        "headers": [
+          { "key": "Link", "value": "</project-definition-specification.md>; rel=\"alternate\"; type=\"text/markdown\"" }
+        ]
+      },
+      {
+        "source": "/source-references-specification",
+        "headers": [
+          { "key": "Link", "value": "</source-references-specification.md>; rel=\"alternate\"; type=\"text/markdown\"" }
+        ]
+      },
+      {
+        "source": "/install",
+        "headers": [
+          { "key": "Link", "value": "</install.md>; rel=\"alternate\"; type=\"text/markdown\"" }
+        ]
+      },
+      {
+        "source": "/demo/todo-app",
+        "headers": [
+          { "key": "Link", "value": "</demo/todo-app.md>; rel=\"alternate\"; type=\"text/markdown\"" }
+        ]
+      },
+      {
+        "source": "**/*.md",
+        "headers": [
+          { "key": "Content-Type", "value": "text/markdown; charset=utf-8" }
+        ]
+      }
+    ]
   }
 }

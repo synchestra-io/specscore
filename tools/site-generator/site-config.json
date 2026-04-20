@@ -15,7 +15,10 @@
       "nav": true,
       "navLabel": "Overview",
       "navGroup": "Specification",
-      "navOrder": 1
+      "navOrder": 1,
+      "llmsGroup": "Overview",
+      "llmsDescription": "Navigable index of all SpecScore specifications with status and one-line descriptions.",
+      "llmsFull": true
     },
     {
       "source": "spec/features/feature/README.md",
@@ -24,7 +27,10 @@
       "nav": true,
       "navLabel": "Feature",
       "navGroup": "Specification",
-      "navOrder": 2
+      "navOrder": 2,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "The atomic unit of product specification. Defines directory structure, metadata (status, source ideas), required sections, lifecycle, and adherence-footer conventions for Features.",
+      "llmsFull": true
     },
     {
       "source": "spec/features/plan/README.md",
@@ -33,7 +39,10 @@
       "nav": true,
       "navLabel": "Plan",
       "navGroup": "Specification",
-      "navOrder": 3
+      "navOrder": 3,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "Planning documents that bridge Feature specs to execution. Covers affected features, scope, approval workflow, and plan-level status.",
+      "llmsFull": true
     },
     {
       "source": "spec/features/task/README.md",
@@ -42,7 +51,10 @@
       "nav": true,
       "navLabel": "Task",
       "navGroup": "Specification",
-      "navOrder": 4
+      "navOrder": 4,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "Discrete units of work within a Plan. Defines Task structure, fields, and how Tasks trace back to Plan scope.",
+      "llmsFull": true
     },
     {
       "source": "spec/features/acceptance-criteria/README.md",
@@ -51,7 +63,10 @@
       "nav": true,
       "navLabel": "Acceptance Criteria",
       "navGroup": "Specification",
-      "navOrder": 5
+      "navOrder": 5,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "Composite verification conditions (AC blocks) that bundle related Requirements inside a Feature's Acceptance Criteria section.",
+      "llmsFull": true
     },
     {
       "source": "spec/features/project-definition/README.md",
@@ -60,7 +75,10 @@
       "nav": true,
       "navLabel": "Project Definition",
       "navGroup": "Specification",
-      "navOrder": 6
+      "navOrder": 6,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "Top-level SpecScore project configuration — repository layout, project metadata, and the root spec anchor.",
+      "llmsFull": true
     },
     {
       "source": "spec/features/source-references/README.md",
@@ -69,7 +87,10 @@
       "nav": true,
       "navLabel": "Source References",
       "navGroup": "Specification",
-      "navOrder": 7
+      "navOrder": 7,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "Code-to-spec traceability via inline annotations. Every implemented requirement links back to the REQ or AC it satisfies.",
+      "llmsFull": true
     },
     {
       "source": "docs/installation.md",
@@ -78,7 +99,10 @@
       "nav": true,
       "navLabel": "Installation",
       "navGroup": "Getting Started",
-      "navOrder": 7
+      "navOrder": 7,
+      "llmsGroup": "Getting Started",
+      "llmsDescription": "How to install the specscore CLI and initialize a SpecScore project.",
+      "llmsFull": true
     },
     {
       "source": "docs/demo/todo-app.md",
@@ -87,7 +111,10 @@
       "nav": true,
       "navLabel": "Demo Project",
       "navGroup": "Getting Started",
-      "navOrder": 8
+      "navOrder": 8,
+      "llmsGroup": "Getting Started",
+      "llmsDescription": "A worked-example SpecScore project — a Todo app spec tree demonstrating real-world structure and conventions.",
+      "llmsFull": true
     },
     {
       "source": "docs/for/developers.md",
@@ -142,6 +169,15 @@
       "navLabel": "Architects",
       "navGroup": "SpecScore for",
       "navOrder": 15
+    },
+    {
+      "source": "docs/for/ai-agents.md",
+      "slug": "for/ai-agents",
+      "title": "SpecScore for AI Agents",
+      "nav": true,
+      "navLabel": "AI Agents",
+      "navGroup": "SpecScore for",
+      "navOrder": 16
     },
     {
       "source": null,

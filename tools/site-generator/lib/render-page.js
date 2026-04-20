@@ -66,11 +66,15 @@ export function injectIntoTemplate(template, { title, content, slug, sidebarGrou
   const viewMarkdownHtml = showViewMarkdown
     ? `<p class="view-markdown"><a href="${mdUrl}">View as Markdown</a></p>`
     : '';
+  const alternateLinkHtml = showViewMarkdown
+    ? `<link rel="alternate" type="text/markdown" href="${mdUrl}">`
+    : '';
 
   return template
     .replace(/\{\{title\}\}/g, title)
     .replace(/\{\{sidebar\}\}/g, sidebarHtml)
     .replace(/\{\{eyebrow\}\}/g, eyebrowHtml)
     .replace(/\{\{content\}\}/g, content)
-    .replace(/\{\{viewMarkdown\}\}/g, viewMarkdownHtml);
+    .replace(/\{\{viewMarkdown\}\}/g, viewMarkdownHtml)
+    .replace(/\{\{alternateLink\}\}/g, alternateLinkHtml);
 }
