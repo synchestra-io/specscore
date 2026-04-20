@@ -8,8 +8,8 @@ Archived Ideas are indexed separately at [archived/README.md](archived/README.md
 
 | Idea | Status | Date | Owner | Promotes To |
 |------|--------|------|-------|-------------|
-
-_No active ideas yet._
+| [adherence-footer-and-doc-type-registry](adherence-footer-and-doc-type-registry.md) | Draft | 2026-04-20 | alexander.trakhimenok | — |
+| [shared-index-feature](shared-index-feature.md) | Draft | 2026-04-20 | alexander.trakhimenok | — |
 
 ## Outstanding Questions
 
