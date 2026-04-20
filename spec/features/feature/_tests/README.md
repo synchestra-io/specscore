@@ -19,3 +19,6 @@ Test scenarios for the [Feature](../README.md) specification.
 ## Outstanding Questions
 
 None at this time.
+
+---
+*This document follows the https://specscore.md/scenarios-index-specification*

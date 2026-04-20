@@ -18,3 +18,6 @@ Test scenarios for the [Acceptance Criteria](../README.md) specification.
 ## Outstanding Questions
 
 None at this time.
+
+---
+*This document follows the https://specscore.md/scenarios-index-specification*

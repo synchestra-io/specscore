@@ -174,23 +174,52 @@ func TestAdherenceFooter_ArchivedIdeasIgnored(t *testing.T) {
 	}
 }
 
-func TestAdherenceFooter_UnderscoreReservedDirsIgnored(t *testing.T) {
+func TestAdherenceFooter_UnderscoreSubtreeNotTreatedAsFeature(t *testing.T) {
 	tmp := t.TempDir()
 	// A valid feature with the footer.
 	writeFeatureReadme(t, tmp, "auth", "# Feature: Auth\n\n**Status:** Draft\n\n"+validFooterURL+"\n")
-	// A README inside _tests/ without the footer — must NOT be flagged.
+	// A README inside _tests/ without the footer — must NOT be flagged as a
+	// feature (feature-specification is a feature-only check). It IS flagged
+	// separately as a scenarios-index missing its own URL.
 	testsDir := filepath.Join(tmp, "features", "auth", "_tests")
 	if err := os.MkdirAll(testsDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(testsDir, "README.md"),
-		[]byte("# Tests for Auth\n\nNo footer needed.\n"), 0o644); err != nil {
+		[]byte("# Scenarios: Auth\n\nNo footer.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	violations := runAdherenceFooterCheck(t, tmp)
+	if len(violations) != 1 {
+		t.Fatalf("expected 1 violation (scenarios-index missing footer), got %d: %+v", len(violations), violations)
+	}
+	v := violations[0]
+	if !strings.Contains(v.Message, "scenarios-index-specification") {
+		t.Errorf("Message should reference scenarios-index-specification, got %q", v.Message)
+	}
+	if strings.Contains(v.Message, "feature-specification") {
+		t.Errorf("Message must NOT reference feature-specification (the _tests/README.md is a scenarios-index, not a feature); got %q", v.Message)
+	}
+	if v.Severity != "warn" {
+		t.Errorf("Severity = %q, want %q", v.Severity, "warn")
+	}
+}
+
+func TestAdherenceFooter_ScenariosIndexWithURL_NoViolation(t *testing.T) {
+	tmp := t.TempDir()
+	testsDir := filepath.Join(tmp, "features", "auth", "_tests")
+	if err := os.MkdirAll(testsDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	content := "# Scenarios: Auth\n\n---\n*This document follows the https://specscore.md/scenarios-index-specification*\n"
+	if err := os.WriteFile(filepath.Join(testsDir, "README.md"), []byte(content), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
 	violations := runAdherenceFooterCheck(t, tmp)
 	if len(violations) != 0 {
-		t.Errorf("expected 0 violations (_tests ignored), got %d: %+v", len(violations), violations)
+		t.Errorf("expected 0 violations, got %d: %+v", len(violations), violations)
 	}
 }
 

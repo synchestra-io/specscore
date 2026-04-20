@@ -74,6 +74,12 @@ var docTypeTargets = []docTypeTarget{
 		severity:    "warn",
 		walk:        walkScenarioFiles,
 	},
+	{
+		description: "scenarios-index README",
+		url:         "https://specscore.md/scenarios-index-specification",
+		severity:    "warn",
+		walk:        walkScenariosIndexes,
+	},
 }
 
 // adherenceFooterChecker verifies that every SpecScore document of a
@@ -260,6 +266,34 @@ func walkTaskReadmes(specRoot string, fn func(path string, content []byte)) erro
 		// A Task README lives at plans/**/tasks/<slug>/README.md. Check that
 		// the grandparent directory is "tasks".
 		if filepath.Base(filepath.Dir(filepath.Dir(path))) != "tasks" {
+			return nil
+		}
+		content, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return nil
+		}
+		fn(path, content)
+		return nil
+	})
+}
+
+// walkScenariosIndexes invokes fn for every scenarios index at
+// specRoot/features/**/_tests/README.md.
+func walkScenariosIndexes(specRoot string, fn func(path string, content []byte)) error {
+	featuresDir := filepath.Join(specRoot, "features")
+	info, err := os.Stat(featuresDir)
+	if err != nil || !info.IsDir() {
+		return nil
+	}
+	return filepath.Walk(featuresDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() || info.Name() != "README.md" {
+			return nil
+		}
+		// README.md must be directly inside a `_tests` directory.
+		if filepath.Base(filepath.Dir(path)) != "_tests" {
 			return nil
 		}
 		content, readErr := os.ReadFile(path)

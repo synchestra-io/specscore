@@ -23,3 +23,6 @@ Test scenarios validating the plan feature requirements.
 ## Outstanding Questions
 
 None at this time.
+
+---
+*This document follows the https://specscore.md/scenarios-index-specification*

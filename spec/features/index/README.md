@@ -84,6 +84,7 @@ An Index-Kind feature whose Behavior section contains only inherited REQ referen
 | [Plans Index](../plans-index/README.md) | plans-index inherits from this feature. Its overrides: a `Recently Closed` section, a Contents column set (Plan / Status / Features / Effort / Impact / Author / Approved), a `REQ: sub-plan-indentation` for nested plans, and an optional `summary-optional` per-plan paragraph. |
 | [Ideas Index](../ideas-index/README.md) | ideas-index inherits from this feature. Its overrides: an Index column set (Idea / Status / Date / Owner / Promotes To) and a `REQ: status-excludes-archived` that keeps Archived Ideas out of the active index. |
 | [Features Index](../features-index/README.md) | features-index inherits from this feature. Its overrides: an Index column set (Feature / Status / Description) and a `REQ: top-level-only` that excludes sub-features (they appear in their parent Feature's Contents section). |
+| [Scenarios Index](../scenarios-index/README.md) | scenarios-index inherits from this feature. Its overrides: a `REQ: per-feature-location` (indexes are per-parent-feature, not repo-wide) and a minimal column set (Scenario / Validates). Unlike the other Index-Kind features, many scenarios indexes exist per repo — one per feature with scenarios. |
 
 ## Acceptance Criteria
 

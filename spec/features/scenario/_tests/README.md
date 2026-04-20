@@ -19,3 +19,6 @@ Scenarios validating the [Scenario](../README.md) feature specification.
 ## Outstanding Questions
 
 None at this time.
+
+---
+*This document follows the https://specscore.md/scenarios-index-specification*
