@@ -1,11 +1,12 @@
 # Idea: Dual-Audience Spec URLs
 
-**Status:** Approved
+**Status:** Archived
 **Date:** 2026-04-20
 **Owner:** alexander.trakhimenok
 **Promotes To:** —
 **Supersedes:** —
 **Related Ideas:** depends_on:adherence-footer-and-doc-type-registry
+**Archive Reason:** implemented — MVP shipped and verified in commit 06c4dc3; no Feature was created (publishing-layer Idea). This stretches the Archive Reason semantics (archival is normally for abandonment) and surfaces a lifecycle gap: the Idea feature lacks a dedicated "Implemented" terminal state for infrastructure Ideas that do not promote to Features.
 
 ## Problem Statement
 

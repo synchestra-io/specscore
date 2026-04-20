@@ -8,7 +8,7 @@ Entries appear in chronological order by each Idea's `**Date:**` field (oldest f
 - YYYY-MM-DD — [slug](<slug>.md) — <archive reason>
 ```
 
-_No archived ideas yet._
+- 2026-04-20 — [dual-audience-spec-urls](dual-audience-spec-urls.md) — implemented
 
 ## Outstanding Questions
 

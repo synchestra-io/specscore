@@ -45,6 +45,12 @@ var docTypeTargets = []docTypeTarget{
 		walk:        walkPlansIndex,
 	},
 	{
+		description: "ideas-index README",
+		url:         "https://specscore.md/ideas-index-specification",
+		severity:    "warn",
+		walk:        walkIdeasIndex,
+	},
+	{
 		description: "Plan README",
 		url:         "https://specscore.md/plan-specification",
 		severity:    "warn",
@@ -144,6 +150,17 @@ func walkIdeaFiles(specRoot string, fn func(path string, content []byte)) error 
 // walkPlansIndex invokes fn for specRoot/plans/README.md if present.
 func walkPlansIndex(specRoot string, fn func(path string, content []byte)) error {
 	path := filepath.Join(specRoot, "plans", "README.md")
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+	fn(path, content)
+	return nil
+}
+
+// walkIdeasIndex invokes fn for specRoot/ideas/README.md if present.
+func walkIdeasIndex(specRoot string, fn func(path string, content []byte)) error {
+	path := filepath.Join(specRoot, "ideas", "README.md")
 	content, err := os.ReadFile(path)
 	if err != nil {
 		return nil

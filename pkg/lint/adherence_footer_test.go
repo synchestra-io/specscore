@@ -3,6 +3,7 @@ package lint
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -127,21 +128,32 @@ func TestAdherenceFooter_IdeaFileWithoutURL_Warns(t *testing.T) {
 	}
 }
 
-func TestAdherenceFooter_IdeasIndexReadmeIgnored(t *testing.T) {
+func TestAdherenceFooter_IdeasIndexCheckedAgainstIndexURL(t *testing.T) {
 	tmp := t.TempDir()
 	ideasDir := filepath.Join(tmp, "ideas")
 	if err := os.MkdirAll(ideasDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	// README.md in ideas/ is the ideas index, not an Idea artifact — must NOT trigger.
+	// README.md in ideas/ is the ideas-index — it MUST carry the
+	// ideas-index-specification URL (not idea-specification).
 	if err := os.WriteFile(filepath.Join(ideasDir, "README.md"),
 		[]byte("# Ideas Index\n\nNo footer.\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
 	violations := runAdherenceFooterCheck(t, tmp)
-	if len(violations) != 0 {
-		t.Errorf("expected 0 violations (ideas README is an index, not an Idea), got %d: %+v", len(violations), violations)
+	if len(violations) != 1 {
+		t.Fatalf("expected 1 violation (ideas-index missing footer), got %d: %+v", len(violations), violations)
+	}
+	v := violations[0]
+	if !strings.Contains(v.Message, "ideas-index-specification") {
+		t.Errorf("Message should reference ideas-index-specification, got %q", v.Message)
+	}
+	if strings.Contains(v.Message, "/idea-specification") {
+		t.Errorf("Message must NOT reference idea-specification (the ideas README is an index, not an Idea); got %q", v.Message)
+	}
+	if v.Severity != "warn" {
+		t.Errorf("Severity = %q, want %q", v.Severity, "warn")
 	}
 }
 

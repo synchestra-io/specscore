@@ -1,9 +1,9 @@
 # Idea: Shared Index Feature
 
-**Status:** Draft
+**Status:** Specified
 **Date:** 2026-04-20
 **Owner:** alexander.trakhimenok
-**Promotes To:** —
+**Promotes To:** index
 **Supersedes:** —
 **Related Ideas:** depends_on:adherence-footer-and-doc-type-registry
 
