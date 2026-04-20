@@ -35,4 +35,4 @@ spec/features/
 None at this time.
 
 ---
-*This document follows the https://specscore.md/feature-specification*
+*This document follows the https://specscore.md/features-index-specification*

@@ -83,6 +83,7 @@ An Index-Kind feature whose Behavior section contains only inherited REQ referen
 | [Document Types Registry](../document-types-registry/README.md) | Index-Kind rows in the registry use this feature as their shared-shape source. The registry's `REQ: kind-cross-check` enforces that Index-Kind features exist at the top level of `spec/features/`. |
 | [Plans Index](../plans-index/README.md) | plans-index inherits from this feature. Its overrides: a `Recently Closed` section, a Contents column set (Plan / Status / Features / Effort / Impact / Author / Approved), a `REQ: sub-plan-indentation` for nested plans, and an optional `summary-optional` per-plan paragraph. |
 | [Ideas Index](../ideas-index/README.md) | ideas-index inherits from this feature. Its overrides: an Index column set (Idea / Status / Date / Owner / Promotes To) and a `REQ: status-excludes-archived` that keeps Archived Ideas out of the active index. |
+| [Features Index](../features-index/README.md) | features-index inherits from this feature. Its overrides: an Index column set (Feature / Status / Description) and a `REQ: top-level-only` that excludes sub-features (they appear in their parent Feature's Contents section). |
 
 ## Acceptance Criteria
 

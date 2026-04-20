@@ -7,7 +7,9 @@
 
 ## Summary
 
-The document types registry is the single canonical list of every document type SpecScore defines — Features, Plans, Ideas, Tasks, Scenarios, Indexes, and the Meta features that define SpecScore itself. The registry lives in the root feature index at [`spec/features/README.md`](../README.md) as an extended Contents table whose columns answer "what is this, where do its instances live, and what specification URL governs them?". This feature specifies the registry's location, its required columns, the Kind taxonomy that classifies every entry, and the lint cross-check that prevents drift between registry rows and feature-declared URLs.
+The document types registry is the single canonical list of every document type SpecScore defines — Features, Plans, Ideas, Tasks, Scenarios, Indexes, and the Meta features that define SpecScore itself. The registry is a **Meta overlay on the [features-index](../features-index/README.md)**: in the SpecScore meta-spec repository, `spec/features/README.md` serves simultaneously as the features-index (base shape) AND the registry (four additional columns capturing the doc type taxonomy). This feature specifies the overlay — the additional columns, the Kind taxonomy, and the lint cross-check that prevents drift between registry rows and feature-declared URLs.
+
+Consumer repos that use SpecScore carry a features-index following the [features-index specification](../features-index/README.md), but do NOT carry the registry overlay — the registry describes SpecScore's own internal taxonomy, not the consumer's features.
 
 ## Problem
 
@@ -17,31 +19,33 @@ Without a registry, the set of SpecScore document types is implicit and scattere
 
 ### Registry location
 
-The registry IS the root feature index. It is not a separate file.
+The registry IS the root features-index, extended. It is not a separate file.
 
 #### REQ: registry-location
 
-The document types registry MUST live at `spec/features/README.md`. The registry is the Contents table in that file, extended with the columns defined below. A separate registry file (e.g., `spec/document-types.md`) MUST NOT be created — duplication would reintroduce the drift problem this feature exists to solve.
+In the SpecScore meta-spec repository, the document types registry MUST live at `spec/features/README.md` — co-located with the [features-index](../features-index/README.md). The registry is the features-index's Contents table extended with the four overlay columns defined below. A separate registry file (e.g., `spec/document-types.md`) MUST NOT be created — duplication would reintroduce the drift problem this feature exists to solve.
+
+Consumer repos do NOT carry the registry overlay. Their `spec/features/README.md` follows the features-index specification alone; the registry applies only to SpecScore's own meta-spec.
 
 ### Required columns
 
-The Contents table carries one row per feature, with the following required columns.
+The registry overlay adds four columns to the features-index base (Feature, Status, Description). These four overlay columns sit between Status and Description.
 
 #### REQ: required-columns
 
-The Contents table in `spec/features/README.md` MUST include, at minimum, these columns in this order:
+The Contents table in SpecScore's `spec/features/README.md` MUST include, at minimum, the features-index base columns AND the four registry overlay columns, in this combined order:
 
-| Column | Meaning |
-|---|---|
-| Feature | Relative link to the feature's README — e.g. the feature named `foo` is linked as a Markdown link whose target is `foo/README.md` |
-| Status | The feature's spec status (`Draft` \| `In Progress` \| `Stable` \| `Deprecated` \| `Conceptual`) |
-| Kind | One of: `Document` \| `Index` \| `Structure` \| `Meta` (see [Kind taxonomy](#kind-taxonomy)) |
-| URL | The bare specification URL, or `—` for Kinds that have none (see [REQ: url-per-kind](#req-url-per-kind)) |
-| Consumer Path | Glob of where instances live in consumer repos (e.g. `spec/plans/**/README.md`), or `—` when no consumer instances exist |
-| Index | Relative link to the companion Index-Kind feature, or `—` when none |
-| Description | One-line human summary |
+| Column | Origin | Meaning |
+|---|---|---|
+| Feature | features-index | Relative link to the feature's README — e.g. the feature named `foo` is linked as a Markdown link whose target is `foo/README.md` |
+| Status | features-index | The feature's spec status (`Draft` \| `In Progress` \| `Stable` \| `Deprecated` \| `Conceptual`) |
+| Kind | registry overlay | One of: `Document` \| `Index` \| `Structure` \| `Meta` (see [Kind taxonomy](#kind-taxonomy)) |
+| URL | registry overlay | The bare specification URL, or `—` for Kinds that have none (see [REQ: url-per-kind](#req-url-per-kind)) |
+| Consumer Path | registry overlay | Glob of where instances live in consumer repos (e.g. `spec/plans/**/README.md`), or `—` when no consumer instances exist |
+| Index | registry overlay | Relative link to the companion Index-Kind feature, or `—` when none |
+| Description | features-index | One-line human summary |
 
-Additional columns MAY be appended after `Description` for project-level needs (e.g., `Owner`, `Last Updated`). The required columns MUST appear in the order above.
+Additional columns MAY be appended after `Description` for project-level needs. The required columns MUST appear in the order above.
 
 ### Kind taxonomy
 
@@ -101,7 +105,8 @@ A Document-Kind or Index-Kind feature MUST have a `REQ: adherence-footer` in its
 
 | Feature | Interaction |
 |---|---|
-| [Feature](../feature/README.md) | The feature index (`spec/features/README.md`) is the registry. The Feature feature's existing `REQ: index-completeness` combines with this feature's `REQ: required-columns` to fully specify the index shape. |
+| [Features Index](../features-index/README.md) | The registry is a Meta overlay on the features-index document at `spec/features/README.md`. Features-index specifies the base shape (Feature, Status, Description columns); this registry adds the four overlay columns (Kind, URL, Consumer Path, Index) that only the SpecScore meta-spec needs. |
+| [Feature](../feature/README.md) | Every feature has a row in the combined features-index + registry table. Cross-checks between each feature's declared specification URL and its registry row catch drift. |
 | [Adherence Footer](../adherence-footer/README.md) | The registry's `URL` column is cross-checked against each Document/Index-Kind feature's local `REQ: adherence-footer` URL. Drift is a lint error. |
 | [Plans Index](../plans-index/README.md) | Plans-Index is an `Index` Kind whose `URL` is `https://specscore.md/plans-index-specification` and whose `Consumer Path` is `spec/plans/README.md`. Its row in the registry demonstrates the Index Kind conventions. |
 

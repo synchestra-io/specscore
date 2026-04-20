@@ -30,7 +30,13 @@ var docTypeTargets = []docTypeTarget{
 		description: "feature README",
 		url:         "https://specscore.md/feature-specification",
 		severity:    "error",
-		walk:        walkFeatureReadmes,
+		walk:        walkFeatureReadmesExcludingIndex,
+	},
+	{
+		description: "features-index README",
+		url:         "https://specscore.md/features-index-specification",
+		severity:    "warn",
+		walk:        walkFeaturesIndex,
 	},
 	{
 		description: "Idea file",
@@ -167,6 +173,34 @@ func walkIdeasIndex(specRoot string, fn func(path string, content []byte)) error
 	}
 	fn(path, content)
 	return nil
+}
+
+// walkFeaturesIndex invokes fn for specRoot/features/README.md if present.
+// This file is an Index-Kind document (features-index), not a Feature README,
+// and is checked against the features-index-specification URL.
+func walkFeaturesIndex(specRoot string, fn func(path string, content []byte)) error {
+	path := filepath.Join(specRoot, "features", "README.md")
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+	fn(path, content)
+	return nil
+}
+
+// walkFeatureReadmesExcludingIndex walks feature READMEs but skips the root
+// spec/features/README.md (which is an Index-Kind document, not a Feature).
+// Used by the feature-specification adherence-footer check so the root index
+// isn't flagged for missing feature-specification — its footer is
+// features-index-specification, handled by walkFeaturesIndex.
+func walkFeatureReadmesExcludingIndex(specRoot string, fn func(path string, content []byte)) error {
+	rootIndex := filepath.Join(specRoot, "features", "README.md")
+	return walkFeatureReadmes(specRoot, func(path string, content []byte) {
+		if path == rootIndex {
+			return
+		}
+		fn(path, content)
+	})
 }
 
 // walkPlanReadmes invokes fn for every Plan README under specRoot/plans/**/README.md,

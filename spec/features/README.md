@@ -7,7 +7,7 @@ Core features of the SpecScore specification framework. This table is the canoni
 | Feature | Status | Kind | URL | Consumer Path | Index | Description |
 |---------|--------|------|-----|---------------|-------|-------------|
 | [idea](idea/README.md) | Conceptual | Document | `https://specscore.md/idea-specification` | `spec/ideas/*.md` | [ideas-index](ideas-index/README.md) | Pre-spec one-pager that refines a concept into a promotable artifact |
-| [feature](feature/README.md) | Stable | Document | `https://specscore.md/feature-specification` | `spec/features/**/README.md` | — | Feature specification structure, metadata, lifecycle, and conventions |
+| [feature](feature/README.md) | Stable | Document | `https://specscore.md/feature-specification` | `spec/features/**/README.md` | [features-index](features-index/README.md) | Feature specification structure, metadata, lifecycle, and conventions |
 | [acceptance-criteria](acceptance-criteria/README.md) | Stable | Structure | `https://specscore.md/acceptance-criteria-specification` | — | — | Acceptance criteria format and conventions |
 | [requirement](requirement/README.md) | Stable | Structure | `https://specscore.md/requirement-specification` | — | — | Discrete testable rules within feature Behavior sections |
 | [scenario](scenario/README.md) | Stable | Document | `https://specscore.md/scenario-specification` | `spec/features/**/_tests/*.md` | — | Concrete Given/When/Then behavior examples in `_tests/` directories |
@@ -15,6 +15,7 @@ Core features of the SpecScore specification framework. This table is the canoni
 | [plan](plan/README.md) | Stable | Document | `https://specscore.md/plan-specification` | `spec/plans/**/README.md` | [plans-index](plans-index/README.md) | Planning documents that bridge specs to execution |
 | [plans-index](plans-index/README.md) | Draft | Index | `https://specscore.md/plans-index-specification` | `spec/plans/README.md` | — | Canonical index of all Plan documents in a repo |
 | [ideas-index](ideas-index/README.md) | Draft | Index | `https://specscore.md/ideas-index-specification` | `spec/ideas/README.md` | — | Canonical index of all active Idea documents in a repo |
+| [features-index](features-index/README.md) | Draft | Index | `https://specscore.md/features-index-specification` | `spec/features/README.md` | — | Canonical index of all top-level features in a repo |
 | [task](task/README.md) | Stable | Document | `https://specscore.md/task-specification` | `spec/plans/**/tasks/*.md` | — | Discrete units of work within a plan |
 | [project-definition](project-definition/README.md) | Stable | Document | `https://specscore.md/project-definition-specification` | `specscore-spec-repo.yaml` | — | SpecScore project configuration and root structure |
 | [adherence-footer](adherence-footer/README.md) | Draft | Meta | — | — | — | The shared footer mechanism every Document-Kind feature delegates to |
@@ -34,6 +35,7 @@ spec/features/
 ├── plan/                      # How to structure planning documents
 ├── plans-index/               # How to structure the plans index
 ├── ideas-index/               # How to structure the ideas index
+├── features-index/            # How to structure this features index
 ├── task/                      # How to define discrete units of work within a plan
 ├── project-definition/        # Project config and top-level structure
 ├── adherence-footer/          # Shared footer mechanism
@@ -56,4 +58,4 @@ See [synchestra.io](https://synchestra.io) for orchestration on top of SpecScore
 None at this time.
 
 ---
-*This document follows the https://specscore.md/feature-specification*
+*This document follows the https://specscore.md/features-index-specification*
