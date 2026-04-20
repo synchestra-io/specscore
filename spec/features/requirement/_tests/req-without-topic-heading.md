@@ -9,3 +9,6 @@ AND there is no intervening `###` topic heading between `## Behavior` and the re
 WHEN the spec linter validates the feature
 THEN the linter reports an error: requirement "orphan-rule" has no parent topic heading
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

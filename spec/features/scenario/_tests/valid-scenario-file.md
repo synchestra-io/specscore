@@ -17,3 +17,6 @@ AND a file `_tests/add-item.md` exists with the content:
 WHEN the spec validator checks the scenario file
 THEN the file is accepted as a valid scenario
 AND no validation errors are reported
+
+---
+*This document follows the https://specscore.md/scenario-specification*

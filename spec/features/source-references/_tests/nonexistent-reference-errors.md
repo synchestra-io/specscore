@@ -11,3 +11,6 @@ WHEN the linter validates the file
 THEN the linter reports an error with the file path and line number
 AND the error indicates that the referenced resource does not exist
 AND the validation fails (not a warning)
+
+---
+*This document follows the https://specscore.md/scenario-specification*

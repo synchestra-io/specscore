@@ -12,3 +12,6 @@ AND a `README.md` file exists inside that directory
 GIVEN a plan slug containing uppercase letters or underscores (e.g., `Add_Batch`)
 WHEN the slug is validated
 THEN validation rejects the slug with an error indicating it must be lowercase, hyphen-separated, and URL-safe
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -19,3 +19,6 @@ THEN validation rejects the document with an error listing the missing required 
 GIVEN a plan document that is missing the `## Tasks` section
 WHEN the document is validated
 THEN validation rejects the document with an error listing the missing required section
+
+---
+*This document follows the https://specscore.md/scenario-specification*

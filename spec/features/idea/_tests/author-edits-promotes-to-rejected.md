@@ -10,3 +10,6 @@ AND no feature in `spec/features/` lists `offline-mode` in its `**Source Ideas:*
 WHEN the spec linter validates the idea tree
 THEN the linter reports an error: `Promotes To` disagrees with referencing features
 AND the error message notes that `Promotes To` is managed state and must not be edited manually
+
+---
+*This document follows the https://specscore.md/scenario-specification*

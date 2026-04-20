@@ -13,3 +13,6 @@ THEN it MUST use `specifications` as the specifications path
 GIVEN the same project file
 WHEN SpecScore resolves the documents directory
 THEN it MUST use `documentation` as the documents path
+
+---
+*This document follows the https://specscore.md/scenario-specification*

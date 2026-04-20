@@ -13,3 +13,6 @@ AND the requirement body contains no RFC 2119 keywords (MUST, SHOULD, MAY, etc.)
 WHEN the spec linter validates the feature
 THEN the linter reports a warning: requirement "title-required" does not use RFC 2119 keywords
 AND the warning suggests rephrasing with MUST, SHOULD, or MAY
+
+---
+*This document follows the https://specscore.md/scenario-specification*

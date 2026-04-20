@@ -2,33 +2,39 @@
 
 > [View in Synchestra Hub](https://hub.synchestra.io/project/features?id=specscore@synchestra-io@github.com&path=spec%2Ffeatures) — graph, discussions, approvals
 
-Core features of the SpecScore specification framework:
+Core features of the SpecScore specification framework. This table is the canonical [Document Types Registry](document-types-registry/README.md) — every SpecScore document type is listed here with its Kind, specification URL, and Consumer Path.
 
-| Feature | Status | Description |
-|---------|--------|-------------|
-| [idea](idea/README.md) | Conceptual | Pre-spec one-pager that refines a concept into a promotable artifact |
-| [feature](feature/README.md) | Stable | Feature specification structure, metadata, lifecycle, and conventions |
-| [acceptance-criteria](acceptance-criteria/README.md) | Stable | Acceptance criteria format and conventions |
-| [requirement](requirement/README.md) | Stable | Discrete testable rules within feature Behavior sections |
-| [scenario](scenario/README.md) | Stable | Concrete Given/When/Then behavior examples in `_tests/` directories |
-| [source-references](source-references/README.md) | Stable | Code-to-spec traceability via inline annotations |
-| [plan](plan/README.md) | Stable | Planning documents that bridge specs to execution |
-| [task](task/README.md) | Stable | Discrete units of work within a plan |
-| [project-definition](project-definition/README.md) | Stable | SpecScore project configuration and root structure |
+| Feature | Status | Kind | URL | Consumer Path | Index | Description |
+|---------|--------|------|-----|---------------|-------|-------------|
+| [idea](idea/README.md) | Conceptual | Document | `https://specscore.md/idea-specification` | `spec/ideas/*.md` | — | Pre-spec one-pager that refines a concept into a promotable artifact |
+| [feature](feature/README.md) | Stable | Document | `https://specscore.md/feature-specification` | `spec/features/**/README.md` | — | Feature specification structure, metadata, lifecycle, and conventions |
+| [acceptance-criteria](acceptance-criteria/README.md) | Stable | Structure | `https://specscore.md/acceptance-criteria-specification` | — | — | Acceptance criteria format and conventions |
+| [requirement](requirement/README.md) | Stable | Structure | `https://specscore.md/requirement-specification` | — | — | Discrete testable rules within feature Behavior sections |
+| [scenario](scenario/README.md) | Stable | Document | `https://specscore.md/scenario-specification` | `spec/features/**/_tests/*.md` | — | Concrete Given/When/Then behavior examples in `_tests/` directories |
+| [source-references](source-references/README.md) | Stable | Structure | `https://specscore.md/source-references-specification` | — | — | Code-to-spec traceability via inline annotations |
+| [plan](plan/README.md) | Stable | Document | `https://specscore.md/plan-specification` | `spec/plans/**/README.md` | [plans-index](plans-index/README.md) | Planning documents that bridge specs to execution |
+| [plans-index](plans-index/README.md) | Draft | Index | `https://specscore.md/plans-index-specification` | `spec/plans/README.md` | — | Canonical index of all Plan documents in a repo |
+| [task](task/README.md) | Stable | Document | `https://specscore.md/task-specification` | `spec/plans/**/tasks/*.md` | — | Discrete units of work within a plan |
+| [project-definition](project-definition/README.md) | Stable | Document | `https://specscore.md/project-definition-specification` | `specscore-spec-repo.yaml` | — | SpecScore project configuration and root structure |
+| [adherence-footer](adherence-footer/README.md) | Draft | Meta | — | — | — | The shared footer mechanism every Document-Kind feature delegates to |
+| [document-types-registry](document-types-registry/README.md) | Draft | Meta | — | — | — | This registry — canonical list of SpecScore document types |
 
 ## Feature Hierarchy
 
 ```
 spec/features/
-├── idea/                  # How to structure pre-spec ideation artifacts
-├── feature/               # How to structure and write features
-├── requirement/           # How to define addressable rules in Behavior sections
-├── acceptance-criteria/   # How to define abstract verification conditions
-├── scenario/              # How to write concrete behavior examples
-├── source-references/     # How to link code to specifications
-├── plan/                  # How to structure planning documents
-├── task/                  # How to define discrete units of work within a plan
-└── project-definition/    # Project config and top-level structure
+├── idea/                      # How to structure pre-spec ideation artifacts
+├── feature/                   # How to structure and write features
+├── requirement/               # How to define addressable rules in Behavior sections
+├── acceptance-criteria/       # How to define abstract verification conditions
+├── scenario/                  # How to write concrete behavior examples
+├── source-references/         # How to link code to specifications
+├── plan/                      # How to structure planning documents
+├── plans-index/               # How to structure the plans index
+├── task/                      # How to define discrete units of work within a plan
+├── project-definition/        # Project config and top-level structure
+├── adherence-footer/          # Shared footer mechanism
+└── document-types-registry/   # Canonical list of document types (this registry)
 ```
 
 ## Integration with Orchestration Tools

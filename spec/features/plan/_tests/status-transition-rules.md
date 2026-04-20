@@ -23,3 +23,6 @@ THEN the transition is rejected with an error indicating the allowed transitions
 GIVEN a plan with status `approved`
 WHEN the status is changed to `draft`
 THEN the transition is rejected with an error indicating no transitions are permitted from `approved`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -13,3 +13,6 @@ GIVEN a scenario file with steps using lowercase keywords:
 WHEN the spec validator checks the steps section
 THEN a validation error is reported indicating keywords must be uppercase
 AND the scenario is rejected
+
+---
+*This document follows the https://specscore.md/scenario-specification*

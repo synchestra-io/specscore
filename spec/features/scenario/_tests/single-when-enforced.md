@@ -14,3 +14,6 @@ GIVEN a scenario file with steps containing two WHEN keywords:
 WHEN the spec validator checks the steps section
 THEN a validation error is reported indicating exactly one WHEN is required
 AND the scenario is rejected
+
+---
+*This document follows the https://specscore.md/scenario-specification*

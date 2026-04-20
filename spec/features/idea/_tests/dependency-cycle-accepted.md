@@ -9,3 +9,6 @@ AND an idea file at `spec/ideas/sync-engine.md` with `**Related Ideas:** depends
 WHEN the spec linter validates the idea tree
 THEN the linter accepts both files without error or warning about the cycle
 AND any traversal tooling terminates safely rather than looping forever
+
+---
+*This document follows the https://specscore.md/scenario-specification*

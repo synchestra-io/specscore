@@ -10,3 +10,6 @@ AND a file or directory `feature/nonexistent` exists at the repo root
 WHEN the resolver processes the reference
 THEN the resolver falls back to treating `feature/nonexistent` as a repo-root-relative path
 AND the reference resolves to `feature/nonexistent`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

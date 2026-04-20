@@ -9,3 +9,6 @@ AND it contains a valid `README.md`
 WHEN the spec linter validates the feature tree
 THEN the linter reports an error: slug "My_Feature" contains invalid characters
 AND the error message indicates that slugs must be lowercase, hyphen-separated, and URL-safe
+
+---
+*This document follows the https://specscore.md/scenario-specification*

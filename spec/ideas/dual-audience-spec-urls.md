@@ -1,6 +1,6 @@
 # Idea: Dual-Audience Spec URLs
 
-**Status:** Draft
+**Status:** Approved
 **Date:** 2026-04-20
 **Owner:** alexander.trakhimenok
 **Promotes To:** —
@@ -109,3 +109,6 @@ No changes to authored specs, no changes to the adherence-footer rule, no backen
 - **Cache-Control headers for `.md` responses** — should raw `.md` be cached differently than HTML given typical consumer (agent) patterns (frequent, short-lived, varied origins)? Current lean: same cache policy as HTML; revisit if agent fetch patterns warrant tuning.
 - **Versioning `llms-full.txt`** — should the file carry a `Last-Modified` or content hash footer so agents can detect changes and invalidate their cached context? Current lean: rely on HTTP `ETag` / `Last-Modified`; do not invent a file-level versioning scheme.
 - **Measurement** — do we add request analytics differentiating `.md` vs. `.html` traffic to quantify agent adoption post-launch? If so, what platform (Firebase Analytics, Cloudflare, Plausible)? Out of scope for the MVP; flagged for a later Idea if the signal is wanted.
+
+---
+*This document follows the https://specscore.md/idea-specification*

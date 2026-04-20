@@ -12,3 +12,6 @@ AND the validation fails
 WHEN `specscore lint --fix` is run against the same tree
 THEN the linter rewrites `spec/ideas/archived/README.md` so entries appear oldest-first by `**Date:**`
 AND a subsequent `specscore lint` run passes
+
+---
+*This document follows the https://specscore.md/scenario-specification*

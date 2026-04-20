@@ -10,3 +10,6 @@ WHEN the spec tooling builds the feature tree
 THEN `completion` appears as a sub-feature of `todo-item`
 AND `_acs` and `_tests` do not appear in the feature tree
 AND `_acs` and `_tests` do not appear in the Contents table
+
+---
+*This document follows the https://specscore.md/scenario-specification*

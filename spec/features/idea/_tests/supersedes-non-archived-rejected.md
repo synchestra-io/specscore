@@ -9,3 +9,6 @@ AND `spec/ideas/offline-mode.md` exists with `**Status:** Approved` (not Archive
 WHEN the spec linter validates the idea tree
 THEN the linter reports an error: `Supersedes` target "offline-mode" must exist under `spec/ideas/archived/` with `Status: Archived`
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

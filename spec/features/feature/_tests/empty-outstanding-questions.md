@@ -9,3 +9,6 @@ AND the feature has no open questions
 WHEN the author writes the Outstanding Questions section
 THEN the section contains the text "None at this time."
 AND the spec linter accepts the feature as valid
+
+---
+*This document follows the https://specscore.md/scenario-specification*

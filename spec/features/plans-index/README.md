@@ -1,5 +1,7 @@
 # Feature: Plans Index
 
+> [View in Synchestra Hub](https://hub.synchestra.io/project/features?id=specscore@synchestra-io@github.com&path=spec%2Ffeatures%2Fplans-index) — graph, discussions, approvals
+
 **Status:** Draft
 
 ## Summary
@@ -40,7 +42,7 @@ The Contents section holds a table with one row per plan. Required columns:
 
 | Column | Meaning |
 |---|---|
-| Plan | Link to the plan directory (e.g., `[my-plan](my-plan/README.md)`) |
+| Plan | Link to the plan directory — e.g. a plan named `my-plan` links to `my-plan/README.md` |
 | Status | `draft` \| `in_review` \| `approved` — or project-extended statuses like `paused`, `superseded`, `completed` |
 | Features | Comma-separated list of features the plan touches |
 | Effort | `S` \| `M` \| `L` \| `XL` — or `-` if absent |
@@ -84,52 +86,41 @@ Entries in Recently Closed MUST include the plan link, its terminal status, and 
 
 ### Adherence footer
 
-Every plans index ends with a footer referencing this SpecScore plans-index specification.
-
 #### REQ: adherence-footer
 
-Every plans index MUST end with a footer that references this SpecScore plans-index specification. The footer is a single italic line preceded by a horizontal rule (`---`), containing the bare URL `https://specscore.md/plans-index-specification` (trailing slash optional). The URL MUST appear in bare form (not wrapped in Markdown link syntax) so it remains clickable in terminals and renderers that detect URLs but do not parse Markdown.
-
-The recommended form is:
-
-```markdown
----
-*This index follows the https://specscore.md/plans-index-specification*
-```
-
-Authors MAY reword the surrounding prose, but the specification URL MUST be present. Tooling matches on the URL, not the sentence.
-
-The specification URL is unversioned by design. SpecScore commits to additive-only evolution of the plans-index format; breaking changes are not planned. If a breaking change ever becomes necessary, the canonical URL will be reissued rather than branched into parallel versions.
+Every plans-index document MUST end with an adherence footer per the [Adherence Footer feature](../adherence-footer/README.md). The footer URL MUST be `https://specscore.md/plans-index-specification`.
 
 ## Interaction with Other Features
 
 | Feature | Interaction |
 |---|---|
-| [Plan](../README.md) | The plans index aggregates plan metadata. Individual plan documents are specified by the parent plan feature; this sub-feature specifies only the index. |
+| [Plan](../plan/README.md) | The plans index aggregates plan metadata. Individual plan documents are specified by the Plan feature; this feature specifies only the index. Plans-Index is a top-level sibling of Plan (not nested) so its specification URL stays flat. |
+| [Adherence Footer](../adherence-footer/README.md) | Plans-Index delegates its footer mechanism to the shared Adherence Footer feature; the local `REQ: adherence-footer` below uses the two-line delegation form. |
+| [Document Types Registry](../document-types-registry/README.md) | Plans-Index is an Index-Kind entry in the registry with URL `plans-index-specification` and Consumer Path `spec/plans/README.md`. |
 
 ## Acceptance Criteria
 
 ### AC: index-location-and-structure
 
-**Requirements:** plan/plans-index#req:location, plan/plans-index#req:required-sections
+**Requirements:** plans-index#req:location, plans-index#req:required-sections
 
 The plans index lives at `spec/plans/README.md` and contains the required sections (`Contents`, `Recently Closed`, `Outstanding Questions`) in order.
 
 ### AC: contents-table
 
-**Requirements:** plan/plans-index#req:contents-columns, plan/plans-index#req:completeness, plan/plans-index#req:sub-plan-indentation
+**Requirements:** plans-index#req:contents-columns, plans-index#req:completeness, plans-index#req:sub-plan-indentation
 
 The Contents table includes all standard columns with `-` for absent metadata, lists every plan under `spec/plans/`, and indents sub-plans with `&ensp;`.
 
 ### AC: recently-closed
 
-**Requirements:** plan/plans-index#req:recently-closed-present, plan/plans-index#req:recently-closed-shape
+**Requirements:** plans-index#req:recently-closed-present, plans-index#req:recently-closed-shape
 
 A Recently Closed section exists (even if empty) and its entries include plan link, terminal status, and closure date.
 
 ### AC: adherence-footer
 
-**Requirements:** plan/plans-index#req:adherence-footer
+**Requirements:** plans-index#req:adherence-footer
 
 Every plans index ends with a footer containing the bare URL `https://specscore.md/plans-index-specification`. Lint matches on the URL, not the prose.
 

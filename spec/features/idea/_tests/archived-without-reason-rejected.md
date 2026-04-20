@@ -9,3 +9,6 @@ AND the `**Archive Reason:**` field is absent or set to `—`
 WHEN the spec linter validates the idea
 THEN the linter reports an error: archived idea "offline-mode" must include a non-empty `Archive Reason`
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

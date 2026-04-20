@@ -8,3 +8,6 @@ GIVEN a feature README with an Acceptance Criteria section
 AND an AC's condition statement contains "GIVEN" or "WHEN" or "THEN" keywords as step instructions
 WHEN the spec linter validates the feature
 THEN the linter reports a warning: AC should remain abstract and not contain Given/When/Then steps
+
+---
+*This document follows the https://specscore.md/scenario-specification*

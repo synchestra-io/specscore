@@ -9,3 +9,6 @@ AND an identical file would have been produced by the `specscore:ideate` skill
 WHEN the spec linter validates the idea
 THEN the linter accepts the file without error or warning
 AND no lint rule inspects or references authoring provenance
+
+---
+*This document follows the https://specscore.md/scenario-specification*

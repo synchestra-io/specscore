@@ -9,3 +9,6 @@ AND a scenario file in `_tests/` with `**Validates:** feature-id#ac:input-valida
 WHEN the spec linter resolves the Validates reference
 THEN the reference resolves to the AC heading in the feature README
 AND validation passes
+
+---
+*This document follows the https://specscore.md/scenario-specification*

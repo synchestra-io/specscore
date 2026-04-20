@@ -1,9 +1,9 @@
 # Idea: Adherence Footer and Document Types Registry
 
-**Status:** Draft
+**Status:** Specified
 **Date:** 2026-04-20
 **Owner:** alexander.trakhimenok
-**Promotes To:** —
+**Promotes To:** adherence-footer, document-types-registry
 **Supersedes:** —
 **Related Ideas:** —
 
@@ -44,7 +44,7 @@ The lint `pkg/lint/adherence_footer.go` is refactored to read `Kind`, `URL`, and
 
 ## MVP Scope
 
-One cycle. Scope is the two new Meta features, the structural flattening of `plans-index` to a top-level sibling, the shrinkage of each Document-Kind feature's `REQ: adherence-footer` to the two-line form, and the lint refactor. Gate on lint transitioning `warn` → `error` after all doc-type features are updated. No work on the publishing pipeline or dual-audience URLs.
+One cycle. Scope is the two new Meta features (`adherence-footer` and `document-types-registry`), the structural flattening of `plans-index` to a top-level sibling, the shrinkage-or-addition of each Document-Kind feature's `REQ: adherence-footer` to the two-line form, and the lint refactor. The shared `index/` Meta feature is out of scope and lives in the dependent Idea `shared-index-feature`. Gate on lint transitioning `warn` → `error` after all doc-type features are updated. No work on the publishing pipeline or dual-audience URLs.
 
 ## Not Doing (and Why)
 
@@ -80,3 +80,6 @@ One cycle. Scope is the two new Meta features, the structural flattening of `pla
 - Should the shrunk two-line form of each Document-Kind feature's `REQ: adherence-footer` be enforced by a template rule (lint checks for an exact two-line shape), or remain convention?
 - Does the top-level-only rule for Document/Index Kinds apply only to the SpecScore meta-spec, or also to consumer repos that define custom doc-type-like features? Current position: meta-spec only; consumer repos have no top-level-only constraint.
 - Are `requirement` and `acceptance-criteria` Structure Kind or Document Kind? They describe embedded constructs inside a Feature README, but their format pages have their own adherence-footer-able URL (for educational linking). Current position: Structure Kind — the URL exists, but consumers don't write standalone files.
+
+---
+*This document follows the https://specscore.md/idea-specification*

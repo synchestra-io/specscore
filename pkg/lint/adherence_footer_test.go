@@ -63,21 +63,102 @@ func TestAdherenceFooter_URLAnywhereInDoc_NoViolation(t *testing.T) {
 	}
 }
 
-func TestAdherenceFooter_NonFeatureReadmesIgnored(t *testing.T) {
+func TestAdherenceFooter_PlanReadmeWithoutURL_Warns(t *testing.T) {
 	tmp := t.TempDir()
-	// plans/ README missing the URL — must NOT be reported (rule is feature-scoped).
+	// A plan README missing the plan-specification URL — consumer-layer
+	// check introduced by the adherence-footer-and-doc-type-registry Idea.
+	// Initial severity is "warn" per the MVP rollout gate.
 	plansDir := filepath.Join(tmp, "plans", "some-plan")
 	if err := os.MkdirAll(plansDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.WriteFile(filepath.Join(plansDir, "README.md"),
-		[]byte("# Plan: Some Plan\n\nNo footer needed here.\n"), 0o644); err != nil {
+		[]byte("# Plan: Some Plan\n\nNo footer.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	violations := runAdherenceFooterCheck(t, tmp)
+	if len(violations) != 1 {
+		t.Fatalf("expected 1 violation (plan readme without footer), got %d: %+v", len(violations), violations)
+	}
+	v := violations[0]
+	if v.Severity != "warn" {
+		t.Errorf("Severity = %q, want %q", v.Severity, "warn")
+	}
+	if v.Rule != "adherence-footer" {
+		t.Errorf("Rule = %q, want %q", v.Rule, "adherence-footer")
+	}
+}
+
+func TestAdherenceFooter_PlanReadmeWithURL_NoViolation(t *testing.T) {
+	tmp := t.TempDir()
+	plansDir := filepath.Join(tmp, "plans", "some-plan")
+	if err := os.MkdirAll(plansDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	content := "# Plan: Some Plan\n\n---\n*This document follows the https://specscore.md/plan-specification*\n"
+	if err := os.WriteFile(filepath.Join(plansDir, "README.md"), []byte(content), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
 	violations := runAdherenceFooterCheck(t, tmp)
 	if len(violations) != 0 {
-		t.Errorf("expected 0 violations (plan readme out of scope), got %d: %+v", len(violations), violations)
+		t.Errorf("expected 0 violations, got %d: %+v", len(violations), violations)
+	}
+}
+
+func TestAdherenceFooter_IdeaFileWithoutURL_Warns(t *testing.T) {
+	tmp := t.TempDir()
+	ideasDir := filepath.Join(tmp, "ideas")
+	if err := os.MkdirAll(ideasDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(ideasDir, "some-idea.md"),
+		[]byte("# Idea: Some Idea\n\nNo footer.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	violations := runAdherenceFooterCheck(t, tmp)
+	if len(violations) != 1 {
+		t.Fatalf("expected 1 violation, got %d: %+v", len(violations), violations)
+	}
+	if violations[0].Severity != "warn" {
+		t.Errorf("Severity = %q, want %q", violations[0].Severity, "warn")
+	}
+}
+
+func TestAdherenceFooter_IdeasIndexReadmeIgnored(t *testing.T) {
+	tmp := t.TempDir()
+	ideasDir := filepath.Join(tmp, "ideas")
+	if err := os.MkdirAll(ideasDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	// README.md in ideas/ is the ideas index, not an Idea artifact — must NOT trigger.
+	if err := os.WriteFile(filepath.Join(ideasDir, "README.md"),
+		[]byte("# Ideas Index\n\nNo footer.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	violations := runAdherenceFooterCheck(t, tmp)
+	if len(violations) != 0 {
+		t.Errorf("expected 0 violations (ideas README is an index, not an Idea), got %d: %+v", len(violations), violations)
+	}
+}
+
+func TestAdherenceFooter_ArchivedIdeasIgnored(t *testing.T) {
+	tmp := t.TempDir()
+	archived := filepath.Join(tmp, "ideas", "archived")
+	if err := os.MkdirAll(archived, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(archived, "old.md"),
+		[]byte("# Idea: Old\n\nNo footer, archived.\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	violations := runAdherenceFooterCheck(t, tmp)
+	if len(violations) != 0 {
+		t.Errorf("expected 0 violations (archived/ excluded), got %d: %+v", len(violations), violations)
 	}
 }
 

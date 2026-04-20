@@ -9,3 +9,6 @@ AND no file exists at `spec/ideas/ghost-idea.md` or `spec/ideas/archived/ghost-i
 WHEN the spec linter validates the idea tree
 THEN the linter reports an error: `Related Ideas` target "ghost-idea" does not resolve to an existing idea
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

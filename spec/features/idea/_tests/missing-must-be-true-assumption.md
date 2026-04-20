@@ -9,3 +9,6 @@ AND the `## Key Assumptions to Validate` table contains only Should-be-true and 
 WHEN the spec linter validates the idea
 THEN the linter reports an error: `Key Assumptions to Validate` must list at least one Must-be-true assumption
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

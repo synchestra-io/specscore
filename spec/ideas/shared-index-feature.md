@@ -73,3 +73,6 @@ One cycle after `adherence-footer-and-doc-type-registry` has shipped and at leas
 - Does the shared `index/` feature hard-require a `Recently Closed` section, or leave it as per-domain opt-in? Plans have a lifecycle where closed items matter; Ideas have `Archived`; Features have `Deprecated`. Different domains, different recency semantics.
 - If `plans-index` turns out to be deletable after reshape, what is the cleanup gesture — delete the directory, or keep a stub with a redirect so historical links keep working?
 - Should `index/` define a machine-readable format for the delegation (e.g., a required Interaction table row pointing at `index/`), or rely on convention alone?
+
+---
+*This document follows the https://specscore.md/idea-specification*

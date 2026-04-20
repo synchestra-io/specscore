@@ -9,3 +9,6 @@ AND the README does not contain a Problem section
 WHEN the spec linter validates the feature
 THEN the linter reports an error: required section "Problem" is missing
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

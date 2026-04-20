@@ -9,3 +9,6 @@ AND the feature index (`spec/features/README.md`) does not list `notifications`
 WHEN the spec linter validates the feature tree
 THEN the linter reports an error: feature "notifications" exists but is not listed in the index
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

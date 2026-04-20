@@ -16,3 +16,6 @@ WHEN the spec validator checks the rehearse block
 THEN the fence tag `rehearse` is recognized
 AND the shebang `#!/bin/bash` is detected as the script language
 AND the block is accepted as a valid rehearse script
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -13,3 +13,6 @@ and SHOULD be unique within the list.
 WHEN the spec linter validates the feature
 THEN the linter reports a warning: requirement "title-rules" contains multiple independent obligations
 AND the linter suggests splitting into separate requirements
+
+---
+*This document follows the https://specscore.md/scenario-specification*

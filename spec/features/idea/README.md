@@ -1,5 +1,7 @@
 # Feature: Idea
 
+> [View in Synchestra Hub](https://hub.synchestra.io/project/features?id=specscore@synchestra-io@github.com&path=spec%2Ffeatures%2Fidea) — graph, discussions, approvals
+
 **Status:** Conceptual
 
 ## Summary
@@ -380,6 +382,12 @@ Ideas do not directly reference [Plans](../plan/README.md). The Feature bridges 
 ### Ideas and outstanding questions
 
 Every Idea maintains an Outstanding Questions section with the standard empty-state text ("None at this time.") when no questions remain open.
+
+### Adherence footer
+
+#### REQ: adherence-footer
+
+Every Idea document MUST end with an adherence footer per the [Adherence Footer feature](../adherence-footer/README.md). The footer URL MUST be `https://specscore.md/idea-specification`.
 
 ## Interaction with Other Features
 

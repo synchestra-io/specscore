@@ -12,3 +12,6 @@ THEN the host is resolved as `github.com`
 AND the org is resolved as `acme`
 AND the repo is resolved as `myproject`
 AND the expanded URL is `https://specscore.org/github.com/acme/myproject/spec/features/cli/task/claim`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

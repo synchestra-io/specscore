@@ -16,3 +16,6 @@ AND a source file contains `// specscore:feature/cli/task/claim`
 WHEN the resolver expands the reference
 THEN the expanded URL uses the config values, not the git remote
 AND the expanded URL is `https://specscore.org/github.com/acme/myproject/spec/features/cli/task/claim`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

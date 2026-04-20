@@ -52,3 +52,6 @@ GIVEN a task with multiple dependencies
 AND one dependency has status `complete` and another has status `in_progress`
 WHEN the task attempts to transition to `in_progress`
 THEN the transition is blocked because not all dependencies are `complete`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

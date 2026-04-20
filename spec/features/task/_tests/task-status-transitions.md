@@ -67,3 +67,6 @@ THEN the transition is rejected with an error indicating the allowed transitions
 GIVEN a task with status `planning`
 WHEN the status is changed to `invalid_status`
 THEN the status is rejected with an error indicating the value is not a valid task status
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -9,3 +9,6 @@ AND the file has not been moved into `spec/ideas/archived/`
 WHEN the spec linter validates the idea tree
 THEN the linter reports an error: archived idea "offline-mode" must reside at `spec/ideas/archived/offline-mode.md`
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

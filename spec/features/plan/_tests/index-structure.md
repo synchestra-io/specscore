@@ -23,3 +23,6 @@ AND the second plan shows `-` in both columns
 GIVEN a plan that was completed within the last 5 entries
 WHEN the plans index is rendered
 THEN the plan appears in the Recently Closed section
+
+---
+*This document follows the https://specscore.md/scenario-specification*

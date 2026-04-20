@@ -9,3 +9,6 @@ AND a file `_tests/add-item.md` exists with the heading `# Add item to list` (mi
 WHEN the spec validator checks the scenario file
 THEN a validation error is reported indicating the `Scenario:` prefix is missing
 AND the file is rejected
+
+---
+*This document follows the https://specscore.md/scenario-specification*

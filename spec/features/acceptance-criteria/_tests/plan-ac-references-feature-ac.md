@@ -10,3 +10,6 @@ WHEN the spec linter resolves the plan step AC reference
 THEN the reference resolves to the feature AC
 AND the plan step AC is captured in plan snapshots
 AND the feature AC continues to evolve independently
+
+---
+*This document follows the https://specscore.md/scenario-specification*

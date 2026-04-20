@@ -15,3 +15,6 @@ GIVEN a scenario file with no `**Validates:**` field
 WHEN the spec validator checks the scenario
 THEN no validation error is reported for the missing field
 AND the scenario is accepted as an exploratory or cross-feature example
+
+---
+*This document follows the https://specscore.md/scenario-specification*

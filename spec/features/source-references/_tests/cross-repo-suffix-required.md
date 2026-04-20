@@ -9,3 +9,6 @@ WHEN the resolver processes the reference
 THEN the reference targets the repository `github.com/acme/orchestrator`
 AND the resolved path is `spec/features/agent-skills`
 AND the expanded URL is `https://specscore.org/github.com/acme/orchestrator/spec/features/agent-skills`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

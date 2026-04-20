@@ -20,3 +20,6 @@ THEN validation rejects the document with an error indicating `Approver` is requ
 GIVEN a plan with Source type set to `task`
 WHEN the document is validated
 THEN validation rejects the document with an error indicating Source type must be `feature` or `change-request`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

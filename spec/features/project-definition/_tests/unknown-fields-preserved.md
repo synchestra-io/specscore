@@ -8,3 +8,6 @@ GIVEN a `specscore-project.yaml` containing `title: My Project` and an unknown f
 WHEN SpecScore validates the project file
 THEN validation MUST succeed without errors
 AND the unknown field MUST NOT cause a warning or validation failure
+
+---
+*This document follows the https://specscore.md/scenario-specification*

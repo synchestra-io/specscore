@@ -9,3 +9,6 @@ AND the first segment `spec` is not a known type prefix
 AND the path `spec/features/cli/task/claim` exists in the repository
 WHEN the resolver processes the reference
 THEN the reference resolves to the repo path `spec/features/cli/task/claim`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

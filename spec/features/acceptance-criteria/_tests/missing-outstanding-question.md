@@ -9,3 +9,6 @@ AND the Outstanding Questions section does not include "Acceptance criteria not 
 WHEN the spec linter validates the feature
 THEN the linter reports an error: missing required Outstanding Question for undefined ACs
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

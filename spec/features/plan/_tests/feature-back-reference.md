@@ -12,3 +12,6 @@ AND the table includes columns for Plan, Status, Author, and Approved
 GIVEN a feature that appears in both a plan and one of its sub-plans
 WHEN the feature README is checked
 THEN both the plan and the sub-plan appear as separate rows in the Plans table
+
+---
+*This document follows the https://specscore.md/scenario-specification*

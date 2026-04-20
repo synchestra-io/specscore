@@ -20,3 +20,6 @@ AND a scenario file `_tests/complete-item.md` references the flow:
 WHEN the spec validator checks both files
 THEN the flow file is accepted as valid (correct location and format)
 AND the scenario's flow reference is resolved successfully
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -1,18 +1,72 @@
 package lint
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
-// adherenceFooterURL is the canonical SpecScore Feature Specification URL
-// that every feature README must reference.
-const adherenceFooterURL = "https://specscore.md/feature-specification"
+// docTypeTarget describes one document type subject to the adherence-footer
+// check. The walk function enumerates the consumer paths defined for that
+// Kind by the document types registry.
+type docTypeTarget struct {
+	description string
+	url         string
+	severity    string
+	walk        func(specRoot string, fn func(path string, content []byte)) error
+}
 
-// adherenceFooterChecker verifies that every feature README contains a link
-// to the SpecScore Feature Specification, as required by
-// [REQ: adherence-footer](spec/features/feature/README.md#req-adherence-footer).
+// docTypeTargets mirrors the Document-Kind and Index-Kind rows in the
+// document types registry at spec/features/README.md. New Document/Index
+// Kinds must be added here.
+//
+// Severity policy during the MVP rollout: feature READMEs stay at "error"
+// (pre-existing behavior), new consumer-layer checks ship at "warn" per
+// the adherence-footer-and-doc-type-registry Idea's MVP gate, then
+// transition to "error" after a cycle of clean runs.
+var docTypeTargets = []docTypeTarget{
+	{
+		description: "feature README",
+		url:         "https://specscore.md/feature-specification",
+		severity:    "error",
+		walk:        walkFeatureReadmes,
+	},
+	{
+		description: "Idea file",
+		url:         "https://specscore.md/idea-specification",
+		severity:    "warn",
+		walk:        walkIdeaFiles,
+	},
+	{
+		description: "plans-index README",
+		url:         "https://specscore.md/plans-index-specification",
+		severity:    "warn",
+		walk:        walkPlansIndex,
+	},
+	{
+		description: "Plan README",
+		url:         "https://specscore.md/plan-specification",
+		severity:    "warn",
+		walk:        walkPlanReadmes,
+	},
+	{
+		description: "Task README",
+		url:         "https://specscore.md/task-specification",
+		severity:    "warn",
+		walk:        walkTaskReadmes,
+	},
+	{
+		description: "Scenario file",
+		url:         "https://specscore.md/scenario-specification",
+		severity:    "warn",
+		walk:        walkScenarioFiles,
+	},
+}
+
+// adherenceFooterChecker verifies that every SpecScore document of a
+// Document or Index Kind carries the adherence footer URL corresponding
+// to its document type, as required by the Adherence Footer feature.
 type adherenceFooterChecker struct{}
 
 func newAdherenceFooterChecker() checker {
@@ -24,37 +78,216 @@ func (c *adherenceFooterChecker) severity() string { return "error" }
 
 func (c *adherenceFooterChecker) check(specRoot string) ([]Violation, error) {
 	var violations []Violation
-	err := walkFeatureReadmes(specRoot, func(readmePath string, content []byte) {
-		if strings.Contains(string(content), adherenceFooterURL) {
-			return
-		}
-		relPath, _ := filepath.Rel(specRoot, readmePath)
-		violations = append(violations, Violation{
-			File:     relPath,
-			Line:     0,
-			Severity: "error",
-			Rule:     "adherence-footer",
-			Message:  "missing required adherence footer: URL '" + adherenceFooterURL + "' not found in feature README",
+	for _, t := range docTypeTargets {
+		target := t
+		err := target.walk(specRoot, func(path string, content []byte) {
+			if strings.Contains(string(content), target.url) {
+				return
+			}
+			relPath, _ := filepath.Rel(specRoot, path)
+			violations = append(violations, Violation{
+				File:     relPath,
+				Line:     0,
+				Severity: target.severity,
+				Rule:     "adherence-footer",
+				Message:  fmt.Sprintf("missing required adherence footer: URL %q not found in %s", target.url, target.description),
+			})
 		})
-	})
-	if err != nil {
-		return nil, err
+		if err != nil {
+			return nil, err
+		}
 	}
 	return violations, nil
 }
 
-// fix appends the canonical adherence footer to any feature README that is
-// missing it. A README already containing the URL is left untouched.
+// fix appends the canonical adherence footer to any document that is missing
+// it. A document already containing the URL is left untouched. Wrong-URL
+// violations are never auto-rewritten — a wrong URL may indicate a
+// mis-classified document and silent rewriting would mask the bug. See
+// adherence-footer#req:fix-inserts-only.
 func (c *adherenceFooterChecker) fix(specRoot string) error {
-	return walkFeatureReadmes(specRoot, func(readmePath string, content []byte) {
-		s := string(content)
-		if strings.Contains(s, adherenceFooterURL) {
-			return
+	for _, t := range docTypeTargets {
+		target := t
+		err := target.walk(specRoot, func(path string, content []byte) {
+			if strings.Contains(string(content), target.url) {
+				return
+			}
+			s := string(content)
+			if !strings.HasSuffix(s, "\n") {
+				s += "\n"
+			}
+			s += "\n---\n*This document follows the " + target.url + "*\n"
+			_ = os.WriteFile(path, []byte(s), 0o644)
+		})
+		if err != nil {
+			return err
 		}
-		if !strings.HasSuffix(s, "\n") {
-			s += "\n"
+	}
+	return nil
+}
+
+// walkIdeaFiles invokes fn for every Idea file under specRoot/ideas/*.md,
+// skipping README.md (the ideas index) and the archived/ subtree.
+func walkIdeaFiles(specRoot string, fn func(path string, content []byte)) error {
+	ideasDir := filepath.Join(specRoot, "ideas")
+	return walkMatchingFiles(ideasDir, func(path string, depth int, name string) bool {
+		if depth != 1 {
+			return false
 		}
-		s += "\n---\n*This document follows the " + adherenceFooterURL + "*\n"
-		_ = os.WriteFile(readmePath, []byte(s), 0o644)
+		if name == "README.md" {
+			return false
+		}
+		return strings.HasSuffix(name, ".md")
+	}, fn)
+}
+
+// walkPlansIndex invokes fn for specRoot/plans/README.md if present.
+func walkPlansIndex(specRoot string, fn func(path string, content []byte)) error {
+	path := filepath.Join(specRoot, "plans", "README.md")
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+	fn(path, content)
+	return nil
+}
+
+// walkPlanReadmes invokes fn for every Plan README under specRoot/plans/**/README.md,
+// excluding specRoot/plans/README.md (which is the plans-index, walked separately)
+// and any README.md inside a reserved _-prefixed directory.
+func walkPlanReadmes(specRoot string, fn func(path string, content []byte)) error {
+	plansDir := filepath.Join(specRoot, "plans")
+	info, err := os.Stat(plansDir)
+	if err != nil || !info.IsDir() {
+		return nil
+	}
+	return filepath.Walk(plansDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			if path != plansDir && strings.HasPrefix(info.Name(), "_") {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		if info.Name() != "README.md" {
+			return nil
+		}
+		// Skip the plans-index itself (handled by walkPlansIndex).
+		if path == filepath.Join(plansDir, "README.md") {
+			return nil
+		}
+		// Skip task READMEs — tasks/<slug>/README.md is a Task, not a Plan.
+		if filepath.Base(filepath.Dir(filepath.Dir(path))) == "tasks" {
+			return nil
+		}
+		content, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return nil
+		}
+		fn(path, content)
+		return nil
+	})
+}
+
+// walkTaskReadmes invokes fn for every Task README under
+// specRoot/plans/**/tasks/*/README.md.
+func walkTaskReadmes(specRoot string, fn func(path string, content []byte)) error {
+	plansDir := filepath.Join(specRoot, "plans")
+	info, err := os.Stat(plansDir)
+	if err != nil || !info.IsDir() {
+		return nil
+	}
+	return filepath.Walk(plansDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() || info.Name() != "README.md" {
+			return nil
+		}
+		// A Task README lives at plans/**/tasks/<slug>/README.md. Check that
+		// the grandparent directory is "tasks".
+		if filepath.Base(filepath.Dir(filepath.Dir(path))) != "tasks" {
+			return nil
+		}
+		content, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return nil
+		}
+		fn(path, content)
+		return nil
+	})
+}
+
+// walkScenarioFiles invokes fn for every scenario markdown file under
+// specRoot/features/**/_tests/*.md, excluding README.md (which is an index,
+// not a scenario).
+func walkScenarioFiles(specRoot string, fn func(path string, content []byte)) error {
+	featuresDir := filepath.Join(specRoot, "features")
+	info, err := os.Stat(featuresDir)
+	if err != nil || !info.IsDir() {
+		return nil
+	}
+	return filepath.Walk(featuresDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		if !strings.HasSuffix(info.Name(), ".md") {
+			return nil
+		}
+		if info.Name() == "README.md" {
+			return nil
+		}
+		// Path must include a segment named _tests.
+		parent := filepath.Base(filepath.Dir(path))
+		if parent != "_tests" {
+			return nil
+		}
+		content, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return nil
+		}
+		fn(path, content)
+		return nil
+	})
+}
+
+// walkMatchingFiles enumerates files under root, invoking fn for each file
+// where match returns true. depth is measured relative to root (1 = direct
+// child). Subdirectories are walked but match is only consulted for files.
+func walkMatchingFiles(root string, match func(path string, depth int, name string) bool, fn func(path string, content []byte)) error {
+	info, err := os.Stat(root)
+	if err != nil || !info.IsDir() {
+		return nil
+	}
+	return filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			if path != root && strings.HasPrefix(info.Name(), "_") {
+				return filepath.SkipDir
+			}
+			// Also skip archived/ for ideas.
+			if info.Name() == "archived" && path != root {
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		rel, _ := filepath.Rel(root, path)
+		depth := strings.Count(rel, string(filepath.Separator)) + 1
+		if !match(path, depth, info.Name()) {
+			return nil
+		}
+		content, readErr := os.ReadFile(path)
+		if readErr != nil {
+			return nil
+		}
+		fn(path, content)
+		return nil
 	})
 }

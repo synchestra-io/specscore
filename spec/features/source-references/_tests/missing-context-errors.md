@@ -10,3 +10,6 @@ AND `specscore-project.yaml` does not declare `project.host`, `project.org`, or 
 WHEN the linter attempts to expand the reference
 THEN the linter reports an error indicating that host/org/repo cannot be resolved
 AND expansion does not proceed
+
+---
+*This document follows the https://specscore.md/scenario-specification*

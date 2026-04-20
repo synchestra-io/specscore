@@ -9,3 +9,6 @@ AND the README title is `# Authentication` (missing `Feature:` prefix)
 WHEN the spec linter validates the feature
 THEN the linter reports an error: title must use `# Feature: {Title}` format
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

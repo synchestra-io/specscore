@@ -25,3 +25,6 @@ THEN validation rejects with an error indicating the git hash is invalid
 GIVEN a plan with a snapshot using a user-defined action `milestone-1`
 WHEN the snapshot table is validated
 THEN validation passes because user-defined actions are permitted
+
+---
+*This document follows the https://specscore.md/scenario-specification*

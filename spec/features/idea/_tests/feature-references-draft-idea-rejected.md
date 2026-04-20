@@ -9,3 +9,6 @@ AND a feature at `spec/features/offline-sync/README.md` with `**Source Ideas:** 
 WHEN the spec linter validates the spec tree
 THEN the linter reports an error: feature "offline-sync" references idea "offline-mode" whose status is `Draft`
 AND the error message notes that referenced ideas must have `Status ∈ {Approved, Specified}`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

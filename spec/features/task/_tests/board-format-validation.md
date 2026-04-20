@@ -45,3 +45,6 @@ THEN validation passes with no errors
 GIVEN a plan with a Recently Finished section
 WHEN the section is validated
 THEN each entry includes a Task column, a Status column, and a Completed date column
+
+---
+*This document follows the https://specscore.md/scenario-specification*

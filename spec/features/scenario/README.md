@@ -223,6 +223,12 @@ Cross-feature scenarios MUST be placed in the `_tests/` directory of the primary
 
 Cross-feature scenarios SHOULD reference REQs or ACs from all exercised features in the `**Validates:**` field, enabling traceability across feature boundaries.
 
+### Adherence footer
+
+#### REQ: adherence-footer
+
+Every scenario document MUST end with an adherence footer per the [Adherence Footer feature](../adherence-footer/README.md). The footer URL MUST be `https://specscore.md/scenario-specification`.
+
 ## Interaction with Other Features
 
 | Feature | Interaction |

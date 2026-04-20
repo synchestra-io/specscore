@@ -9,3 +9,6 @@ AND a `##### REQ: deep-rule` heading under that topic (two levels below instead 
 WHEN the spec linter validates the feature
 THEN the linter reports an error: requirement "deep-rule" is not one heading level below its topic
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

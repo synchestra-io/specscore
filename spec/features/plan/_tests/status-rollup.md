@@ -20,3 +20,6 @@ GIVEN a plan with a derived status of `draft` but an explicitly set status of `i
 WHEN the plan status is evaluated
 THEN the explicit status `in_review` takes precedence over the derived value
 AND tooling surfaces a discrepancy between the explicit and derived statuses
+
+---
+*This document follows the https://specscore.md/scenario-specification*

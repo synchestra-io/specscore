@@ -15,3 +15,6 @@ THEN the `**Features:**` field lists all three features, each linking to its fea
 GIVEN a plan document without a `**Features:**` field
 WHEN the document is validated
 THEN validation rejects the document with an error indicating the Features field is required
+
+---
+*This document follows the https://specscore.md/scenario-specification*

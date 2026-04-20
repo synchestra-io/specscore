@@ -10,3 +10,6 @@ WHEN `specscore lint --fix` runs over the spec tree
 THEN the idea's `**Status:**` is updated to `Specified`
 AND the idea's `**Promotes To:**` lists `offline-sync`
 AND subsequent `specscore lint` invocations succeed without drift
+
+---
+*This document follows the https://specscore.md/scenario-specification*

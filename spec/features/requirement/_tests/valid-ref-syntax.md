@@ -9,3 +9,6 @@ AND an AC section with `**Requirements:** todo-item/manage#req:title-required`
 WHEN the spec linter validates the references
 THEN both references resolve to the correct requirement heading
 AND no validation errors are reported
+
+---
+*This document follows the https://specscore.md/scenario-specification*

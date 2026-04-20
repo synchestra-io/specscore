@@ -10,3 +10,6 @@ AND the path `spec/features/cli/task/claim` exists in the repository
 WHEN the linter runs with `--fix` (or the pre-commit hook runs)
 THEN the comment is replaced with `// https://specscore.org/github.com/acme/myproject/spec/features/cli/task/claim`
 AND no `specscore:` prefixed reference remains in the file
+
+---
+*This document follows the https://specscore.md/scenario-specification*

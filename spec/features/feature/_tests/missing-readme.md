@@ -9,3 +9,6 @@ AND the directory does not contain a `README.md` file
 WHEN the spec linter validates the feature tree
 THEN the linter reports an error for `my-feature`: "Feature directory missing README.md"
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

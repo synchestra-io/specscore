@@ -12,3 +12,6 @@ THEN it contains a `Plan` field linking to the plan
 GIVEN a plan with Source type `feature`
 WHEN the plan is validated
 THEN no forward reference from a proposal is required
+
+---
+*This document follows the https://specscore.md/scenario-specification*

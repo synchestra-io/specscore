@@ -9,3 +9,6 @@ AND the section contains `### AC: my-check` followed by a prose statement but no
 WHEN the spec linter validates the feature
 THEN the linter reports an error: AC must include a `**Requirements:**` field
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

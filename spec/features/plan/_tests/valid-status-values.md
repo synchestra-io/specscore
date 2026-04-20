@@ -23,3 +23,6 @@ THEN validation rejects the status with an error indicating `completed` is an ex
 GIVEN a plan document with status `failed`
 WHEN the status is validated
 THEN validation rejects the status with an error indicating `failed` is an execution concern and not a valid plan status
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -14,12 +14,9 @@ There is one structural concept: the **task**. A task with children is a plan. A
 
 | Directory | Description |
 |---|---|
-| [plans-index](plans-index/README.md) | Specification of the `spec/plans/README.md` plans-index file: required sections, Contents-table columns, Recently Closed section, adherence footer. |
 | [_tests](_tests/README.md) | Test scenarios validating plan feature requirements |
 
-### plans-index
-
-The plans-index sub-feature specifies the contract for the `spec/plans/README.md` file that every spec repository maintains. It defines the required section order (Contents, Recently Closed, Outstanding Questions), the standard column set for the Contents table, the sub-plan indentation convention, and the adherence footer that marks a file as conforming to the SpecScore plans-index specification. Details previously inlined in this feature's "Plans index" section now live entirely in the sub-feature.
+The Plan document type has a companion Index-Kind feature, [plans-index](../plans-index/README.md), which specifies the shape of the `spec/plans/README.md` aggregation file every repo maintains. Plans-Index lives as a top-level sibling of Plan under `spec/features/` — not as a sub-feature — so its specification URL stays flat (`plans-index-specification`, not a nested compound).
 
 ## Problem
 
@@ -456,7 +453,7 @@ When present, the Impact field MUST be one of: `low`, `medium`, `high`, or `crit
 
 ### Plans index
 
-Every spec repository with plans maintains an index at `spec/plans/README.md`. Its format — required sections, Contents-table columns, Recently Closed section, and adherence footer — is specified by the [plans-index](plans-index/README.md) sub-feature.
+Every spec repository with plans maintains an index at `spec/plans/README.md`. Its format — required sections, Contents-table columns, Recently Closed section, and adherence footer — is specified by the [plans-index](../plans-index/README.md) Index-Kind feature.
 
 ### Feature README back-reference
 
@@ -652,6 +649,12 @@ The AI considers these signals in order of priority:
 
 Planning settings are configured in the project definition file. See [Project Definition](../project-definition/README.md).
 
+### Adherence footer
+
+#### REQ: adherence-footer
+
+Every plan document MUST end with an adherence footer per the [Adherence Footer feature](../adherence-footer/README.md). The footer URL MUST be `https://specscore.md/plan-specification`.
+
 ## Interaction with Other Features
 
 | Feature | Interaction |
@@ -663,6 +666,7 @@ Planning settings are configured in the project definition file. See [Project De
 | [Scenario](../scenario/README.md) | Scenarios in `_tests/` validate plan REQs with concrete Given/When/Then flows. |
 | [Proposals](../proposals/README.md) | A proposal (change request) is a trigger for plan creation. Approved proposals link forward to their plan; plans link back to their source proposal. |
 | [Outstanding Questions](../outstanding-questions/README.md) | Plan tasks may surface outstanding questions. These follow the existing question lifecycle. |
+| [Plans Index](../plans-index/README.md) | The plans-index feature specifies the `spec/plans/README.md` aggregation file that lists every Plan in a repo. Plan documents conform to `plan-specification`; the plans-index file conforms to `plans-index-specification`. |
 
 ## Acceptance Criteria
 

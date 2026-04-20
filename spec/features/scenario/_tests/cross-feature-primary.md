@@ -11,3 +11,6 @@ WHEN the spec validator checks the scenario
 THEN the scenario is accepted in the primary feature's `_tests/` directory
 AND both cross-feature validates references are resolved
 AND no duplicate scenario exists in `spec/features/todo-list/_tests/`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

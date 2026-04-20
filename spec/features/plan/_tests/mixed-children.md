@@ -18,3 +18,6 @@ THEN validation passes
 GIVEN a plan where all children are sub-plans (no leaf tasks)
 WHEN the plan structure is validated
 THEN validation passes
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -10,3 +10,6 @@ AND another line contains `-- specscore:feature/model-selection`
 AND another line contains `; specscore:feature/model-selection`
 WHEN the detector scans the file
 THEN all four lines are detected as valid source references
+
+---
+*This document follows the https://specscore.md/scenario-specification*

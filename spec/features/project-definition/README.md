@@ -102,6 +102,12 @@ planning:
 
 SpecScore MUST ignore unknown fields in `specscore-project.yaml`. This allows any orchestration tool to add its own configuration alongside the standard SpecScore fields without causing validation errors.
 
+### Adherence footer
+
+#### REQ: adherence-footer
+
+Every project-definition document MUST end with an adherence footer per the [Adherence Footer feature](../adherence-footer/README.md). The footer URL MUST be `https://specscore.md/project-definition-specification`.
+
 ## Acceptance Criteria
 
 Not defined yet.

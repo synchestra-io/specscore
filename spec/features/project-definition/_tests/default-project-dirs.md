@@ -13,3 +13,6 @@ THEN it MUST use `spec` as the specifications path
 GIVEN a `specscore-project.yaml` with only `title: My Project` and no `project_dirs`
 WHEN SpecScore resolves the documents directory
 THEN it MUST use `docs` as the documents path
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -9,3 +9,6 @@ AND the directory `spec/features/cli/task/claim` exists in the repository
 WHEN the resolver processes the reference
 THEN the reference resolves to the repo path `spec/features/cli/task/claim`
 AND the type prefix `feature/` does not appear in the resolved path
+
+---
+*This document follows the https://specscore.md/scenario-specification*

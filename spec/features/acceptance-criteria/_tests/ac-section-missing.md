@@ -8,3 +8,6 @@ GIVEN a feature README that contains all required sections except `## Acceptance
 WHEN the spec linter validates the feature
 THEN the linter reports an error: Acceptance Criteria section is required
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

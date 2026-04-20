@@ -9,3 +9,6 @@ AND a file `spec/features/todo/add-item.md` exists with a valid `# Scenario:` he
 WHEN the spec validator scans the feature tree
 THEN a validation error is reported indicating scenarios must live in `_tests/`
 AND the file is not recognized as a valid scenario
+
+---
+*This document follows the https://specscore.md/scenario-specification*

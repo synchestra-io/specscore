@@ -9,3 +9,6 @@ AND the section contains a heading `### Acceptance Criteria: my-ac` instead of `
 WHEN the spec linter validates the feature
 THEN the linter reports an error: AC heading must use `### AC: {slug}` format
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

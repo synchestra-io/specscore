@@ -11,3 +11,6 @@ BUT no such requirement exists in `billing/payments` — it only exists in `bill
 WHEN the spec linter validates the reference
 THEN the linter reports an error: requirement `billing/payments#req:currency-required` not found
 AND suggests referencing the parent requirement as `billing#req:currency-required`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

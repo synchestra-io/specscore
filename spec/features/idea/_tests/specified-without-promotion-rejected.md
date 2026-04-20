@@ -9,3 +9,6 @@ AND the `**Promotes To:**` field value is `—`
 WHEN the spec linter validates the idea
 THEN the linter reports an error: an idea with `Status: Specified` must have a non-empty `Promotes To` list
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

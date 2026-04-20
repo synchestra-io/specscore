@@ -13,3 +13,6 @@ THEN it MUST report an error indicating the project file is missing
 GIVEN a repository with `specscore-project.yaml` at the root
 WHEN SpecScore attempts to discover the project
 THEN it MUST successfully load the project configuration
+
+---
+*This document follows the https://specscore.md/scenario-specification*

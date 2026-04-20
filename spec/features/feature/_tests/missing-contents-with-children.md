@@ -9,3 +9,6 @@ AND the `ui/README.md` does not contain a Contents section
 WHEN the spec linter validates the feature
 THEN the linter reports an error: feature has child directories but no Contents section
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

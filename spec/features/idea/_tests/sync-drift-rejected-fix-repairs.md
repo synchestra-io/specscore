@@ -10,3 +10,6 @@ WHEN `specscore lint` runs without `--fix`
 THEN the linter reports an error: idea "offline-mode" drift — `Promotes To` and `Status` disagree with referencing features
 AND re-running `specscore lint --fix` rewrites the idea header to `**Status:** Specified` and `**Promotes To:** offline-sync`
 AND a subsequent `specscore lint` run succeeds
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -227,6 +227,12 @@ Every task SHOULD include an Acceptance Criteria section defining what "done" lo
 
 When present, the `Produces` field MUST be a bulleted list of named artifacts. Each artifact is a deliverable that downstream tasks may depend on.
 
+### Adherence footer
+
+#### REQ: adherence-footer
+
+Every task document MUST end with an adherence footer per the [Adherence Footer feature](../adherence-footer/README.md). The footer URL MUST be `https://specscore.md/task-specification`.
+
 ## Interaction with Other Features
 
 | Feature | Interaction |

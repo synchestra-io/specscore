@@ -17,3 +17,6 @@ THEN validation passes because there is no maximum nesting limit
 GIVEN a sub-plan `chat-infrastructure` nested under `chat-feature`
 WHEN the sub-plan document is validated
 THEN it follows the same format as a top-level plan, including title, header fields, Context, Acceptance criteria, and Tasks sections
+
+---
+*This document follows the https://specscore.md/scenario-specification*

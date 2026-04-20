@@ -10,3 +10,6 @@ AND the file does not contain an `**Owner:**` field
 WHEN the spec linter validates the idea
 THEN the linter reports an error: required header field "Owner" is missing
 AND the validation fails
+
+---
+*This document follows the https://specscore.md/scenario-specification*

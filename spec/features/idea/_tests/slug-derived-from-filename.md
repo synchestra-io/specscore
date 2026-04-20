@@ -9,3 +9,6 @@ AND the file does not contain a separate `**Id:**` or `id:` field
 WHEN the spec linter validates the idea
 THEN the linter accepts the file
 AND the idea's canonical id is reported as `team-billing`, matching the filename without `.md`
+
+---
+*This document follows the https://specscore.md/scenario-specification*

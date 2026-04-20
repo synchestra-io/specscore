@@ -199,18 +199,7 @@ The Acceptance Criteria section MUST always be present in every feature README. 
 
 #### REQ: adherence-footer
 
-Every feature README MUST end with a footer that references the SpecScore Feature Specification. The footer is a single italic line preceded by a horizontal rule (`---`), and MUST contain the bare URL `https://specscore.md/feature-specification` (trailing slash optional). The URL MUST appear in bare form (not wrapped in Markdown link syntax) so it remains clickable in terminals and other renderers that detect URLs but do not parse Markdown.
-
-The recommended form is:
-
-```markdown
----
-*This document follows the https://specscore.md/feature-specification*
-```
-
-Authors MAY reword the surrounding prose, but the specification URL MUST be present. `specscore lint` matches on the URL, not the sentence.
-
-The specification URL is unversioned by design. SpecScore commits to additive-only evolution of the feature format; breaking changes are not planned. If a breaking change ever becomes necessary, the canonical URL will be reissued rather than branched into parallel versions.
+Every feature README MUST end with an adherence footer per the [Adherence Footer feature](../adherence-footer/README.md). The footer URL MUST be `https://specscore.md/feature-specification`.
 
 #### REQ: contents-when-children
 
