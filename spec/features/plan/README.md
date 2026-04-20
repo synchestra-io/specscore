@@ -14,7 +14,12 @@ There is one structural concept: the **task**. A task with children is a plan. A
 
 | Directory | Description |
 |---|---|
+| [plans-index](plans-index/README.md) | Specification of the `spec/plans/README.md` plans-index file: required sections, Contents-table columns, Recently Closed section, adherence footer. |
 | [_tests](_tests/README.md) | Test scenarios validating plan feature requirements |
+
+### plans-index
+
+The plans-index sub-feature specifies the contract for the `spec/plans/README.md` file that every spec repository maintains. It defines the required section order (Contents, Recently Closed, Outstanding Questions), the standard column set for the Contents table, the sub-plan indentation convention, and the adherence footer that marks a file as conforming to the SpecScore plans-index specification. Details previously inlined in this feature's "Plans index" section now live entirely in the sub-feature.
 
 ## Problem
 
@@ -451,45 +456,7 @@ When present, the Impact field MUST be one of: `low`, `medium`, `high`, or `crit
 
 ### Plans index
 
-`spec/plans/README.md` lists all plans:
-
-```markdown
-# Plans
-
-| Plan | Status | Features | Effort | Impact | Author | Approved |
-|---|---|---|---|---|---|---|
-| [chat-feature](chat-feature/) | draft | chat, chat/workflow | XL | critical | @alex | - |
-| &ensp;[chat-infrastructure](chat-feature/chat-infrastructure/) | draft | chat | L | high | @alex | - |
-| &ensp;[chat-workflow-engine](chat-feature/chat-workflow-engine/) | draft | chat/workflow | M | high | @alex | - |
-| [user-auth](user-auth/) | approved | api, ui/hub | M | high | @alex | 2026-03-15 |
-| [add-batch-mode](add-batch-mode/) | in_review | cli | S | medium | @alex | - |
-
-## Recently Closed
-
-| Plan                     | Status     | Completed  |
-|--------------------------|------------|------------|
-| [old-auth](old-auth/)    | completed  | 2026-03-10 |
-
-## Outstanding Questions
-
-None at this time.
-```
-
-#### REQ: index-completeness
-
-The plans index (`spec/plans/README.md`) MUST list every plan. An unlisted plan is a validation error.
-
-#### REQ: index-child-indentation
-
-Sub-plans in the index MUST be indented with `&ensp;` and their link paths MUST include the parent directory (e.g., `chat-feature/chat-infrastructure/`).
-
-#### REQ: index-roi-columns
-
-The plans index MUST include Effort and Impact columns. When ROI metadata is absent from a plan, the column value MUST display `-`.
-
-#### REQ: index-recently-closed
-
-The plans index MUST include a Recently Closed section showing completed plans from the last N plans (configurable per project, default: 5).
+Every spec repository with plans maintains an index at `spec/plans/README.md`. Its format — required sections, Contents-table columns, Recently Closed section, and adherence footer — is specified by the [plans-index](plans-index/README.md) sub-feature.
 
 ### Feature README back-reference
 
@@ -728,12 +695,6 @@ Snapshots are recorded in a table with Date, Git Hash, Action, and Comment colum
 **Requirements:** plan#req:recursive-nesting, plan#req:mixed-children, plan#req:parallel-eligibility, plan#req:two-level-acceptance-criteria, plan#req:status-rollup
 
 Plans nest recursively with no artificial depth limit. Tasks and sub-plans coexist at the same level. Tasks without `Depends on` are parallel-eligible. Acceptance criteria exist at both plan-level and task-level. Composite task status derives from children unless explicitly overridden.
-
-### AC: index-validity
-
-**Requirements:** plan#req:index-completeness, plan#req:index-child-indentation, plan#req:index-roi-columns, plan#req:index-recently-closed
-
-The plans index lists every plan, indents sub-plans with `&ensp;`, includes Effort and Impact columns (showing `-` when absent), and has a Recently Closed section.
 
 ### AC: cross-artifact-links
 
