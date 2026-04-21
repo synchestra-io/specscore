@@ -12,29 +12,60 @@ on:
       - 'go.sum'
   workflow_dispatch:
     inputs:
-      tag:
-        description: 'Tag to release (e.g. v0.1.0) — leave empty to build snapshot of current ref'
-        required: false
+      release_tag:
+        description: 'Release tag to publish (e.g. v0.2.0). Must not already exist; it will be created from the current main HEAD and pushed.'
+        required: true
         type: string
 
 permissions:
   contents: write
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release-${{ github.ref }}-${{ inputs.release_tag }}
   cancel-in-progress: true
 
 jobs:
   goreleaser:
-    name: ${{ (startsWith(github.ref, 'refs/tags/') || inputs.tag != '') && 'Publish release' || 'Validate snapshot build' }}
+    name: ${{ (github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')) && 'Publish release' || 'Validate snapshot build' }}
     runs-on: ubuntu-latest
 
     steps:
+      - name: Validate dispatch input
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          TAG: ${{ inputs.release_tag }}
+        run: |
+          if [ -z "$TAG" ]; then
+            echo "::error::release_tag is required for manual dispatch"
+            exit 1
+          fi
+          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::release_tag must be a semver tag like v1.2.3 or v1.2.3-rc.1 (got: $TAG)"
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          ref: ${{ inputs.tag || github.ref }}
+
+      - name: Create and push tag (manual dispatch)
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          TAG: ${{ inputs.release_tag }}
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "::error::tag $TAG already exists on origin; bump the version or delete the existing tag"
+            exit 1
+          fi
+
+          echo "Creating tag $TAG at $(git rev-parse HEAD)"
+          git tag -a "$TAG" -m "$TAG"
+          git push origin "refs/tags/$TAG"
+          git checkout "refs/tags/$TAG"
 
       - name: Set up Go
         uses: actions/setup-go@v6
@@ -43,7 +74,7 @@ jobs:
           cache: true
 
       - name: Run GoReleaser (snapshot — validate only)
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && inputs.tag == '' }}
+        if: ${{ github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/') }}
         uses: goreleaser/goreleaser-action@v7
         with:
           version: latest
@@ -52,7 +83,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run GoReleaser (full release)
-        if: ${{ startsWith(github.ref, 'refs/tags/') || inputs.tag != '' }}
+        if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/') }}
         uses: goreleaser/goreleaser-action@v7
         with:
           version: latest
@@ -61,7 +92,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload snapshot artifacts
-        if: ${{ !startsWith(github.ref, 'refs/tags/') && inputs.tag == '' }}
+        if: ${{ github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/') }}
         uses: actions/upload-artifact@v7
         with:
           name: snapshot-binaries
