@@ -65,6 +65,13 @@
         "headers": [
           { "key": "Content-Type", "value": "text/markdown; charset=utf-8" }
         ]
+      },
+      {
+        "source": "/get-cli",
+        "headers": [
+          { "key": "Content-Type", "value": "text/x-shellscript; charset=utf-8" },
+          { "key": "Cache-Control", "value": "public, max-age=300" }
+        ]
       }
     ]
   }

@@ -26,6 +26,12 @@ async function build() {
     join(OUTPUT, 'assets', 'style.css')
   );
 
+  // CLI installer script — served at /get-cli
+  await cp(
+    join(__dirname, 'get-cli.sh'),
+    join(OUTPUT, 'get-cli')
+  );
+
   console.log(`Building ${config.pages.length} pages...`);
 
   for (const page of config.pages) {
