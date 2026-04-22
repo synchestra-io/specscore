@@ -56,5 +56,52 @@
       localStorage.setItem('specscore-theme', next);
     });
   </script>
+  <script>
+    (function() {
+      document.querySelectorAll('main pre > code').forEach(function(code) {
+        var pre = code.parentNode;
+        if (pre.parentNode.classList.contains('code-block')) return;
+
+        var wrap = document.createElement('div');
+        wrap.className = 'code-block';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copy-btn';
+        btn.setAttribute('aria-label', 'Copy code to clipboard');
+        btn.textContent = 'Copy';
+        wrap.appendChild(btn);
+
+        btn.addEventListener('click', function() {
+          var text = code.innerText;
+          var done = function(ok) {
+            btn.dataset.state = ok ? 'copied' : 'error';
+            btn.textContent = ok ? 'Copied' : 'Failed';
+            setTimeout(function() {
+              delete btn.dataset.state;
+              btn.textContent = 'Copy';
+            }, 1500);
+          };
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function() { done(true); }, function() { done(false); });
+            return;
+          }
+
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { done(document.execCommand('copy')); } catch (e) { done(false); }
+          document.body.removeChild(ta);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
