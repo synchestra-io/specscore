@@ -58,6 +58,14 @@
   </script>
   <script>
     (function() {
+      var ICON_COPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>';
+      var ICON_CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>';
+      var ICON_ERROR = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v6M12 16v.01"></path></svg>';
+
+      function render(btn, icon, label) {
+        btn.innerHTML = icon + '<span>' + label + '</span>';
+      }
+
       document.querySelectorAll('main pre > code').forEach(function(code) {
         var pre = code.parentNode;
         if (pre.parentNode.classList.contains('code-block')) return;
@@ -71,17 +79,17 @@
         btn.type = 'button';
         btn.className = 'copy-btn';
         btn.setAttribute('aria-label', 'Copy code to clipboard');
-        btn.textContent = 'Copy';
+        render(btn, ICON_COPY, 'Copy');
         wrap.appendChild(btn);
 
         btn.addEventListener('click', function() {
           var text = code.innerText;
           var done = function(ok) {
             btn.dataset.state = ok ? 'copied' : 'error';
-            btn.textContent = ok ? 'Copied' : 'Failed';
+            render(btn, ok ? ICON_CHECK : ICON_ERROR, ok ? 'Copied' : 'Failed');
             setTimeout(function() {
               delete btn.dataset.state;
-              btn.textContent = 'Copy';
+              render(btn, ICON_COPY, 'Copy');
             }, 1500);
           };
 

@@ -331,40 +331,93 @@ pre code {
 
 .code-block {
   position: relative;
+  isolation: isolate;
+}
+
+.code-block > pre {
+  /* Reserve space so the copy button never overlaps the first line. */
+  padding-right: 4.5rem;
 }
 
 .copy-btn {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background: var(--bg);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
   border: 1px solid var(--code-border);
   color: var(--text-secondary);
   font-family: inherit;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   line-height: 1;
-  padding: 0.35rem 0.6rem;
-  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
   cursor: pointer;
-  opacity: 0.55;
-  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  opacity: 0.5;
+  transform: translateY(0);
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
-.code-block:hover .copy-btn,
-.copy-btn:focus,
-.copy-btn:hover {
+.copy-btn svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex-shrink: 0;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.code-block:hover .copy-btn {
   opacity: 1;
 }
 
-.copy-btn:hover {
+.copy-btn:hover,
+.copy-btn:focus-visible {
+  opacity: 1;
   color: var(--accent);
   border-color: var(--accent);
+  background: var(--accent-light);
+  box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--accent) 35%, transparent);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.copy-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .copy-btn[data-state="copied"] {
   opacity: 1;
   color: var(--accent);
   border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.copy-btn[data-state="error"] {
+  opacity: 1;
+  color: #dc2626;
+  border-color: #dc2626;
+  background: color-mix(in srgb, #dc2626 10%, var(--bg));
+}
+
+@media (hover: none) {
+  .copy-btn { opacity: 1; }
 }
 
 /* === TABLES === */
