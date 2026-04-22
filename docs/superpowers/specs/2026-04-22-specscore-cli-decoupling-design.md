@@ -369,6 +369,6 @@ const url = `https://raw.githubusercontent.com/synchestra-io/specscore-cli/${SPE
 **Out of scope (explicitly):**
 
 - Pre-commit hook setup in either repo.
-- `synchestra-io/specscore-ai-plugin` (separate work item).
+- `synchestra-io/specscore-ai-plugin` — **do not create a new repo**. This already exists as `synchestra-io/ai-plugin-specscore` (local checkout at `../ai-plugin-specscore/`) and will be renamed in separate work.
 - Renaming or restructuring `pkg/` packages.
 - Reusable GitHub Action wrapper (`setup-specscore`) — defer until external consumers ask for it.
