@@ -49,7 +49,7 @@ jobs:
       - name: Install svu
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: |
-          go install github.com/caarlos0/svu/v3@latest
+          go install github.com/caarlos0/svu/v3@v3.4.0
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       - name: Resolve release tag
@@ -60,12 +60,15 @@ jobs:
         run: |
           set -eu
 
+          # --v0 keeps a 0.x project in 0.x territory: a stray "BREAKING CHANGE"
+          # token (even in commit-message prose) won't silently graduate the
+          # project to v1.0.0. Drop --v0 once the project is intentionally 1.x.
           case "${INPUT:-auto}" in
             ''|auto)
-              TAG=$(svu next)
+              TAG=$(svu next --v0)
               ;;
             patch|minor|major)
-              TAG=$(svu "$INPUT")
+              TAG=$(svu "$INPUT" --v0)
               ;;
             v*)
               if ! printf '%s' "$INPUT" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
