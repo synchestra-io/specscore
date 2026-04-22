@@ -7,7 +7,7 @@ curl -fsSL https://specscore.md/get-cli | sh
 ```
 
 The script detects your OS and architecture, downloads the matching archive
-from the latest [GitHub release](https://github.com/synchestra-io/specscore/releases),
+from the latest [GitHub release](https://github.com/synchestra-io/specscore-cli/releases),
 verifies its SHA‑256 checksum, and installs the `specscore` binary to
 `/usr/local/bin` (or `~/.local/bin` if `/usr/local/bin` isn't writable).
 
@@ -40,7 +40,7 @@ sh get-cli.sh
 ## Manual install
 
 1. Download the archive for your platform from the
-   [GitHub Releases page](https://github.com/synchestra-io/specscore/releases).
+   [GitHub Releases page](https://github.com/synchestra-io/specscore-cli/releases).
    Archives follow the pattern
    `specscore_<version>_<os>_<arch>.<ext>`:
    - `specscore_<version>_darwin_amd64.tar.gz`
@@ -58,7 +58,7 @@ sh get-cli.sh
 Requires [Go](https://go.dev/) 1.26 or newer:
 
 ```bash
-go install github.com/synchestra-io/specscore/cmd/specscore@latest
+go install github.com/synchestra-io/specscore-cli/cmd/specscore@latest
 ```
 
 ## Verify the install

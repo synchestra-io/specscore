@@ -875,7 +875,7 @@ You don't need to convert your entire backlog. You don't need to change your too
 ## Try It
 
 ```bash
-go install github.com/synchestra-io/specscore/cmd/specscore@latest
+go install github.com/synchestra-io/specscore-cli/cmd/specscore@latest
 specscore lint ./spec
 ```
 
@@ -973,7 +973,7 @@ Specs that don't pass the linter don't get merged. The same gate you have for te
 ## Try It
 
 ```bash
-go install github.com/synchestra-io/specscore/cmd/specscore@latest
+go install github.com/synchestra-io/specscore-cli/cmd/specscore@latest
 specscore lint ./spec
 ```
 
