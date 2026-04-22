@@ -57,9 +57,12 @@ function buildSidebarHtml(sidebarGroups, currentSlug) {
  * @param {boolean} [opts.showViewMarkdown=true] - whether to show the "View as Markdown" link
  * @returns {string} complete HTML page
  */
+const CANONICAL_ORIGIN = 'https://specscore.md';
+
 export function injectIntoTemplate(template, { title, content, slug, sidebarGroups, eyebrow, showViewMarkdown = true }) {
   const sidebarHtml = buildSidebarHtml(sidebarGroups, slug);
   const mdUrl = slug === 'index' ? '/index.md' : `/${slug}.md`;
+  const canonicalUrl = slug === 'index' ? `${CANONICAL_ORIGIN}/` : `${CANONICAL_ORIGIN}/${slug}`;
   const eyebrowHtml = eyebrow
     ? `<div class="page-eyebrow">${eyebrow}</div>`
     : '';
@@ -76,5 +79,6 @@ export function injectIntoTemplate(template, { title, content, slug, sidebarGrou
     .replace(/\{\{eyebrow\}\}/g, eyebrowHtml)
     .replace(/\{\{content\}\}/g, content)
     .replace(/\{\{viewMarkdown\}\}/g, viewMarkdownHtml)
-    .replace(/\{\{alternateLink\}\}/g, alternateLinkHtml);
+    .replace(/\{\{alternateLink\}\}/g, alternateLinkHtml)
+    .replace(/\{\{canonical\}\}/g, canonicalUrl);
 }
