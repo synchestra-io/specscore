@@ -2,23 +2,29 @@
 
 **The open specification standard for AI-driven development**
 
-SpecScore is an open specification format that makes requirements machine-readable without making them human-unreadable. It's Markdown and YAML — version-controlled, portable, no vendor lock-in. A linter and LSP catch ambiguity before your agents do. Use it standalone or with any orchestration tool.
+SpecScore is an open specification format that makes requirements machine-readable without making them human-unreadable. It's Markdown and YAML — version-controlled, portable, no vendor lock-in. Use it standalone or with any orchestration tool.
 
 [Read the Spec](spec/README.md) · [specscore.md](https://specscore.md) · [Ecosystem](docs/ecosystem.md)
 
 ---
 
-## Quick Start
+## Reference CLI
+
+The reference implementation for working with SpecScore repositories is [`specscore-cli`](https://github.com/synchestra-io/specscore-cli):
 
 ```bash
-# Install the CLI
-go install github.com/synchestra-io/specscore/tools/cli@latest
-
-# Lint your first spec
-specscore lint ./spec
+curl -fsSL https://specscore.md/get-cli | sh
 ```
 
-Full installation guide: [docs/installation.md](docs/installation.md)
+```bash
+specscore spec lint              # validate the current spec tree
+specscore feature list           # list features
+specscore feature show <slug>    # inspect a feature
+specscore task list              # show the task board
+specscore version                # full build identity
+```
+
+Full installation guide: [docs/installation.md](docs/installation.md). Source: <https://github.com/synchestra-io/specscore-cli>.
 
 ---
 
@@ -75,4 +81,4 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) to get started
 
 ## License
 
-Apache License 2.0. See [LICENSE](LICENSE) for details.
+This repository's specification text and documentation are licensed under [CC BY 4.0](LICENSE). The reference CLI implementation [`specscore-cli`](https://github.com/synchestra-io/specscore-cli) is licensed separately under Apache-2.0.
