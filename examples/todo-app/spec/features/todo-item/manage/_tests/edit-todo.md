@@ -21,3 +21,6 @@ output=$(todo list)
 assert_contains "$output" "Buy oat milk"
 assert_not_contains "$output" "Buy milk"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

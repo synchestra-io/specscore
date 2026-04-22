@@ -24,3 +24,6 @@ assert_contains "$output" "Pay rent"
 assert_not_contains "$output" "Walk dog"
 assert_contains "$output" "Showing 2 of 3 items"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

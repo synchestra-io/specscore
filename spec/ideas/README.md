@@ -9,6 +9,7 @@ Archived Ideas are indexed separately at [archived/README.md](archived/README.md
 | Idea | Status | Date | Owner | Promotes To |
 |------|--------|------|-------|-------------|
 | [adherence-footer-and-doc-type-registry](adherence-footer-and-doc-type-registry.md) | Specified | 2026-04-20 | alexander.trakhimenok | adherence-footer, document-types-registry |
+| [decision-and-decisions-index](decision-and-decisions-index.md) | Specified | 2026-04-20 | alexander.trakhimenok | decision, decisions-index |
 | [shared-index-feature](shared-index-feature.md) | Specified | 2026-04-20 | alexander.trakhimenok | index |
 
 ## Outstanding Questions

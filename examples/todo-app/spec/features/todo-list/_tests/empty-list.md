@@ -17,3 +17,6 @@ output=$(todo list)
 assert_exit_code 0
 assert_contains "$output" "No todos"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

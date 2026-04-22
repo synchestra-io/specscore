@@ -22,3 +22,6 @@ assert_contains "$output" "[active]"
 count=$(echo "$output" | grep -c "Buy milk")
 assert_eq "$count" "1"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

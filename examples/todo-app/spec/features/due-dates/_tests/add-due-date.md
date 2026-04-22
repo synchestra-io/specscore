@@ -19,3 +19,6 @@ output=$(todo list)
 assert_contains "$output" "Pay rent"
 assert_contains "$output" "due: 2026-04-15"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

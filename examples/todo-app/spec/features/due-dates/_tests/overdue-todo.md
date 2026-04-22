@@ -18,3 +18,6 @@ output=$(todo list)
 assert_contains "$output" "Pay rent"
 assert_contains "$output" "[OVERDUE]"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

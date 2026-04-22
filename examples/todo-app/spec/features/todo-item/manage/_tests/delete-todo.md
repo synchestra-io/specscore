@@ -20,3 +20,6 @@ assert_exit_code 0
 output=$(todo list --all)
 assert_contains "$output" "No todos"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

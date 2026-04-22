@@ -20,3 +20,6 @@ output=$(todo list --overdue)
 assert_contains "$output" "No todos"
 assert_not_contains "$output" "Pay rent"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*
