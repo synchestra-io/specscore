@@ -70,5 +70,5 @@ specscore version
 You should see a line like:
 
 ```
-specscore v0.1.0 (<commit>) <date>
+specscore 0.1.0 (<commit>) <date>
 ```
