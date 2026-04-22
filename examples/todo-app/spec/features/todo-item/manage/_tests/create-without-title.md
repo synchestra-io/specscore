@@ -21,3 +21,6 @@ assert_contains "$output" "title"
 list_output=$(todo list)
 assert_contains "$list_output" "No todos"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

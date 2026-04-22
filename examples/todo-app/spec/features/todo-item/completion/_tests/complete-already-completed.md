@@ -22,3 +22,6 @@ assert_exit_code 0
 timestamp2=$(todo list --completed --format=json | jq -r '.[0].completed_at')
 assert_eq "$timestamp1" "$timestamp2"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

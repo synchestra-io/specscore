@@ -24,3 +24,6 @@ assert_contains "$output" "[completed]"
 assert_not_contains "$output" "Buy milk"
 assert_contains "$output" "Showing 1 of 3 items"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

@@ -23,3 +23,6 @@ completed=$(todo list --completed)
 assert_contains "$completed" "Buy milk"
 assert_contains "$completed" "[completed]"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*

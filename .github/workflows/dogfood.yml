@@ -1,0 +1,45 @@
+name: Dogfood lint
+
+on:
+  push:
+    paths:
+      - 'spec/**'
+      - 'examples/**'
+      - '.github/workflows/dogfood.yml'
+  pull_request:
+    paths:
+      - 'spec/**'
+      - 'examples/**'
+      - '.github/workflows/dogfood.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dogfood-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SPECSCORE_VERSION: v0.12.1  # bump intentionally via PR
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install specscore CLI
+        run: |
+          curl -fsSL https://specscore.md/get-cli | \
+            SPECSCORE_VERSION="${SPECSCORE_VERSION}" \
+            SPECSCORE_INSTALL_DIR="$HOME/.local/bin" sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Lint spec tree
+        run: specscore spec lint
+      - name: Lint example projects
+        run: |
+          for dir in examples/*/; do
+            if [ -d "$dir/spec" ]; then
+              (cd "$dir" && specscore spec lint)
+            fi
+          done

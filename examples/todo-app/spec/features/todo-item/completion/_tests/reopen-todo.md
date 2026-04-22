@@ -24,3 +24,6 @@ assert_contains "$active" "[active]"
 completed=$(todo list --completed)
 assert_contains "$completed" "No todos"
 ```
+
+---
+*This document follows the https://specscore.md/scenario-specification*
