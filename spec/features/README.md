@@ -22,6 +22,7 @@ Core features of the SpecScore specification framework. This table is the canoni
 | [adherence-footer](adherence-footer/README.md) | Draft | Meta | — | — | — | The shared footer mechanism every Document-Kind feature delegates to |
 | [document-types-registry](document-types-registry/README.md) | Draft | Meta | — | — | — | This registry — canonical list of SpecScore document types |
 | [index](index/README.md) | Draft | Meta | — | — | — | Shared shape of every Index-Kind feature — required sections, completeness, footer delegation |
+| [cli](cli/README.md) | In Progress | Command | — | — | — | `specscore` CLI — parent feature for command-level specifications |
 
 ## Feature Hierarchy
 
@@ -42,7 +43,26 @@ spec/features/
 ├── project-definition/        # Project config and top-level structure
 ├── adherence-footer/          # Shared footer mechanism
 ├── document-types-registry/   # Canonical list of document types (this registry)
-└── index/                     # Shared shape of every Index-Kind feature
+├── index/                     # Shared shape of every Index-Kind feature
+└── cli/                       # `specscore` CLI commands
+    ├── code/                  # `specscore code` — source → spec queries
+    │   └── deps/              # `code deps` — resources a file depends on
+    ├── feature/               # `specscore feature` — feature tree queries & scaffolding
+    │   ├── deps/              # `feature deps <id>`
+    │   ├── info/              # `feature info <id>`
+    │   ├── list/              # `feature list`
+    │   ├── new/               # `feature new`
+    │   ├── refs/              # `feature refs <id>`
+    │   └── tree/              # `feature tree [id]`
+    ├── new/                   # `specscore new` — scaffolds non-feature artifacts
+    │   └── idea/              # `new idea <slug>`
+    ├── spec/                  # `specscore spec` — tree-level validation
+    │   └── lint/              # `spec lint`
+    ├── task/                  # `specscore task` — task board
+    │   ├── info/              # `task info`
+    │   ├── list/              # `task list`
+    │   └── new/               # `task new`
+    └── version/               # `version` subcommand and `--version` flag
 ```
 
 ## Integration with Orchestration Tools
