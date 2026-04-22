@@ -10,7 +10,7 @@
 
 set -eu
 
-REPO="synchestra-io/specscore"
+REPO="synchestra-io/specscore-cli"
 BIN_NAME="specscore"
 
 log()  { printf '%s\n' "$*"; }
