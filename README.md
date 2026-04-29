@@ -8,9 +8,9 @@ SpecScore is an open specification format that makes requirements machine-readab
 
 ---
 
-## Reference CLI
+## CLI
 
-The reference implementation for working with SpecScore repositories is [`specscore-cli`](https://github.com/synchestra-io/specscore-cli):
+The CLI for working with SpecScore repositories is [`specscore-cli`](https://github.com/synchestra-io/specscore-cli):
 
 ```bash
 curl -fsSL https://specscore.md/get-cli | sh
@@ -81,10 +81,10 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) to get started
 
 ## License
 
-This repository's specification text and documentation are licensed under [CC BY 4.0](LICENSE). The reference CLI implementation [`specscore-cli`](https://github.com/synchestra-io/specscore-cli) is licensed separately under Apache-2.0.
+This repository's specification text and documentation are licensed under [CC BY 4.0](LICENSE). The CLI [`specscore-cli`](https://github.com/synchestra-io/specscore-cli) is licensed separately under Apache-2.0.
 
 ---
 
 ## History
 
-The reference CLI `specscore` was extracted from this repository on 2026-04-22. Its source code, releases, and the `v0.x` release tags that were originally created here now live at [`synchestra-io/specscore-cli`](https://github.com/synchestra-io/specscore-cli). This repository's `v*` tags were removed at the same time, since they tagged CLI releases that no longer reside here. Engineering history (commits) for the extracted code is preserved in `specscore-cli` via `git filter-repo`.
+The `specscore` CLI was extracted from this repository on 2026-04-22. Its source code, releases, and the `v0.x` release tags that were originally created here now live at [`synchestra-io/specscore-cli`](https://github.com/synchestra-io/specscore-cli). This repository's `v*` tags were removed at the same time, since they tagged CLI releases that no longer reside here. Engineering history (commits) for the extracted code is preserved in `specscore-cli` via `git filter-repo`.

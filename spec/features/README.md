@@ -45,7 +45,7 @@ spec/features/
 └── index/                     # Shared shape of every Index-Kind feature
 ```
 
-The reference CLI (`specscore`) is specified separately at [synchestra-io/specscore-cli](https://github.com/synchestra-io/specscore-cli).
+The `specscore` CLI is specified separately at [synchestra-io/specscore-cli](https://github.com/synchestra-io/specscore-cli).
 
 ## Integration with Orchestration Tools
 

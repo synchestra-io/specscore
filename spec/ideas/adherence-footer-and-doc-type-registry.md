@@ -13,7 +13,7 @@ How might we let every SpecScore document declare — in one machine-verifiable,
 
 ## Context
 
-Today `REQ: adherence-footer` lives in `spec/features/feature/README.md` and hardcodes the URL `https://specscore.md/feature-specification`. The lint checker `pkg/lint/adherence_footer.go` hardcodes the same constant. One exception exists: the recently-extracted `spec/features/plan/plans-index/` sub-feature defines `plans-index-specification`.
+Today `REQ: adherence-footer` lives in `spec/features/feature/README.md` and hardcodes the URL `https://specscore.md/feature-specification`. The lint checker `pkg/lint/adherence_footer.go` (in [`specscore-cli`](https://github.com/synchestra-io/specscore-cli)) hardcodes the same constant. One exception exists: the recently-extracted `spec/features/plan/plans-index/` sub-feature defines `plans-index-specification`.
 
 Two distinct layers use adherence footers, and conflating them has caused confusion:
 
@@ -32,7 +32,7 @@ Introduce two new sibling features as the mechanism, and elevate the feature ind
 
 **Structural rule**: Document-Kind and Index-Kind features MUST live at the top level of `spec/features/`. This makes terminal-slug the URL stem (trivial, no nesting-rule to invent). As a consequence, `plan/plans-index/` is flattened to a top-level sibling `plans-index/` cross-referenced with `plan/` via Dependencies and Interaction tables.
 
-The lint `pkg/lint/adherence_footer.go` is refactored to read `Kind`, `URL`, and `Consumer Path` from the registry, then walk consumer paths and check the correct footer URL per Kind. Structure and Meta Kinds are not walked.
+The lint `pkg/lint/adherence_footer.go` (in [`specscore-cli`](https://github.com/synchestra-io/specscore-cli)) is refactored to read `Kind`, `URL`, and `Consumer Path` from the registry, then walk consumer paths and check the correct footer URL per Kind. Structure and Meta Kinds are not walked.
 
 ## Alternatives Considered
 
@@ -70,7 +70,7 @@ One cycle. Scope is the two new Meta features (`adherence-footer` and `document-
 ## SpecScore Integration
 
 - **New Features this would create:** `adherence-footer` (Meta Kind), `document-types-registry` (Meta Kind), top-level `plans-index` (Index Kind — reparented from `plan/plans-index`).
-- **Existing Features affected:** `feature` (local REQ: adherence-footer shrinks and references the new feature; index-completeness REQ gains new columns), `plan`, `idea`, `task`, `scenario`, `requirement`, `acceptance-criteria`, `source-references`, `project-definition` (each gains or shrinks a two-line `REQ: adherence-footer` pointing at its consumer URL), root `spec/features/README.md` (new required columns populated), `pkg/lint/adherence_footer.go` (refactored).
+- **Existing Features affected:** `feature` (local REQ: adherence-footer shrinks and references the new feature; index-completeness REQ gains new columns), `plan`, `idea`, `task`, `scenario`, `requirement`, `acceptance-criteria`, `source-references`, `project-definition` (each gains or shrinks a two-line `REQ: adherence-footer` pointing at its consumer URL), root `spec/features/README.md` (new required columns populated), `pkg/lint/adherence_footer.go` in [`specscore-cli`](https://github.com/synchestra-io/specscore-cli) (refactored).
 - **Dependencies:** None. This Idea is the foundation for `shared-index-feature`.
 
 ## Open Questions
