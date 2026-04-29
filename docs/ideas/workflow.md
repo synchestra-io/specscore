@@ -74,9 +74,9 @@ specscore new idea offline-mode --force     # overwrite existing
 
 The scaffold is lint-clean on exit regardless of which flags you supply. Missing content is filled with inline HTML-comment prompts that describe what belongs there; these are explicitly allowed by the placeholder-detection rule. Flag values replace the corresponding prompt with real text.
 
-### 3. `specscore:ideate` skill
+### 3. `spec-studio:ideate` skill
 
-For Claude Code and compatible AI tools, the [`specscore:ideate`](https://github.com/synchestra/ai-plugin-sdd/tree/main/skills/specscore-ideate) skill runs a three-phase divergent/convergent refinement process (Understand & Expand → Evaluate & Converge → Crystallize). It asks sharpening questions, generates variations, stress-tests directions on user value / feasibility / differentiation, and writes the final artifact to `spec/ideas/<slug>.md`.
+For Claude Code and compatible AI tools, the [`spec-studio:ideate`](https://github.com/synchestra-io/spec-studio/tree/main/skills/ideate) skill runs a three-phase divergent/convergent refinement process (Understand & Expand → Evaluate & Converge → Crystallize). It asks sharpening questions, generates variations, stress-tests directions on user value / feasibility / differentiation, and writes the final artifact to `spec/ideas/<slug>.md`.
 
 The skill delegates file creation to `specscore new idea` when the CLI is installed and falls back to writing the file directly otherwise.
 
@@ -129,4 +129,4 @@ specscore spec lint --fix              # auto-repair drift (idea ↔ feature)
 
 - [Idea feature spec](../spec/features/idea/README.md) — authoritative schema, lint rules, acceptance criteria.
 - [Feature feature spec](../spec/features/feature/README.md) — how `**Source Ideas:**` drives the Idea's derived state.
-- [`specscore:ideate` skill](https://github.com/synchestra/ai-plugin-sdd/tree/main/skills/specscore-ideate) — recommended AI-assisted authoring path.
+- [`spec-studio:ideate` skill](https://github.com/synchestra-io/spec-studio/tree/main/skills/ideate) — recommended AI-assisted authoring path.

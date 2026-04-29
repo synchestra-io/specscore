@@ -8,7 +8,7 @@
 
 An idea is a **pre-spec, lintable one-pager** that captures a problem, a recommended direction, an MVP scope, and the assumptions that must hold for the direction to be worth pursuing. Ideas are the optional front-door to SpecScore: they refine a vague concept into something concrete enough to promote into one or more [Features](../feature/README.md).
 
-An idea artifact is a single file at `spec/ideas/<slug>.md` with typed YAML front-matter and a fixed section schema. Ideas can be authored manually, by AI agents, or — recommended — via the [`specscore:ideate`](https://github.com/synchestra/ai-plugin-sdd) skill. The spec defines the artifact; it does not mandate the authoring workflow.
+An idea artifact is a single file at `spec/ideas/<slug>.md` with typed YAML front-matter and a fixed section schema. Ideas can be authored manually, by AI agents, or — recommended — via the [`spec-studio:ideate`](https://github.com/synchestra-io/spec-studio) skill. The spec defines the artifact; it does not mandate the authoring workflow.
 
 ## Problem
 
@@ -286,13 +286,13 @@ An author (human or skill) MUST NOT directly write `**Status:** Specified`. Atte
 
 ### Recommended authoring workflow
 
-The [`specscore:ideate`](https://github.com/synchestra/ai-plugin-sdd/tree/main/skills/specscore-ideate) skill is the **recommended** way to produce an Idea artifact. It runs a three-phase divergent/convergent process (Understand & Expand → Evaluate & Converge → Crystallize), enforces the schema above, and emits `idea.drafted` / `idea.approved` events for Synchestra consumers.
+The [`spec-studio:ideate`](https://github.com/synchestra-io/spec-studio/tree/main/skills/ideate) skill is the **recommended** way to produce an Idea artifact. It runs a three-phase divergent/convergent process (Understand & Expand → Evaluate & Converge → Crystallize), enforces the schema above, and emits `idea.drafted` / `idea.approved` events for Synchestra consumers.
 
 Using the skill is **not mandatory**. An Idea is valid if and only if it passes `specscore lint` — how it was authored is out of scope for this spec. Manual authoring, other skills, bespoke AI agents, and imports from external systems are all acceptable.
 
 #### REQ: authoring-agnostic
 
-Validation MUST NOT depend on authoring provenance. An Idea hand-written by a human and an Idea produced by `specscore:ideate` are indistinguishable to `specscore lint` and to downstream tooling.
+Validation MUST NOT depend on authoring provenance. An Idea hand-written by a human and an Idea produced by `spec-studio:ideate` are indistinguishable to `specscore lint` and to downstream tooling.
 
 #### REQ: scaffold-command
 
@@ -303,7 +303,7 @@ The `specscore` CLI MUST provide `specscore new idea <slug>` that scaffolds a sk
 - **Interactive TUI.** When invoked with `--interactive` (or `-i`), the CLI prompts the user for each field and writes actual values in place of the HTML-comment prompts.
 - **Always lint-clean on exit.** Regardless of how much content was supplied, the generated file MUST pass `specscore lint` — the inline prompts and `—` placeholders are designed so an untouched scaffold already validates.
 
-The `specscore:ideate` skill SHOULD delegate file creation to this command when available, and fall back to writing the file directly when the CLI is not installed.
+The `spec-studio:ideate` skill SHOULD delegate file creation to this command when available, and fall back to writing the file directly when the CLI is not installed.
 
 ### Idea index
 
@@ -367,7 +367,7 @@ When a Feature is created or updated with a `**Source Ideas:**` entry, tooling:
 1. Resolves the link.
 2. Appends the Feature slug to each referenced Idea's `**Promotes To:**` list.
 3. Transitions any referenced Idea from `Status: Approved` to `Status: Specified`.
-4. Optionally emits an `idea.specified` event (see [Synchestra events](https://github.com/synchestra/ai-plugin-sdd/blob/main/skills/shared/synchestra-events.md)).
+4. Optionally emits an `idea.specified` event (see [Synchestra events](https://github.com/synchestra-io/spec-studio/blob/main/skills/shared/synchestra-events.md)).
 
 When every Feature referencing an Idea is deleted or loses its reference, the Idea's `**Promotes To:**` is recomputed accordingly; if it becomes empty, tooling reverts `Status: Specified → Approved`.
 

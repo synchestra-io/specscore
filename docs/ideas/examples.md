@@ -273,7 +273,7 @@ by the two design partners within one week of work.
 This page shows what bad looks like. For what good looks like, read real ones.
 
 - **`spec/ideas/`** in this repository is the canonical reference once real Ideas exist. At the time of writing, the directory contains no active Ideas — the first real ones, when written, become the ongoing good-examples library. Prefer a real in-repo Idea over any synthetic example.
-- **The `specscore:ideate` skill's `references/examples.md`** at `/home/ai/projects/synchestra-io/ai-plugin-sdd/skills/specscore-ideate/references/examples.md` contains external ideation-session examples — full three-phase sessions (Understand & Expand → Evaluate & Converge → Crystallize) that terminate in a complete Idea artifact. Useful when you want to see the *process* that produced a good Idea, not just the artifact.
+- **The [`spec-studio:ideate` skill's `references/examples.md`](https://github.com/synchestra-io/spec-studio/blob/main/skills/ideate/references/examples.md)** contains external ideation-session examples — full three-phase sessions (Understand & Expand → Evaluate & Converge → Crystallize) that terminate in a complete Idea artifact. Useful when you want to see the *process* that produced a good Idea, not just the artifact.
 
 When a real Idea in `spec/ideas/` has aged well through a Feature promotion and a retrospective, cite it from this page.
 
