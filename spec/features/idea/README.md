@@ -265,7 +265,7 @@ Every slug referenced in `**Related Ideas:**` MUST resolve to an Idea file under
 `Specified` is a **derived status**: it reflects the existence of at least one Feature that references the Idea. It is not a state the author chooses. Three mechanisms can drive the transition:
 
 1. **`specscore` CLI (authoritative).** `specscore idea sync` (equivalently `specscore lint --fix`) scans `spec/features/**/README.md` for `**Source Ideas:**` fields, recomputes every Idea's `**Promotes To:**`, and updates `**Status:**` accordingly. Running this command is the definitive way to reconcile Idea status.
-2. **Feature-creation tooling.** When `specscore new feature` (or an equivalent scaffolder) creates a Feature with `**Source Ideas:**`, it performs the same update on each referenced Idea in the same commit.
+2. **Feature-creation tooling.** When `specscore feature new` (or an equivalent scaffolder) creates a Feature with `**Source Ideas:**`, it performs the same update on each referenced Idea in the same commit.
 3. **Synchestra (optional).** When Synchestra is present, it watches for Feature changes and performs the update automatically, emitting `idea.specified`. Standalone SpecScore users do not need Synchestra — the CLI is sufficient.
 
 **CI enforcement is strict.** `specscore lint` (without `--fix`) fails on any drift between a Feature's `**Source Ideas:**` entries and the corresponding Idea's `**Promotes To:**` / `**Status:**`. Contributors are expected to run `specscore lint --fix` locally before committing. If strictness proves too disruptive in practice, the severity can be relaxed in a future revision; the initial posture is strict because `lint --fix` makes compliance cheap.
@@ -296,7 +296,7 @@ Validation MUST NOT depend on authoring provenance. An Idea hand-written by a hu
 
 #### REQ: scaffold-command
 
-The `specscore` CLI MUST provide `specscore new idea <slug>` that scaffolds a skeleton at `spec/ideas/<slug>.md`. Behavior:
+The `specscore` CLI MUST provide `specscore idea new <slug>` that scaffolds a skeleton at `spec/ideas/<slug>.md`. Behavior:
 
 - **Pre-population.** Each required section is emitted with an inline HTML-comment prompt describing what belongs there (e.g. `<!-- One "How Might We…" sentence. -->`). These prompts replace placeholder text and do not trip lint rule U-005 (placeholders).
 - **Argument injection.** Values supplied via flags (`--title`, `--owner`, `--hmw`, `--not-doing`, etc.) replace the corresponding prompt with real content.
@@ -444,7 +444,7 @@ Typed relationships (`depends_on`, `alternative_to`, `extends`, `conflicts_with`
 
 **Requirements:** idea#req:scaffold-command
 
-`specscore new idea <slug>` produces a lint-clean file whether invoked bare, with flag arguments, or interactively. Inline HTML-comment prompts stand in for missing content without triggering placeholder-detection rules.
+`specscore idea new <slug>` produces a lint-clean file whether invoked bare, with flag arguments, or interactively. Inline HTML-comment prompts stand in for missing content without triggering placeholder-detection rules.
 
 ### AC: authoring-independence
 

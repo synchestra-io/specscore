@@ -61,15 +61,15 @@ All three paths produce the same artifact. Validation does not care how it was a
 
 Create `spec/ideas/<slug>.md` in any editor, follow the schema above, and run `specscore spec lint` until it is clean. Appropriate when you already know the shape of the Idea and just need to write it down.
 
-### 2. `specscore new idea <slug>` (CLI scaffolder)
+### 2. `specscore idea new <slug>` (CLI scaffolder)
 
 ```
-specscore new idea offline-mode
-specscore new idea offline-mode --title "Offline Mode" --owner alex@synchestra.io \
+specscore idea new offline-mode
+specscore idea new offline-mode --title "Offline Mode" --owner alex@synchestra.io \
     --hmw "How might we let users keep working offline?" \
     --not-doing "conflict resolution UI — v2"
-specscore new idea offline-mode -i          # interactive TUI
-specscore new idea offline-mode --force     # overwrite existing
+specscore idea new offline-mode -i          # interactive TUI
+specscore idea new offline-mode --force     # overwrite existing
 ```
 
 The scaffold is lint-clean on exit regardless of which flags you supply. Missing content is filled with inline HTML-comment prompts that describe what belongs there; these are explicitly allowed by the placeholder-detection rule. Flag values replace the corresponding prompt with real text.
@@ -78,7 +78,7 @@ The scaffold is lint-clean on exit regardless of which flags you supply. Missing
 
 For Claude Code and compatible AI tools, the [`spec-studio:ideate`](https://github.com/synchestra-io/spec-studio/tree/main/skills/ideate) skill runs a three-phase divergent/convergent refinement process (Understand & Expand → Evaluate & Converge → Crystallize). It asks sharpening questions, generates variations, stress-tests directions on user value / feasibility / differentiation, and writes the final artifact to `spec/ideas/<slug>.md`.
 
-The skill delegates file creation to `specscore new idea` when the CLI is installed and falls back to writing the file directly otherwise.
+The skill delegates file creation to `specscore idea new` when the CLI is installed and falls back to writing the file directly otherwise.
 
 ## The Lifecycle
 
@@ -119,8 +119,8 @@ Format: `**Related Ideas:** depends_on:payment-rails-audit, alternative_to:singl
 ## Day-to-Day Commands
 
 ```
-specscore new idea <slug>              # scaffold a new Idea
-specscore new idea <slug> -i           # interactive scaffold
+specscore idea new <slug>              # scaffold a new Idea
+specscore idea new <slug> -i           # interactive scaffold
 specscore spec lint                    # validate the spec tree
 specscore spec lint --fix              # auto-repair drift (idea ↔ feature)
 ```

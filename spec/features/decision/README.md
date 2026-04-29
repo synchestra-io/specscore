@@ -270,7 +270,7 @@ Every Decision document MUST end with an adherence footer per the [Adherence Foo
 
 #### REQ: scaffold-command
 
-The `specscore` CLI MUST provide `specscore new decision <slug>` that scaffolds a skeleton at `spec/decisions/<next-number>-<slug>.md`. Behavior:
+The `specscore` CLI MUST provide `specscore decision new <slug>` that scaffolds a skeleton at `spec/decisions/<next-number>-<slug>.md`. Behavior:
 
 - **Number assignment.** The CLI determines the next sequence number per [REQ: number-assignment](#req-number-assignment) and embeds it in the filename. Authors do not supply the number.
 - **Pre-population.** Each required section is emitted with an inline HTML-comment prompt describing what belongs there. `Observed Consequences` is pre-populated with `None observed yet.` to satisfy [REQ: observed-consequences-placeholder](#req-observed-consequences-placeholder).
@@ -371,7 +371,7 @@ Every Decision ends with a footer containing the bare URL `https://specscore.md/
 
 **Requirements:** decision#req:scaffold-command, decision#req:authoring-agnostic
 
-`specscore new decision <slug>` produces a lint-clean file with the next sequence number assigned. Hand-authored and skill-authored Decisions with identical content produce identical lint results.
+`specscore decision new <slug>` produces a lint-clean file with the next sequence number assigned. Hand-authored and skill-authored Decisions with identical content produce identical lint results.
 
 ## TODO
 

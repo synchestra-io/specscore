@@ -49,7 +49,7 @@ Ship both features together with the minimum schema to pass lint:
 
 - `decision` README declaring: title format, header fields (Status, Date, Owner, Tags, Source Idea, Supersedes, Superseded By), required sections (Context, Decision, Rationale, Declined Alternatives, Consequences at decision time, Observed Consequences, Affected Features), status lifecycle (Proposed → Accepted → Superseded), adherence footer, acceptance criteria.
 - `decisions-index` README declaring: active-index columns, archived-index chronology rule, completeness rule, adherence footer.
-- `specscore new decision <title>` CLI scaffold that assigns the next number and produces a lint-clean skeleton.
+- `specscore decision new <title>` CLI scaffold that assigns the next number and produces a lint-clean skeleton.
 - `specscore lint` rules: required sections, status values, supersede target exists, immutability check (body hash unchanged once Accepted — except for `## Observed Consequences` appends), index completeness.
 
 No REQ↔Decision linking in MVP. No automatic migration from existing `Alternatives Considered` sections. No tag vocabulary enforcement.
@@ -66,7 +66,7 @@ No REQ↔Decision linking in MVP. No automatic migration from existing `Alternat
 
 | Tier | Assumption | How to validate |
 |------|------------|-----------------|
-| Must-be-true | Teams will write Decisions at the point of choice, not retrofit them. Retrofit ADRs are vapid and would poison the artifact's reputation. | Ship `specscore new decision` with an interactive TUI matching `new idea`'s ergonomics. Measure: first-week usage on SpecScore itself (dogfood). If we don't reach for it during real decisions, no one else will. |
+| Must-be-true | Teams will write Decisions at the point of choice, not retrofit them. Retrofit ADRs are vapid and would poison the artifact's reputation. | Ship `specscore decision new` with an interactive TUI matching `idea new`'s ergonomics. Measure: first-week usage on SpecScore itself (dogfood). If we don't reach for it during real decisions, no one else will. |
 | Must-be-true | Authors can tell the difference between a Decision and an Idea's `Alternatives Considered`. | Include a "When to write a Decision vs put alternatives in an Idea" subsection in the `decision` feature README, with two concrete examples. If first reviewers can't answer correctly after reading it, rewrite. |
 | Must-be-true | The `NNNN-slug.md` filename break from slug-only convention is acceptable to SpecScore maintainers. | Surface this as an explicit open question on this Idea before it promotes. Alternative: use slug-only and introduce a `**Number:**` header field. Cheaper either way, but the filename form is conventional in ADR and I'd recommend adopting it. |
 | Should-be-true | `Observed Consequences` will actually get updated post-hoc by at least some authors. | After SpecScore ships with ≥5 internal Decisions, check at the 6-month mark. If the section is empty across all of them, drop it in a minor revision — it's theater, not signal. |
