@@ -1,3 +1,8 @@
+---
+format: https://specscore.md/plan-specification
+status: Approved
+---
+
 # Plan: Capability and Platform Implementations
 
 **Status:** Approved
