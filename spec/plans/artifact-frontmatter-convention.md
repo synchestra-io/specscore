@@ -1,3 +1,8 @@
+---
+format: https://specscore.md/plan-specification
+status: Draft
+---
+
 # Plan: Artifact Frontmatter Convention
 
 **Status:** Draft
