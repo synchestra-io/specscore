@@ -59,6 +59,63 @@ Every Index-Kind feature's Interaction table MUST include three rows cross-refer
 2. The [Adherence Footer feature](../adherence-footer/README.md) — because the index delegates its footer mechanism there.
 3. The [Document Types Registry](../document-types-registry/README.md) — the registry entry for the Index-Kind row.
 
+### The atomic artifact file is authoritative; the index is derived
+
+This is the cross-cutting data-model rule every Index-Kind feature inherits
+and every tool implementation MUST honor, not only a structural convention
+about headings and columns. It exists because a 2026-08-27 gap
+(`specscore-cli`'s `task change-status` had no path to initialize a Task's
+missing `**Status:**` line, because no tool treated the per-task file as the
+place that value actually lives) showed the rule had never been written down
+anywhere a future implementer could find it.
+
+#### REQ: file-authoritative-over-index
+
+For every Document-Kind instance an Index-Kind feature aggregates, the
+instance's own artifact file is the SOURCE OF TRUTH for any field the index
+also displays (most commonly Status). The index row is a DERIVED PROJECTION
+of that field, never the reverse. Consequently:
+
+- A tool MAY regenerate a drifted index row from its artifact file at any
+  time — that direction is always safe, because the index carries no
+  independent authority to lose.
+- A tool MUST NOT regenerate or "correct" an artifact file's field FROM its
+  index row. An index row is a cache, not a ballot; treating it as a second
+  vote on the artifact's true state is the exact inversion this REQ forbids.
+- A ONE-TIME bootstrap that seeds an artifact file's missing field from the
+  index (because, before the bootstrap, the index is the only place a value
+  exists at all) does not violate this REQ, provided it runs at most once per
+  artifact — never overwriting a field the artifact file already carries —
+  and the tool's own documentation says so explicitly, so a later reader
+  never mistakes the bootstrap for a precedent that index values win.
+
+This settles the general form of a narrower question every consumer
+eventually asks concretely: "the file says X, the index says Y — which do I
+believe, and which do I rewrite?" Answer: believe the file; rewrite the
+index.
+
+#### REQ: reconciliation-must-be-reported
+
+"File wins" is a deterministic default for regenerating derived data — it is
+safe to automate PRECISELY BECAUSE the index is derived, never because the
+file's existing value is presumed to be the one a human actually wants. A
+file can be stale (a status transition that forgot to run) exactly as often
+as an index row can be stale. A tool that silently rewrites an index row from
+its artifact file therefore destroys the one signal — the fact that the two
+disagreed — that would let a human or agent notice the FILE was actually the
+side that needed correcting.
+
+Any automated reconciliation (e.g. a lint `--fix` pass) that rewrites a
+derived index row from its artifact file MUST report every row it changed,
+naming the artifact, the value the index carried, and the value taken from
+the file. It MUST NOT report only a file-count or a bare "fixed" — an
+itemized report is the requirement, not a summary. When an agent or human
+judges the index's prior value to have been the correct one, the correction
+is still made by updating the ARTIFACT FILE (via that Document Kind's own
+change-status/edit path, with the reasoning recorded there) — never by
+editing the index back to match — so "file wins" remains mechanically true
+even when a human-level judgment call is what supplied the right value.
+
 ### Per-domain overrides
 
 Index-Kind features declare, in their own README:
@@ -110,6 +167,22 @@ A per-domain Index-Kind feature's Behavior section declares overrides only — n
 **Requirements:** index#req:delete-empty-overrides
 
 When an Index-Kind feature's overrides become empty (no per-domain sections, no unique columns, no domain-specific REQs), the feature SHOULD be deleted. Lint may emit a warning; deletion remains a human decision.
+
+### AC: file-wins-on-drift
+
+**Requirements:** [index#req:file-authoritative-over-index](#req-file-authoritative-over-index)
+
+**Given** a Document-Kind instance whose artifact file's Status disagrees with its Index-Kind row
+**When** a tool reconciles the two
+**Then** the index row is rewritten to match the artifact file, never the reverse — an implementation that instead rewrites the artifact file's field from the index row violates this REQ, except for the one-time bootstrap case where the artifact file previously had no value for that field at all.
+
+### AC: reconciliation-is-itemized
+
+**Requirements:** [index#req:reconciliation-must-be-reported](#req-reconciliation-must-be-reported)
+
+**Given** an automated fix pass that reconciles one or more drifted index rows from their artifact files
+**When** the fix completes
+**Then** its report names each corrected artifact and both the value the index carried and the value taken from the file — a bare change count or a silent rewrite with no report fails this AC.
 
 ## Open Questions
 
