@@ -162,6 +162,18 @@
       "llmsFull": true
     },
     {
+      "source": "spec/features/lessons-index/README.md",
+      "slug": "lessons-index-specification",
+      "title": "Lessons Index Specification",
+      "nav": true,
+      "navLabel": "Lessons Index",
+      "navGroup": "Specification",
+      "navOrder": 9.55,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "The lessons index at spec/lessons/README.md: its column set, and why recurrence is derived read-model data rather than a hand-maintained counter.",
+      "llmsFull": true
+    },
+    {
       "source": "spec/features/rule/README.md",
       "slug": "rule-specification",
       "title": "Rule Specification",
