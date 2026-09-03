@@ -162,6 +162,42 @@
       "llmsFull": true
     },
     {
+      "source": "spec/features/lessons-index/README.md",
+      "slug": "lessons-index-specification",
+      "title": "Lessons Index Specification",
+      "nav": true,
+      "navLabel": "Lessons Index",
+      "navGroup": "Specification",
+      "navOrder": 9.55,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "The lessons index at spec/lessons/README.md: its column set, and why recurrence is derived read-model data rather than a hand-maintained counter.",
+      "llmsFull": true
+    },
+    {
+      "source": "spec/features/rule/README.md",
+      "slug": "rule-specification",
+      "title": "Rule Specification",
+      "nav": true,
+      "navLabel": "Rule",
+      "navGroup": "Specification",
+      "navOrder": 9.6,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "How to write a Rule: one normative MUST/NEVER sentence with its scope grammar, enforcement ladder and required control, typed sources, the inline-versus-detailed two-form model, and reciprocity with Lessons and agent skills.",
+      "llmsFull": true
+    },
+    {
+      "source": "spec/features/rules-index/README.md",
+      "slug": "rules-index-specification",
+      "title": "Rules Index Specification",
+      "nav": true,
+      "navLabel": "Rules Index",
+      "navGroup": "Specification",
+      "navOrder": 9.7,
+      "llmsGroup": "Specifications",
+      "llmsDescription": "The rules index is both the inventory and the primary artifact: an inline Rule is one row and nothing else, the row stays authoritative for a detailed Rule, and a row that does not parse is preserved rather than dropped.",
+      "llmsFull": true
+    },
+    {
       "source": null,
       "slug": "new",
       "title": "New-Artefact Templates",
