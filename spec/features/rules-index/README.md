@@ -12,7 +12,7 @@ status: Approved
 
 ## Summary
 
-The Rules Index at `spec/rules/README.md` is unusual among SpecScore indexes: it is both the inventory *and* the primary artifact. An inline [Rule](../rule/README.md) lives in exactly one row here and nowhere else, and for a detailed Rule this row remains authoritative for every field it carries.
+The Rules Index at `spec/rules/README.md` is unusual among SpecScore indexes: it is both the inventory *and* the primary artifact. An inline Rule lives in exactly one row here and nowhere else, and for a detailed Rule this row remains authoritative for every field it carries.
 
 ## Problem
 
