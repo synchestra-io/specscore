@@ -24,13 +24,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Install specscore CLI (latest published)
-        # The CLI lints the very specs that define it, so dogfood against the
-        # latest published release rather than a pinned version. The installer
-        # resolves "latest" when SPECSCORE_VERSION is unset.
+      - name: Install specscore CLI (pinned)
+        # Pinned, not "latest". A floating linter changes the gate underneath
+        # the repository: a pull request and the main branch it targets get
+        # different rule sets depending on what happened to be published in
+        # between, so a branch can go red on a row it never touched while main
+        # stays green on the same content. Bump this deliberately, in its own
+        # commit, alongside whatever spec edits the new version requires.
+        env:
+          SPECSCORE_VERSION: v0.39.1
         run: |
           curl -fsSL https://specscore.md/install/get-cli | \
             SPECSCORE_INSTALL_DIR="$HOME/.local/bin" sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          specscore --version
       - name: Lint spec tree
         run: specscore spec lint
