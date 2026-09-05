@@ -1,18 +1,18 @@
 ---
 format: https://specscore.md/feature-specification
-status: Stable
+status: Amending
 ---
 
 # Feature: Source References
 
 > [SpecScore.**Studio**](https://specscore.studio): | [Explore](https://specscore.studio/app/github.com/specscore/specscore/spec/features/source-references?op=explore) | [Edit](https://specscore.studio/app/github.com/specscore/specscore/spec/features/source-references?op=edit) | [Ask question](https://specscore.studio/app/github.com/specscore/specscore/spec/features/source-references?op=ask) | [Request change](https://specscore.studio/app/github.com/specscore/specscore/spec/features/source-references?op=request-change) |
 
-**Status:** Stable
-**Source Ideas:** —
+**Status:** Amending
+**Source Ideas:** spec-code-linking-via-codegraph
 
 ## Summary
 
-Source references are inline annotations in any source file that link code to SpecScore resources (features, plans, documents). A single prefix — `specscore:` — lets any tool, linter, or pre-commit hook discover references by binary search, resolve them against the project's spec repository, and transform them into clickable URLs pointing to `specscore.org`.
+Source references are inline annotations in any source file that link code to SpecScore resources. Untyped references record general context. Typed `implements` and `verifies` directives distinguish code that implements a requirement from executable tests that verify an acceptance criterion or requirement. Every committed target remains a clickable canonical `specscore.org` URL.
 
 ## Problem
 
@@ -25,12 +25,56 @@ Two concrete gaps exist:
 
 ## Design Philosophy
 
-- **Language-agnostic** — the notation must work in any language's comment syntax. Detection requires a recognized comment prefix on the same line — no AST parsing, just a single-line regex match.
+- **Language-agnostic semantics** — the notation works in any language's comment syntax. SpecScore owns the reference and relation grammar. A code-intelligence provider may attach a directive to the nearest symbol using language-aware parsing.
 - **Strict validation** — following Go's philosophy, references that point to non-existent resources are errors, not warnings. Invalid references are caught by linter, pre-commit hook, or PR check.
 - **Single prefix** — `specscore:` covers all resource types (features, plans, docs). One prefix to search, one parser to maintain, one convention to learn.
 - **Graceful cross-repo** — same-repo references omit host/org/repo for brevity. Cross-repo references use the URL authority form `specscore://{host}/{org}/{repo}/{reference}` ([decision 0010](../../decisions/0010-references-are-urls.md)). Host, org, and repo for the current context are inferred from git remote and can be overridden in `specscore.yaml`.
 
 ## Behavior
+
+### Relation directives
+
+A source comment MAY qualify a reference with one of three relation directives:
+
+```
+specscore:implements {target}
+specscore:verifies {target}
+specscore:references {target}
+```
+
+`{target}` accepts the same short or expanded address forms defined below. The canonical committed form preserves the directive and expands only its target:
+
+```go
+// specscore:implements https://specscore.org/github.com/acme/orders/spec/features/checkout#req:totals
+func calculateTotal(...) { ... }
+
+// specscore:verifies https://specscore.org/github.com/acme/orders/spec/features/checkout#ac:discounted-total
+func TestDiscountedTotal(t *testing.T) { ... }
+```
+
+| Relation | Source | Allowed target | Meaning |
+|---|---|---|---|
+| `implements` | implementation symbol | REQ | The symbol participates in implementing the requirement |
+| `verifies` | executable test symbol | AC, or a REQ that has no useful AC grouping | The test is executable evidence for the target |
+| `references` | any source location or symbol | any SpecScore resource | The source depends on or provides context for the resource without claiming implementation or verification |
+
+An existing unqualified source reference has `references` semantics. `implements` and `verifies` are accepted traceability claims and MUST be explicit in committed source. Inferred or agent-suggested pairs MUST NOT be reported as accepted claims until the corresponding directive is committed.
+
+#### REQ: typed-relations
+
+The relation set MUST be exactly `implements`, `verifies`, and `references`. An omitted relation MUST resolve to `references`. Unknown relation names MUST produce an error.
+
+#### REQ: relation-targets
+
+An `implements` directive MUST target a REQ. A `verifies` directive MUST target an AC or a directly verified REQ. A `references` directive MAY target any valid SpecScore resource.
+
+#### REQ: verification-source
+
+A `verifies` directive MUST attach to an executable test symbol. A scanner that can determine symbol kinds MUST reject a `verifies` directive attached to a non-test symbol. A language-agnostic fallback scanner MUST preserve the directive and report that symbol validation was not performed.
+
+#### REQ: accepted-not-inferred
+
+Tooling MUST distinguish accepted directives found in committed source from inferred candidate links. Suggested pairs MUST include their evidence and confidence and MUST NOT satisfy traceability or verification completeness checks.
 
 ### Notation format
 
@@ -139,22 +183,31 @@ The **expanded URL** is the canonical form stored in source files. The short `sp
 2. Pre-commit hook (or spec-aware linter with `--fix`) resolves the type prefix and expands it to `https://specscore.org/github.com/acme/myproject/spec/features/cli/task/claim`
 3. The expanded URL is what gets committed and stored in the repository
 
+For a typed directive, the relation token remains unchanged and the target is expanded:
+
+```
+// specscore:verifies feature/checkout#ac:discounted-total
+  -> // specscore:verifies https://specscore.org/github.com/acme/myproject/spec/features/checkout#ac:discounted-total
+```
+
 #### REQ: canonical-url-form
 
 The canonical form of a source reference MUST be the fully expanded `https://specscore.org/...` URL. The short `specscore:` notation MUST NOT be persisted in committed source files.
 
 #### REQ: auto-expansion
 
-The linter or pre-commit hook MUST auto-expand short `specscore:` notation to the canonical URL form before commit. After expansion, no `specscore:` prefixed references (other than within `https://specscore.org/` URLs) SHOULD remain in committed source.
+The linter or pre-commit hook MUST auto-expand short reference targets to the canonical URL form before commit. After expansion, an untyped `specscore:` reference SHOULD NOT remain in committed source.
+
+For typed directives, the directive prefix remains `specscore:{relation}` and only its target is expanded. A canonical typed directive therefore contains both `specscore:{relation}` and a canonical `https://specscore.org/...` target.
 
 ### Detection strategy
 
-A valid source reference must be preceded on the same line by a recognized comment prefix followed by optional whitespace. This eliminates false positives from string literals and non-comment code without requiring AST parsing.
+A valid source reference or directive must be preceded on the same line by a recognized comment prefix followed by optional whitespace. A language-agnostic scanner can discover candidates with a line matcher. CodeGrapher or another code-intelligence provider SHOULD use syntax-aware parsing to attach the directive to the nearest symbol and validate whether it is implementation code or an executable test.
 
 **Detection regex (single line):**
 
 ```regex
-^\s*(//|#|--|[/*]|%|;)\s*(specscore:|https://specscore\.org/)
+^\s*(//|#|--|[/*]|%|;)\s*(specscore:(implements|verifies|references)\s+|specscore:|https://specscore\.org/)
 ```
 
 **Recognized comment prefixes:**
@@ -188,10 +241,11 @@ var x = "https://specscore.org/github.com/org/repo/..." (inside string literal)
 
 Users with uncommon comment syntax can open an issue to expand the prefix set, or override it in project configuration (future).
 
-**Two reference forms are recognized:**
+**Reference forms:**
 
 1. **Short notation** — `specscore:` prefix: either the same-repo opaque form (`specscore:{reference}`) or the cross-repo authority form (`specscore://{host}/{org}/{repo}/{reference}`)
 2. **Expanded URLs** — `https://specscore.org/` prefix, then `{host}/{org}/{repo}/{resolved_path}`
+3. **Typed directives** — `specscore:{relation}` followed by either a short target or an expanded URL
 
 The linter auto-expands short notation to URLs, so committed code should only contain expanded URLs. The short form is accepted as input for authoring convenience.
 
@@ -199,9 +253,9 @@ The linter auto-expands short notation to URLs, so committed code should only co
 
 A source reference MUST be preceded on the same line by a recognized comment prefix (`//`, `#`, `--`, `*`, `/*`, `%`, `;`) followed by optional whitespace. References not preceded by a comment prefix MUST NOT be detected or processed.
 
-#### REQ: two-forms-recognized
+#### REQ: reference-forms-recognized
 
-The detection strategy MUST recognize exactly two reference forms: short notation (`specscore:` prefix) and expanded URLs (`https://specscore.org/` prefix). Both forms MUST match only when preceded by a comment prefix.
+The detection strategy MUST recognize short notation (`specscore:` prefix), expanded URLs (`https://specscore.org/` prefix), and typed directives (`specscore:{relation} {target}`). Every form MUST match only when preceded by a comment prefix.
 
 ### Host/org/repo resolution
 
@@ -266,6 +320,43 @@ Spec-aware tools can use source references as a second data source for dependenc
 
 This enables bidirectional traceability: spec-to-spec via dependency sections, and code-to-spec via source references.
 
+### Code-intelligence provider boundary
+
+SpecScore owns artifact parsing, stable IDs, reference resolution, relation semantics, and validation rules. A code-intelligence provider owns language parsing, symbol identity, incremental indexing, and graph traversal. Integration MUST use a versioned CLI or service contract; SpecScore MUST NOT depend on a provider's private database format.
+
+The provider SHOULD expose queries for accepted links, dangling targets, missing links, inferred candidate pairs, and exact-revision backlinks. Results MUST state the repository and revision they describe. SpecScore Studio MAY render these dynamic backlinks, but generated file and line locations MUST NOT be committed into the specification as if they were durable identifiers.
+
+#### REQ: provider-boundary
+
+SpecScore integrations with a code-intelligence provider MUST use a versioned public contract and MUST NOT read the provider's private storage format. Accepted and inferred links MUST remain distinguishable in every response.
+
+#### REQ: exact-revision-results
+
+Traceability results MUST identify the repository and exact Git revision they describe. Results from a different revision MUST be labelled stale and MUST NOT silently satisfy current-revision validation.
+
+### Coverage evidence
+
+Coverage is derived execution evidence. A coordinator such as WB MAY collect one language-native coverage artifact at a validation gate. The code-intelligence provider maps covered source ranges to symbols and follows accepted `implements` and `verifies` links to attribute evidence to REQs, ACs, and features.
+
+Reports MUST keep these signals separate:
+
+- **implementation exercised** means linked implementation code was executed by the measured suite;
+- **AC or REQ verified** means an explicitly linked executable test passed.
+
+Exercising implementation code is not sufficient evidence that an AC passed. Each coverage evidence record carries the exact commit, executed command, package or project scope, coverage mode, and collection time. Partial, missing, and stale results are visible. Aggregate suite coverage is the default; per-test coverage MAY be collected when its additional attribution value justifies its cost.
+
+#### REQ: coverage-is-derived-evidence
+
+Coverage of implementation code MUST NOT be reported as proof that an AC or REQ passed. Verification status requires an accepted `verifies` link to an executable test and a passing result for that test within the recorded run.
+
+#### REQ: coverage-provenance
+
+Every attributed coverage result MUST record the exact Git commit, command, scope, coverage mode, and collection time. Tooling MUST label evidence from another revision as stale and MUST expose incomplete scope.
+
+#### REQ: coverage-collection-cost
+
+Tooling SHOULD reuse one aggregate coverage artifact across all linked features and ACs. Per-test coverage MUST remain optional and MUST NOT be required on every commit.
+
 ## Dependencies
 
 - [feature](../feature/README.md)
@@ -278,6 +369,8 @@ This enables bidirectional traceability: spec-to-spec via dependency sections, a
 | [Feature](../feature/README.md) | Source references point to features; dependency analysis tools consume them |
 | [Repo Config](../repo-config/README.md) | `specscore.yaml` provides `project.host`/`project.org`/`project.repo` overrides for git-remote inference |
 | [Plan](../plan/README.md) | Plans are a referenceable resource type |
+| [Requirement](../requirement/README.md) | Implementation symbols use `implements` links to REQs |
+| [Acceptance Criteria](../acceptance-criteria/README.md) | Executable tests use `verifies` links to ACs or directly verified REQs |
 
 ## Acceptance Criteria
 
@@ -295,9 +388,9 @@ Short `specscore:` notation is auto-expanded to a fully qualified `https://specs
 
 ### AC: detection-accuracy
 
-**Requirements:** source-references#req:comment-prefix-required, source-references#req:two-forms-recognized
+**Requirements:** source-references#req:comment-prefix-required, source-references#req:reference-forms-recognized
 
-References preceded by a recognized comment prefix are detected. References without a comment prefix (bare text, string literals) are ignored. Both short notation and expanded URL forms are recognized.
+References preceded by a recognized comment prefix are detected. References without a comment prefix (bare text, string literals) are ignored. Short notation, expanded URL, and typed directive forms are recognized.
 
 ### AC: strict-validation
 
@@ -311,12 +404,33 @@ References to non-existent resources produce errors, not warnings. Missing host/
 
 Same-repo references resolve host/org/repo from git remote by default. Project config overrides git remote inference. Cross-repo references use the explicit `specscore://{host}/{org}/{repo}/{reference}` authority form; the legacy `@` suffix is rewritten by `--fix`.
 
+### AC: typed-code-and-test-links
+
+**Requirements:** source-references#req:typed-relations, source-references#req:relation-targets, source-references#req:verification-source, source-references#req:accepted-not-inferred
+
+An implementation symbol can explicitly link to the REQ it implements, and an executable test can explicitly link to the AC or standalone REQ it verifies. Invalid relation targets fail validation. Suggested pairs remain separate from accepted committed links.
+
+### AC: exact-revision-backlinks
+
+**Requirements:** source-references#req:provider-boundary, source-references#req:exact-revision-results
+
+A SpecScore client can query a code-intelligence provider through a versioned contract and receive accepted and suggested backlinks for an exact repository revision. Stale results are visible and cannot satisfy current-revision validation.
+
+### AC: attributed-coverage
+
+**Requirements:** source-references#req:coverage-is-derived-evidence, source-references#req:coverage-provenance, source-references#req:coverage-collection-cost
+
+One aggregate coverage artifact can be attributed through linked symbols to features, REQs, and ACs with complete provenance. Reports distinguish exercised implementation from passing linked tests, expose partial or stale scope, and do not require per-test coverage on every commit.
+
 ## Open Questions
 
 - Should the set of recognized comment prefixes be extensible via project configuration, or is the built-in set sufficient?
 - How should the linter handle references in files with no recognized comment syntax (e.g., plain text files)?
 - Should cross-repo reachability checks be mandatory in CI, or always optional?
 - What is the behavior when a type prefix expansion fails but the literal path (with the type prefix) exists as a repo-root-relative path?
+- Should canonical fragments migrate to lowercase `#req:` and `#ac:` while accepting uppercase `#REQ:` during a compatibility window?
+- How should typed links attach to generated code that cannot carry comments?
+- Which coverage formats should the first provider contract support beyond Go cover profiles?
 
 ---
 *This document follows the https://specscore.md/feature-specification*

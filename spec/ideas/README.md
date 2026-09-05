@@ -32,7 +32,7 @@ Archived Ideas are indexed separately at [archived/README.md](archived/README.md
 | [recap-artifacts-drift-and-session](recap-artifacts-drift-and-session.md) | Specifying | 2026-06-01 | alex | drift-recap, session-recap |
 | [rename-outstanding-questions-to-open-questions](rename-outstanding-questions-to-open-questions.md) | Approved | 2026-05-22 | alexandertrakhimenok | — |
 | [shared-index-feature](shared-index-feature.md) | Specifying | 2026-04-20 | alexander.trakhimenok | index |
-| [spec-code-linking-via-codegraph](spec-code-linking-via-codegraph.md) | Draft | 2026-06-10 | trakhimenok | — |
+| [spec-code-linking-via-codegraph](spec-code-linking-via-codegraph.md) | Specified | 2026-06-10 | trakhimenok | source-references |
 | [specscore-hub](specscore-hub.md) | Approved | 2026-06-01 | alex | — |
 | [studio-toolbar](studio-toolbar.md) | Specified | 2026-05-19 | alex | studio-toolbar |
 | [unify-task-status-vocabulary](unify-task-status-vocabulary.md) | Specified | 2026-06-26 | alex | unify-task-status-vocabulary |
