@@ -3,6 +3,8 @@
 project:
   title: SpecScore
 
+plans_repo: specscore/specscore
+
 lessons:
   classifications:
     - process

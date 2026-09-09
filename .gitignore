@@ -18,3 +18,4 @@ node_modules/
 
 # npm lockfiles — this repo uses pnpm
 package-lock.json
+/.specscore-lifecycle.lock

@@ -14,7 +14,7 @@ status: Stable
 
 A plan is a composite task -- a task that contains subtasks. It bridges feature specifications and change requests to executable work. Plans are mutable documents; snapshots provide immutable reference points for review, approval, and retrospective.
 
-There is one structural concept: the **task**. A task with children is a plan. A task without children is a leaf task. A plan is normally a single flat file (`spec/plans/{slug}.md`) whose tasks are inline `### Task N:` blocks; it MAY optionally be decomposed into sub-plans (recursive nesting, no depth limit) as a reserved advanced form. The typed shape of a single Plan is captured in the co-located [plan entity](plan.entity.md).
+There is one structural concept: the **task**. A task with children is a plan. A task without children is a leaf task. Every Plan has a canonical directory whose `README.md` is the Plan document; child directories express recursive sub-plans with no artificial depth limit. The typed shape of a single Plan is captured in the co-located [plan entity](plan.entity.md).
 
 ## Contents
 
@@ -72,19 +72,56 @@ graph LR
 
 ### Plan location
 
-A plan is a single Markdown file under `spec/plans/` in the spec repository:
+A Plan is stored in a slug-named directory whose `README.md` is the document:
 
 ```text
 spec/plans/
-  README.md              <- index of all plans
-  {plan-slug}.md         <- the plan document (one flat file per plan)
+  README.md
+  {plan-slug}/
+    README.md
+    {child-plan-slug}/
+      README.md
 ```
 
-`{plan-slug}` is a URL/path-safe identifier (e.g., `add-batch-mode`, `user-auth`).
+`{plan-slug}` is a URL/path-safe identifier (e.g., `add-batch-mode`, `user-auth`). A nested Plan's logical ID is its full slash-separated path relative to its source namespace, such as `chat-feature/chat-infrastructure/database-setup`.
 
 #### REQ: plan-file
 
-Every plan MUST be a single Markdown file `spec/plans/{plan-slug}.md`. This single-file form is the contract enforced by `specscore spec lint` (lint rule `P-003`). The optional decomposition of a plan into sub-plans (see [Recursive task and plan model](#recursive-task-and-plan-model)) is a reserved advanced form, not currently required or enforced.
+Every newly created Plan MUST be a `README.md` in its canonical directory. A root Plan is `spec/plans/{plan-slug}/README.md`; each child Plan adds one slug directory below its parent. The plans index alone owns `spec/plans/README.md`. Readers MAY accept a legacy flat `{plan-slug}.md` during migration, but it MUST NOT coexist with a directory Plan of the same logical ID.
+
+#### REQ: plan-logical-id
+
+A Plan's logical ID MUST preserve every path segment from the namespace root. Creation, lookup, dependency resolution, status changes, and index generation MUST use the full logical ID; two leaf names under different parents are distinct Plans.
+
+### External Plan namespace
+
+When a source project routes Plans to another repository, the destination stores them under the source project's complete repository identity:
+
+```text
+spec/plans/{source-host}/{source-owner}/{source-repo}/{nested-plan-id}/README.md
+```
+
+For example, `github.com/datatug/datatug` Plan `phase-1/core-loop` lives at `spec/plans/github.com/datatug/datatug/phase-1/core-loop/README.md` in the destination. The host segment prevents repositories with the same owner/name on different forges from sharing a namespace. When the explicitly selected destination equals the source repository, the existing `spec/plans/{nested-plan-id}/README.md` layout is used without the identity prefix.
+
+#### REQ: external-source-namespace
+
+An external destination MUST isolate every source at `spec/plans/{source-host}/{source-owner}/{source-repo}/`. Repository identities and Plan IDs MUST be joined as validated path segments. Neither lexical traversal nor symlinks in an existing namespace may escape the destination repository or cross into another source namespace.
+
+#### REQ: source-project-context
+
+`--project` always identifies the source project, including when invoked from a generic Plan-store checkout. The source project owns Features, acceptance criteria, Ideas, and other specification context. Plan operations MAY read those source artifacts for validation but MUST NOT modify them; all Plan and Plan-index writes go only to the resolved Plan namespace.
+
+#### REQ: read-only-plan-operations
+
+Read-only and dry-run Plan operations MUST leave both source and destination repositories byte-for-byte unchanged. Validation fixes required for source artifacts MUST be reported rather than applied as a side effect of a Plan operation.
+
+#### REQ: plan-path-conflicts
+
+A logical Plan ID MUST have exactly one on-disk representation. If a legacy flat file and canonical directory form resolve to the same ID, validation and mutation fail before durable writes. `--force` MAY replace an existing canonical Plan document but MUST NOT choose between ambiguous representations or overwrite a parent Plan.
+
+#### REQ: external-store-lifecycle-lock
+
+An external Plan-store repository MUST ignore the anchored `/.specscore-lifecycle.lock` file. The persistent lock inode is shared lifecycle coordination state and MUST NOT be deleted after each operation. A destination that has not otherwise been initialized by SpecScore still requires this exact gitignore rule before Plan mutation.
 
 #### REQ: plan-slug-format
 
@@ -168,7 +205,8 @@ Every plan document MUST include the following sections: title (`# Plan: X`), he
 | **Date** | Yes | Date the plan was created |
 | **Owner** | Yes | Who wrote the plan |
 | **Supersedes** | Yes | `—`, or the slug of an older plan this one wholesale-replaces |
-| **Parent** | No | The master plan this plan is a sub-plan of (master/sub-plan composition). A same-repo plan slug or a cross-repo `<repo-slug>:<plan-slug>` soft reference. Absent for root plans. See [Cross-repo plan composition](#cross-repo-plan-composition). Validated by lint rule `P-005`. |
+| **Parent** | No | The master plan this plan is a sub-plan of (master/sub-plan composition). A same-source full Plan logical ID or a cross-repository `<repo-slug>:<plan-logical-id>` soft reference. Absent for root plans. See [Cross-repo plan composition](#cross-repo-plan-composition). Validated by lint rule `P-005`. |
+| **Prerequisite Plans** | No | Comma-separated full logical IDs of same-source Plans that must be implemented before this Plan begins. Nested IDs retain every ancestor segment. |
 | **Coordination** | No | The repo/branch where this plan document's own mutations are authoritative -- `<owner>/<repo>@<branch>`. Absent means unrestricted (any repo/branch may mutate the plan, as before this field existed). See [Coordination branch](#coordination-branch). Validated by lint rule `P-010`. |
 | **Effort** | No | `S` \| `M` \| `L` \| `XL` -- see [Optional ROI metadata](#optional-roi-metadata) |
 | **Impact** | No | `low` \| `medium` \| `high` \| `critical` -- see [Optional ROI metadata](#optional-roi-metadata) |
@@ -285,7 +323,7 @@ Each snapshot MUST reference a valid git commit hash that represents the plan's 
 
 ### Recursive task and plan model
 
-> **Optional / reserved advanced form.** The default and lint-enforced shape of a plan is a single flat file (`spec/plans/{slug}.md`, per [plan-file](#req-plan-file)) whose tasks are inline `### Task N:` blocks. The recursive directory decomposition described below is an OPTIONAL advanced form for very large plans; it is **not currently enforced or required** by `specscore spec lint` (which enforces the single-file contract via `P-003`). It is documented here as the reserved model for future sub-plan support.
+The directory hierarchy is the canonical Plan model. Inline `### Task N:` blocks remain leaf execution tasks inside a Plan document; child Plan directories decompose larger units while preserving one document format.
 
 A plan is a composite task -- it contains other tasks. Some of those child tasks may themselves contain subtasks, making them sub-plans. This nesting is recursive with no artificial depth limit.
 
@@ -312,7 +350,7 @@ Whether something is a "plan" or a "task" is determined by structure: if it has 
 
 #### REQ: recursive-nesting
 
-In the optional directory form, plans and tasks MAY nest to arbitrary depth. There is no maximum nesting level. Depth is a judgment call made by the plan author. The single-file form (the default and lint-enforced shape) carries its tasks as inline `### Task N:` blocks rather than child directories.
+Plans MAY nest to arbitrary depth. There is no maximum nesting level. Depth is a judgment call made by the plan author, and each nested document keeps its full logical ID. Inline `### Task N:` blocks MAY coexist with child Plan directories.
 
 #### REQ: child-plan-format
 
@@ -328,22 +366,26 @@ A plan MAY contain both leaf tasks and sub-plans as direct children at the same 
 
 ### Cross-repo plan composition
 
-The directory form above nests sub-plans physically inside one repo. **Cross-repo plan composition** is a distinct, lint-enforced form that composes **flat single-file plans** — including plans in *different repositories* — by reference rather than by directory nesting. It is the mechanism behind a single Idea fanning out into coordinated work across repos.
+The directory hierarchy nests sub-plans physically inside one source namespace. **Cross-repo plan composition** composes Plan directories in different source namespaces by reference rather than by physical nesting. It is the mechanism behind a single Idea fanning out into coordinated work across repos.
 
-A **master plan** is an ordinary single-file plan whose work is carried out by **sub-plans**. Each sub-plan is itself a flat single-file plan that names its master through the **Parent** header field (`**Parent:** <plan-ref>`). The reference is either a same-repo plan slug or a cross-repo `<repo-slug>:<plan-slug>` soft reference. On the master side, a task MAY delegate to a sub-plan via the Task entity's `sub_plan` property — the master-side expression of the same edge.
+A **master plan** is an ordinary Plan whose work is carried out by **sub-plans**. Each sub-plan names its master through the **Parent** header field (`**Parent:** <plan-ref>`). The reference is either a same-source full Plan logical ID or a cross-repository `<repo-slug>:<plan-logical-id>` soft reference. On the master side, a task MAY delegate to a sub-plan via the Task entity's `sub_plan` property — the master-side expression of the same edge.
 
 ```text
-specscore/spec/plans/cross-repo-master.md        <- master plan (root: no Parent)
-specscore-cli/spec/plans/sub-cli-bootstrap.md    <- **Parent:** specscore:cross-repo-master
-specscore/spec/plans/sub-entity-model.md         <- **Parent:** cross-repo-master   (same-repo)
-specstudio-skills/spec/plans/sub-skills.md       <- **Parent:** specscore:cross-repo-master
+specscore/spec/plans/cross-repo-master/README.md        <- master plan (root: no Parent)
+specscore-cli/spec/plans/sub-cli-bootstrap/README.md    <- **Parent:** specscore:cross-repo-master
+specscore/spec/plans/sub-entity-model/README.md         <- **Parent:** cross-repo-master   (same-repo)
+specstudio-skills/spec/plans/sub-skills/README.md       <- **Parent:** specscore:cross-repo-master
 ```
 
-The canonical, navigable link is the child's **Parent** ref (child → master); composition is single-parent (a tree) in the MVP. Lint owns reference integrity per rule `P-005`: same-repo parents are resolved and checked for acyclicity; cross-repo `<repo-slug>:<plan-slug>` parents are validated **syntactically only** — the linter never scans sibling repositories, so a cross-repo parent is a best-effort, unresolved reference (like an external link). Cross-repo back-link maintenance and execution ordering across the tree are out of scope for this model and belong to the consuming skills.
+The canonical, navigable link is the child's **Parent** ref (child → master); composition is single-parent (a tree) in the MVP. Lint owns reference integrity per rule `P-005`: same-repo parents are resolved and checked for acyclicity; cross-repository `<repo-slug>:<plan-logical-id>` parents are validated **syntactically only** — the linter never scans sibling repositories, so a cross-repo parent is a best-effort, unresolved reference (like an external link). Cross-repo back-link maintenance and execution ordering across the tree are out of scope for this model and belong to the consuming skills.
 
 #### REQ: cross-repo-parent-ref
 
-A plan MAY declare a single `**Parent:** <plan-ref>` header field naming the master plan it is a sub-plan of. The value is a same-repo plan slug or a cross-repo `<repo-slug>:<plan-slug>` reference. A plan with no `**Parent:**` field is a root plan. Composition is single-parent in the MVP: a plan MUST NOT declare more than one parent. Reference validity (same-repo resolution and acyclicity; cross-repo syntactic-only checks) is enforced by `specscore spec lint` rule `P-005`, not by this document.
+A plan MAY declare a single `**Parent:** <plan-ref>` header field naming the master plan it is a sub-plan of. The value is a same-source full Plan logical ID or a cross-repository `<repo-slug>:<plan-logical-id>` reference. Nested references MUST retain every ancestor segment. A plan with no `**Parent:**` field is a root plan. Composition is single-parent in the MVP: a plan MUST NOT declare more than one parent. Reference validity (same-repo resolution and acyclicity; cross-repo syntactic-only checks) is enforced by `specscore spec lint` rule `P-005`, not by this document.
+
+#### REQ: prerequisite-plan-logical-ids
+
+Each `**Prerequisite Plans:**` entry MUST be a full same-source Plan logical ID. Readiness resolves the entry relative to the resolved source namespace, preserves arbitrary nesting, and reports missing, malformed, cyclic, or not-yet-implemented prerequisites without falling back to a matching leaf name elsewhere in the hierarchy.
 
 ### Coordination branch
 
@@ -428,7 +470,7 @@ Tasks whose `Depends on` value is `none` MUST be treated as parallel-eligible. B
 
 ### Task-to-feature-AC traceability
 
-In the flat single-file model, a plan does not embed its own acceptance-criteria sections. Instead, each task declares a `**Verifies:**` line naming one or more acceptance criteria of the source Feature (by `feature-slug#ac:<ac-slug>`) that the task implements. This is the plan's traceability mechanism — every task maps to the feature ACs it satisfies — and it is enforced by lint rule `P-001` (every plan task references at least one feature AC).
+A Plan does not embed its own acceptance-criteria sections. Instead, each task declares a `**Verifies:**` line naming one or more acceptance criteria of the source Feature (by `feature-slug#ac:<ac-slug>`) that the task implements. This is the plan's traceability mechanism — every task maps to the feature ACs it satisfies — and it is enforced by lint rule `P-001` (every plan task references at least one feature AC).
 
 #### REQ: task-verifies-feature-ac
 
@@ -495,7 +537,7 @@ When present, the Impact field MUST be one of: `low`, `medium`, `high`, or `crit
 
 ### Plans index
 
-Every spec repository with plans maintains an index at `spec/plans/README.md`. Its format — required sections, Contents-table columns, Recently Closed section, and adherence footer — is specified by the [plans-index](../plans-index/README.md) Index-Kind feature.
+Every source namespace with Plans maintains an index at its resolved namespace-root `README.md`. Same-repository storage uses `spec/plans/README.md`; external storage uses the full source repository namespace. Its format — required sections, Contents-table columns, Recently Closed section, and adherence footer — is specified by the [plans-index](../plans-index/README.md) Index-Kind feature.
 
 ### Feature README back-reference
 
@@ -708,7 +750,7 @@ Every plan document MUST end with an adherence footer per the [Adherence Footer 
 | [Scenario](../scenario/README.md) | Scenarios in `_tests/` validate plan REQs with concrete Given/When/Then flows. |
 | [Proposals](../proposals/README.md) | A proposal (change request) is a trigger for plan creation. Approved proposals link forward to their plan; plans link back to their source proposal. |
 | [Open Questions](../open-questions/README.md) | Plan tasks may surface open questions. These follow the existing question lifecycle. |
-| [Plans Index](../plans-index/README.md) | The plans-index feature specifies the `spec/plans/README.md` aggregation file that lists every Plan in a repo. Plan documents conform to `plan-specification`; the plans-index file conforms to `plans-index-specification`. |
+| [Plans Index](../plans-index/README.md) | The plans-index feature specifies the resolved source namespace aggregation file that lists every Plan for that source project. Plan documents conform to `plan-specification`; the plans-index file conforms to `plans-index-specification`. |
 | [Status Vocabulary](../status-vocabulary/README.md) | The canonical source of truth for the legal Plan status values. The Plan set is `Draft`, `In Review`, `Approved`, `Executing`, `Blocked`, `Implemented`, `Failed`, `Rejected`, `Withdrawn`, `Superseded`, `Deprecated`; `Executing` (in-progress role) is a documented conscious divergence from the shared `Implementing` term, governed there. |
 
 ## Acceptance Criteria
@@ -721,9 +763,15 @@ A plan document has a correctly formatted title (`# Plan: {Title}`), all require
 
 ### AC: plan-location-validity
 
-**Requirements:** plan#req:plan-file, plan#req:plan-slug-format
+**Requirements:** plan#req:plan-file, plan#req:plan-logical-id, plan#req:plan-slug-format, plan#req:external-source-namespace
 
-A plan is a single slug-named Markdown file `spec/plans/{slug}.md` (not a directory). A plan written as a directory tree is rejected by the single-file lint contract; a flat file with a valid slug passes.
+A Plan is a slug-named directory containing `README.md`. Nested Plans retain their complete logical IDs, arbitrary nesting is accepted, and a legacy flat file cannot duplicate the same logical ID.
+
+### AC: external-plan-boundaries
+
+**Requirements:** plan#req:external-source-namespace, plan#req:source-project-context, plan#req:read-only-plan-operations, plan#req:plan-path-conflicts, plan#req:external-store-lifecycle-lock
+
+An externally routed Plan is stored beneath the full source host/owner/repo namespace. A Plan command launched from the generic destination with `--project` resolves Feature and AC context from that source without modifying it. Traversal, symlink escapes, ambiguous flat/directory IDs, and attempts to overwrite a parent README fail before writes. Read-only and dry-run commands change neither repository, and the destination retains the ignored lifecycle-lock inode across operations.
 
 ### AC: status-lifecycle
 
@@ -741,7 +789,7 @@ Snapshots are recorded in a table with Date, Git Hash, Action, and Comment colum
 
 **Requirements:** plan#req:recursive-nesting, plan#req:mixed-children, plan#req:parallel-eligibility, plan#req:task-verifies-feature-ac, plan#req:status-rollup
 
-In the optional directory form, plans nest recursively with no artificial depth limit and tasks and sub-plans coexist at the same level; the default single-file form carries inline `### Task N:` blocks. Tasks whose `Depends on` is `none` are parallel-eligible. Each task declares a `**Verifies:**` line mapping it to the source Feature's acceptance criteria (enforced by `P-001`). Once `Approved`, the plan's execution-band status derives from its task-status rollup via `lint --fix`.
+Plans nest recursively with no artificial depth limit, and inline tasks and child Plans coexist at the same level. Tasks whose `Depends on` is `none` are parallel-eligible. Each task declares a `**Verifies:**` line mapping it to the source Feature's acceptance criteria (enforced by `P-001`). Once `Approved`, the plan's execution-band status derives from its task-status rollup via `lint --fix`.
 
 ### AC: tasks-count
 
@@ -761,7 +809,7 @@ Affected features back-reference plans in a Plans table. Proposals triggered by 
 - What is the exact format for the plan task reference -- should it be structured metadata (YAML frontmatter) or a markdown convention (as shown in examples)?
 - Should the deviation report be generated automatically when all tasks complete, or only on demand?
 - `tasks_count` migration: existing plans gain `tasks_count` via `specscore spec lint --fix` on next touch (derived, never hand-authored), so no manual backfill is required. (Source Idea: `plan-granularity-improvement`.)
-- This Feature was reconciled to the flat single-file model that lint actually enforces, and its status enum was expanded to the full prep/execution/disposition lifecycle realizing the Approved `plan-status-lifecycle` Idea. Open from that Idea: exact rollup precedence on mixed task states (encoded here as Failed > Executing > Blocked > Implemented — confirm against real `implement` runs); what triggers `lint --fix` to recompute the execution band (every lint run vs a hook vs the `implement` checkpoints); and whether `Failed` requires human acknowledgement to leave.
+- This Feature now makes the recursive Plan-directory model canonical, and its status enum was expanded to the full prep/execution/disposition lifecycle realizing the Approved `plan-status-lifecycle` Idea. Open from that Idea: exact rollup precedence on mixed task states (encoded here as Failed > Executing > Blocked > Implemented — confirm against real `implement` runs); what triggers `lint --fix` to recompute the execution band (every lint run vs a hook vs the `implement` checkpoints); and whether `Failed` requires human acknowledgement to leave.
 - The CLI enforcement of the expanded status enum and the `lint --fix` execution-band derivation are not yet implemented; until then plans use the prep-band statuses (`Draft`/`Approved`) as before. (Realizing Idea: `plan-status-lifecycle`.)
 
 ---

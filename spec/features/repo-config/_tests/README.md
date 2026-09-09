@@ -17,6 +17,8 @@ Scenarios that verify the requirements defined in [Repo Config](../README.md).
 | [projects-url-entries-preserved](projects-url-entries-preserved.md) | [REQ: projects-list](../README.md#req-projects-list) |
 | [projects-local-path-resolves](projects-local-path-resolves.md) | [REQ: projects-list](../README.md#req-projects-list), [REQ: projects-local-path-must-resolve](../README.md#req-projects-local-path-must-resolve) |
 | [projects-local-path-without-specscore-yaml-fails](projects-local-path-without-specscore-yaml-fails.md) | [REQ: projects-local-path-must-resolve](../README.md#req-projects-local-path-must-resolve) |
+| [plan-route-precedence](plan-route-precedence.md) | [REQ: plans-repo-project-selection](../README.md#req-plans-repo-project-selection), [REQ: plan-repos-aggregate-routing](../README.md#req-plan-repos-aggregate-routing), [REQ: plan-route-required](../README.md#req-plan-route-required), [REQ: plan-config-precedence](../README.md#req-plan-config-precedence) |
+| [plan-checkout-machine-local](plan-checkout-machine-local.md) | [REQ: repo-checkouts-machine-local](../README.md#req-repo-checkouts-machine-local) |
 | [specs-dir-name-default](specs-dir-name-default.md) | [REQ: specs-dir-name-default](../README.md#req-specs-dir-name-default) |
 | [docs-dir-name-default](docs-dir-name-default.md) | [REQ: docs-dir-name-default](../README.md#req-docs-dir-name-default) |
 | [modules-default-to-root](modules-default-to-root.md) | [REQ: modules-default](../README.md#req-modules-default) |

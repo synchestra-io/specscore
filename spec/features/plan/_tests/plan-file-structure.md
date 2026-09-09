@@ -10,11 +10,17 @@ format: https://specscore.md/scenario-specification
 
 GIVEN a spec repository with a `spec/plans/` directory
 WHEN a new plan is created with slug `add-batch-mode`
-THEN a single file `spec/plans/add-batch-mode.md` is created (not a directory)
+THEN `spec/plans/add-batch-mode/README.md` is created
+AND `spec/plans/add-batch-mode.md` is not created
 
-GIVEN a plan authored as a directory tree `spec/plans/add-batch-mode/README.md`
-WHEN the document is validated against the single-file contract (lint rule `P-003`)
-THEN validation rejects it, indicating a plan MUST be a single flat file
+GIVEN both `spec/plans/add-batch-mode.md` and `spec/plans/add-batch-mode/README.md` exist
+WHEN the Plan namespace is validated
+THEN validation rejects the duplicate logical ID before any mutation
+
+GIVEN `spec/plans/platform/api/README.md` and `spec/plans/payments/api/README.md` exist
+WHEN the Plan namespace is enumerated
+THEN their logical IDs are `platform/api` and `payments/api`
+AND neither is collapsed to the leaf name `api`
 
 GIVEN a plan slug containing uppercase letters or underscores (e.g., `Add_Batch`)
 WHEN the slug is validated

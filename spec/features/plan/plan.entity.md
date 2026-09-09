@@ -7,12 +7,12 @@ description: A composite task — a task with subtasks — that bridges Feature 
 properties:
   - name: id
     data_type: string
-    description: The plan's slug — the file name (without `.md`) under `spec/plans/`.
+    description: The Plan's full slash-separated logical ID relative to its source namespace.
     checks:
       required: true
       min_length: 1
       max_length: 128
-      pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*$"
   - name: status
     data_type: string
     description: The plan's full-lifecycle status in one field, across three bands — prep (human-authored), execution (derived by `lint --fix` from task rollup), and disposition (human-authored).
@@ -56,7 +56,7 @@ properties:
       min: 0
   - name: parent
     data_type: string
-    description: The master Plan this Plan is a sub-plan of — the master/sub-plan composition link. A same-repo plan slug, or a cross-repo `<repo-slug>:<plan-slug>` soft reference. Absent for root plans. Single-parent (a tree) in the MVP; multi-parent DAGs are out of scope. Same-repo parents are resolved and checked for acyclicity by lint rule `P-005`; cross-repo parents are validated syntactically only (no sibling-repo resolution).
+    description: The master Plan this Plan is a sub-plan of — the master/sub-plan composition link. A same-source full logical ID, or a cross-repository `<repo-slug>:<plan-logical-id>` soft reference. Absent for root plans. Single-parent (a tree) in the MVP; multi-parent DAGs are out of scope. Same-repo parents are resolved and checked for acyclicity by lint rule `P-005`; cross-repo parents are validated syntactically only (no sibling-repo resolution).
     checks:
       required: false
       max_length: 256
@@ -83,12 +83,12 @@ recursive definition.
 <!-- managed-by: specscore lint --fix -->
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `id` | string | yes | The plan's slug — the file name (without `.md`) under `spec/plans/`. |
+| `id` | string | yes | The Plan's full slash-separated logical ID relative to its source namespace. |
 | `status` | string | yes | The plan's full-lifecycle status in one field, across three bands — prep (human-authored), execution (derived by `lint --fix` from task rollup), and disposition (human-authored). |
 | `features` | array | no | Features this Plan affects (its source Feature for feature-sourced plans). Empty for idea-sourced plans, which bind to an Idea via the `Source` line instead. |
 | `tasks` | array | no | Subtasks that make up this Plan. Empty list means the Plan is a leaf Task. |
 | `tasks_count` | integer | no | Derived count of the Plan's direct child tasks. Maintained by `specscore spec lint --fix` and surfaced in frontmatter (per artifact-frontmatter-convention); never hand-authored. |
-| `parent` | string | no | The master Plan this Plan is a sub-plan of — the master/sub-plan composition link. A same-repo plan slug, or a cross-repo `<repo-slug>:<plan-slug>` soft reference. Absent for root plans. Single-parent (a tree) in the MVP; multi-parent DAGs are out of scope. Same-repo parents are resolved and checked for acyclicity by lint rule `P-005`; cross-repo parents are validated syntactically only (no sibling-repo resolution). |
+| `parent` | string | no | The master Plan this Plan is a sub-plan of — the master/sub-plan composition link. A same-source full logical ID, or a cross-repository `<repo-slug>:<plan-logical-id>` soft reference. Absent for root plans. Single-parent (a tree) in the MVP; multi-parent DAGs are out of scope. Same-repo parents are resolved and checked for acyclicity by lint rule `P-005`; cross-repo parents are validated syntactically only (no sibling-repo resolution). |
 <!-- end-managed -->
 
 ## Referenced by

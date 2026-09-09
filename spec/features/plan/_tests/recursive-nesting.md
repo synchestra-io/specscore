@@ -22,5 +22,11 @@ GIVEN a sub-plan `chat-infrastructure` nested under `chat-feature`
 WHEN the sub-plan document is validated
 THEN it follows the same format as a top-level plan, including title, header fields, and the `## Summary`, `## Approach`, `## Tasks`, and `## Open Questions` sections
 
+GIVEN Plan `delivery/api` declares `**Prerequisite Plans:** platform/bootstrap/database`
+AND another Plan exists at `legacy/database`
+WHEN readiness is evaluated
+THEN it resolves only `platform/bootstrap/database`
+AND never substitutes the leaf-name match `legacy/database`
+
 ---
 *This document follows the https://specscore.md/scenario-specification*

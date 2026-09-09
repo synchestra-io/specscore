@@ -12,7 +12,7 @@ status: Draft
 
 ## Summary
 
-The plans index — `spec/plans/README.md` — is the canonical entry point for understanding what implementation work is planned, in flight, approved, or superseded in a spec repository. It inherits the shared shape of every SpecScore index from the [Index feature](../index/README.md) and declares only the plans-specific overrides: the Contents column set, a Recently Closed section, sub-plan indentation, and an optional per-plan summary convention.
+The plans index — `spec/plans/README.md` for same-repository storage or a source namespace `README.md` in an external store — is the canonical entry point for understanding what implementation work is planned, in flight, approved, or superseded in a spec repository. It inherits the shared shape of every SpecScore index from the [Index feature](../index/README.md) and declares only the plans-specific overrides: the Contents column set, a Recently Closed section, sub-plan indentation, and an optional per-plan summary convention.
 
 ## Problem
 
@@ -20,7 +20,11 @@ Plans accumulate silently without a structured aggregation: readers cannot answe
 
 ## Behavior
 
-This feature inherits all shared rules from the [Index feature](../index/README.md): canonical location at `spec/plans/README.md`, the minimum-required-sections rule, completeness, adherence-footer delegation form, and the three registry cross-references in the Interaction table. Those rules are NOT re-stated here per [Index#req:overrides-only](../index/README.md#req-overrides-only). What follows is the plans-index's own overrides.
+This feature inherits the shared shape from the [Index feature](../index/README.md). In same-repository storage its canonical location is `spec/plans/README.md`; in an external store it is the source namespace root `spec/plans/{source-host}/{source-owner}/{source-repo}/README.md`.
+
+#### REQ: namespace-root-only
+
+Index generation MUST write only the resolved source namespace root `README.md`. It MUST enumerate nested Plans recursively but MUST NOT replace any child or parent Plan's `README.md`, including when a nested Plan ID is also a directory prefix for descendants.
 
 ### Section structure
 
@@ -97,9 +101,9 @@ Every plans-index document MUST end with an adherence footer per the [Adherence 
 
 ### AC: plan-specific-sections
 
-**Requirements:** plans-index#req:required-sections
+**Requirements:** plans-index#req:required-sections, plans-index#req:namespace-root-only
 
-The plans index adds `## Recently Closed` between the shared list section and the shared Open Questions section. Section order is enforced.
+The plans index adds `## Recently Closed` between the shared list section and the shared Open Questions section. Section order is enforced. Generation updates only the selected source namespace index and never overwrites a Plan README.
 
 ### AC: contents-table
 

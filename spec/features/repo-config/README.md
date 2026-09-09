@@ -12,7 +12,7 @@ status: Draft
 
 ## Summary
 
-Defines `specscore.yaml`, the single mandatory repository-level config file for SpecScore projects. Specifies the file name, the mandatory schema-pointer header comment, the optional `project` identity block, related-project navigation hints, top-level dir-name overrides, modules with code roots, studio configuration, publication policy, and inference defaults so a minimal repo can ship with an effectively empty config.
+Defines `specscore.yaml`, the single mandatory repository-level config file for SpecScore projects. Specifies the file name, the mandatory schema-pointer header comment, the optional `project` identity block, related-project navigation hints, explicit Plan-repository routing, top-level dir-name overrides, modules with code roots, studio configuration, publication policy, and inference defaults.
 
 ## Contents
 
@@ -139,6 +139,50 @@ projects:
 #### REQ: projects-local-path-must-resolve
 
 When a `projects:` entry is a local path, that path MUST resolve to a directory containing its own `specscore.yaml` file. Lint MUST emit an error for local-path entries pointing at directories that do not exist or do not contain `specscore.yaml`.
+
+### Plan repository routing
+
+Plan storage is resolved by SpecScore itself. It does not depend on WB or another orchestrator. Routing uses portable repository identities, while checkout paths are kept in machine-local configuration.
+
+Repository identities use either `owner/repo` shorthand (the source repository's host is implied) or the full `host/owner/repo` form. Normalization MUST preserve all three logical components and MUST reject absolute paths, `.` or `..` segments, and malformed identities.
+
+The committed project config and its local override select one destination with a scalar:
+
+```yaml
+plans_repo: specscore/specscore
+```
+
+User and organization config may route several source projects to a destination:
+
+```yaml
+plan_repos:
+  sneat-co/workbench:
+    - datatug/datatug
+    - github.com/datatug/dashboardius
+
+repo_checkouts:
+  sneat-co/workbench: /work/checkouts/sneat-co/workbench
+```
+
+#### REQ: plans-repo-project-selection
+
+`plans_repo` in `specscore.local.yaml` or the repository's committed `specscore.yaml` MUST be a non-empty scalar repository identity. It selects the Plan destination for that source project. The local value overrides the committed value. Setting it to the source repository's own identity explicitly selects same-repository Plan storage; omission does not imply same-repository storage.
+
+#### REQ: plan-repos-aggregate-routing
+
+`plan_repos` in organization or user config MUST map destination repository identities to lists of source repository identities. A source MUST resolve to at most one destination within a layer; duplicate mappings to different normalized destinations are a hard error. Repository/local `plans_repo` overrides organization routing, which overrides user routing.
+
+#### REQ: plan-route-required
+
+Every Plan operation MUST resolve an explicit route from `plans_repo` or `plan_repos`. If none matches the source project, the Plan operation MUST fail before reading or writing Plan artifacts and explain where routing can be configured. Feature, Idea, Proposal, Lesson, and other non-Plan operations MUST remain independent of Plan routing.
+
+#### REQ: repo-checkouts-machine-local
+
+`repo_checkouts` maps a repository identity to an absolute path whose git top-level and origin identity match that repository. It MAY appear in user, organization, or `specscore.local.yaml` configuration and MUST NOT appear in committed `specscore.yaml`. Missing, relative, nested-subdirectory, non-repository, or identity-mismatched paths are hard errors when an external Plan checkout is required. Symlinks are resolved before these checks.
+
+#### REQ: plan-config-precedence
+
+Plan routing precedence is `specscore.local.yaml` then committed `specscore.yaml`, then organization `.specscore.yaml`, then user `~/.specscore.yaml`. Checkout precedence is local, organization, then user; committed project config is forbidden from contributing machine paths. The organization file is the `.specscore.yaml` inside the organization directory containing the canonical source clone, so linked worktrees share the same organization policy.
 
 ### Directory names
 
@@ -408,6 +452,8 @@ modules:
 | [Document Types Registry](../document-types-registry/README.md) | This feature is registered in the canonical document-types table; its consumer path is `specscore.yaml`. |
 | [Grade body-metadata field](../canonical-grade-metadata-field/README.md) | The optional `grade:` block defined here carries `grade.values`; that Feature owns the field's parsing, placement, default, and lint semantics. |
 | [Publication Policy Config](../publication-policy-config/README.md) | The optional `publication:` block defined here carries project-level publication policy; that Feature owns policy shape, action validation, command/event scopes, branch rules, and user-config parity. |
+| [Layered Config](../layered-config/README.md) | Supplies local, repository, organization, and user origins and enforces that `repo_checkouts` never enters committed project config. |
+| [Plan](../plan/README.md) | Consumes the resolved destination and source identity to select the authoritative Plan namespace while leaving source Features read-only. |
 
 ## Acceptance Criteria
 
@@ -444,6 +490,18 @@ Project identity (title, host, org, repo) is inferred from the working directory
 **Requirements:** repo-config#req:projects-list, repo-config#req:projects-local-path-must-resolve
 
 Each `projects:` entry is recognized as a URL or a local directory path. Local paths are validated to exist and to contain a nested `specscore.yaml`; entries that fail validation are reported as errors.
+
+### AC: plan-route-resolved
+
+**Requirements:** repo-config#req:plans-repo-project-selection, repo-config#req:plan-repos-aggregate-routing, repo-config#req:plan-route-required, repo-config#req:plan-config-precedence
+
+A local or committed scalar `plans_repo` selects one Plan destination and overrides organization and user mappings. Without either form of explicit routing, every Plan operation fails before Plan access, while unrelated artifact operations continue normally. Shorthand and full repository identities normalize to the same host/owner/repo identity, and conflicting mappings fail.
+
+### AC: plan-checkout-separated
+
+**Requirements:** repo-config#req:repo-checkouts-machine-local
+
+An external Plan destination resolves only through an absolute machine-local `repo_checkouts` entry whose checkout root and origin match the destination. Committed checkout paths, relative or nested paths, wrong origins, and unresolved symlinks fail without touching either repository.
 
 ### AC: modules-resolved
 
@@ -495,6 +553,7 @@ Unknown fields at any level survive read/write without warnings. Orchestrators c
 - Should `code:` entries support glob patterns (e.g., `pkg/**/*.go`), or must they be literal file/directory paths? Defer until lint actually consumes them.
 - Should an explicit `studio.name` be allowed to differ from the host implied by `studio.url` (e.g., `name: MyCompanyDocs` with a SpecScore.Studio-hosted URL)? Spec currently allows it freely.
 - How should tooling handle a repository that has no `specscore.yaml` at all — refuse to operate, or assume defaults?
+- Should organization configuration eventually have an explicit discovery registry instead of being anchored inside the organization directory containing the canonical source clone? Current behavior uses the canonical-clone anchor so worktrees agree.
 
 ---
 *This document follows the https://specscore.md/feature-specification*
